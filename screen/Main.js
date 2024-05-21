@@ -5,10 +5,8 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
-  Alert,
   Modal,
   StyleSheet,
-  Button,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -28,31 +26,10 @@ const Main = ({ navigation }) => {
     );
   };
   const [selectedItemId, setSelectedItemId] = useState(null);
-
+ const [pickervalue,setPickervalue] = useState("")
   const OpenDrawer = () => {
     navigation.dispatch(DrawerActions.toggleDrawer());
   };
-
-  const deliverydates = [
-    {
-      id: 1,
-    },
-    {
-      id: 2,
-    },
-    {
-      id: 3,
-    },
-    {
-      id: 4,
-    },
-    {
-      id: 5,
-    },
-    {
-      id: 6,
-    },
-  ];
   const [modalVisible, setModalVisible] = useState(false);
   //const [selectedItemIds, setSelectedItemIds] = useState(null);
   //const handleItemSelects = (id) => {
@@ -60,11 +37,10 @@ const Main = ({ navigation }) => {
   //  setModalVisible(false);
   //  console.log(`Selected item id: ${id}`);
   //};
-
   const showModal = () => {
     setModalVisible(true);
   };
-  const { getFutureDate } = useContext(DateTimeContext);
+  const { getFutureDate,timeSlots,currentHour } = useContext(DateTimeContext);
   const [futureDates, setFutureDates] = useState([]);
   useEffect(() => {
     const dates = [];
@@ -77,6 +53,7 @@ const Main = ({ navigation }) => {
     }
     setFutureDates(dates);
   }, []);
+  
   return (
     <View
       style={{
@@ -118,7 +95,6 @@ const Main = ({ navigation }) => {
             className="scroll-smooth"
           >
             {futureDates.map((items, key) => {
-              console.log(items);
               return (
                 <SelectAppointmentDate
                   key={key}
@@ -139,13 +115,29 @@ const Main = ({ navigation }) => {
             horizontal
             showsHorizontalScrollIndicator={false}
           >
-            {deliverydates.map((items, key) => {
+            {timeSlots.map((item, key) => {
+              const hour = item.toString().padStart(2, "0"); // Ensure two-digit format
+              const formattedCurrentHour = currentHour
+                .toString()
+                .padStart(2, "0");
+
               return (
-                <TouchableOpacity
-                  key={items.id}
-                  className="w-36 h-10 border m-2 rounded"
-                  onPress={showModal}
-                ></TouchableOpacity>
+                hour !== formattedCurrentHour && ( // Exclude the current hour
+                  <TouchableOpacity
+                    key={key}
+                    className="w-36 h-10 border border-gray-400 m-2 rounded justify-center flex-row items-center"
+                    onPress={()=>{
+                      setPickervalue(`${item} : 00`)
+                      showModal()
+                    }}
+                  >
+                    <Text className="text-center font-bold text-lg m-1">
+                      {item}
+                    </Text>
+                    <Text className="font-bold text-lg m-1">:</Text>
+                    <Text className="font-bold text-lg m-1">00</Text>
+                  </TouchableOpacity>
+                )
               );
             })}
           </ScrollView>
@@ -204,8 +196,9 @@ const Main = ({ navigation }) => {
                   <View className="flex-row items-center">
                     <Feather name="clock" size={24} color="#008080" />
                     <Text className="ml-1 text-sm text-teal-700 font-bold">
-                      10:00 10:30 AM
+                      {pickervalue}
                     </Text>
+                    <Text className="ml-1 text-sm text-teal-700 font-bold">{pickervalue <= 12 ? "AM": "PM"}</Text>
                   </View>
                 </View>
               </View>
@@ -219,13 +212,29 @@ const Main = ({ navigation }) => {
             horizontal
             showsHorizontalScrollIndicator={false}
           >
-            {deliverydates.map((items, key) => {
+           {timeSlots.map((item, key) => {
+              const hour = item.toString().padStart(2, "0"); // Ensure two-digit format
+              const formattedCurrentHour = currentHour
+                .toString()
+                .padStart(2, "0");
+
               return (
-                <TouchableOpacity
-                  key={items.id}
-                  className="w-36 h-10 border m-2 rounded"
-                  onPress={showModal}
-                ></TouchableOpacity>
+                hour !== formattedCurrentHour && ( // Exclude the current hour
+                  <TouchableOpacity
+                    key={key}
+                    className="w-36 h-10 border border-gray-400 m-2 rounded justify-center flex-row items-center"
+                    onPress={() => {
+                      setPickervalue(`${item} : 00`);
+                      showModal();
+                    }}
+                  >
+                    <Text className="text-center font-bold text-lg m-1">
+                      {item}
+                    </Text>
+                    <Text className="font-bold text-lg m-1">:</Text>
+                    <Text className="font-bold text-lg m-1">00</Text>
+                  </TouchableOpacity>
+                )
               );
             })}
           </ScrollView>
