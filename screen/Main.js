@@ -5,18 +5,17 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
-  Modal,
   StyleSheet,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Entypo } from "@expo/vector-icons";
 import { DrawerActions } from "@react-navigation/native";
-import { Ionicons } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
 import { DateTimeContext } from "../context/DateProvider";
 import SelectAppointmentDate from "../components/SelectAppointmentDate";
+import Modalpop from "../components/Modalpop";
+import TimeSlots from "../components/TimeSlots";
+
 
 const Main = ({ navigation }) => {
   const insets = useSafeAreaInsets();
@@ -26,34 +25,20 @@ const Main = ({ navigation }) => {
     );
   };
   const [selectedItemId, setSelectedItemId] = useState(null);
- const [pickervalue,setPickervalue] = useState("")
+  const [pickervalue, setPickervalue] = useState("");
+  const [timeslots, setTimeslots] = useState(null);
   const OpenDrawer = () => {
     navigation.dispatch(DrawerActions.toggleDrawer());
   };
   const [modalVisible, setModalVisible] = useState(false);
-  //const [selectedItemIds, setSelectedItemIds] = useState(null);
-  //const handleItemSelects = (id) => {
-  //  setSelectedItemId(id);
-  //  setModalVisible(false);
-  //  console.log(`Selected item id: ${id}`);
-  //};
   const showModal = () => {
     setModalVisible(true);
   };
-  const { getFutureDate,timeSlots,currentHour } = useContext(DateTimeContext);
-  const [futureDates, setFutureDates] = useState([]);
-  useEffect(() => {
-    const dates = [];
-    for (let day = 0; day < 7; day++) {
-      const futureDateData = getFutureDate(Number(day));
-      dates.push({
-        id: day,
-        data: futureDateData,
-      });
-    }
-    setFutureDates(dates);
-  }, []);
-  
+  const { currentHour, futureDates, morningSlots, eveningSlots } =
+    useContext(DateTimeContext);
+  const handleTimeSlots = (itemId) => {
+    setTimeslots((prev) => (prev === itemId ? null : itemId));
+  };
   return (
     <View
       style={{
@@ -96,145 +81,76 @@ const Main = ({ navigation }) => {
           >
             {futureDates.map((items, key) => {
               return (
-                <SelectAppointmentDate
-                  key={key}
-                  day={items.data.day}
-                  daydate={items.data.date}
-                  id={items.id}
-                  selectedItemId={selectedItemId}
-                  onItemSelect={handleItemSelect}
-                />
+                <View>
+                  <SelectAppointmentDate
+                    key={key}
+                    day={items.data.day}
+                    daydate={items.data.date}
+                    id={items.id}
+                    selectedItemId={selectedItemId}
+                    onItemSelect={handleItemSelect}
+                    showModal={showModal}
+                  />
+                </View>
               );
             })}
           </ScrollView>
         </View>
         <View className="p-2 mt-5 ">
-          <Text className="text-lg text-orange-500 ml-2">Morning</Text>
-          <ScrollView
-            className=""
-            horizontal
-            showsHorizontalScrollIndicator={false}
-          >
-            {timeSlots.map((item, key) => {
-              const hour = item.toString().padStart(2, "0"); // Ensure two-digit format
-              const formattedCurrentHour = currentHour
-                .toString()
-                .padStart(2, "0");
-
-              return (
-                hour !== formattedCurrentHour && ( // Exclude the current hour
-                  <TouchableOpacity
-                    key={key}
-                    className="w-36 h-10 border border-gray-400 m-2 rounded justify-center flex-row items-center"
-                    onPress={()=>{
-                      setPickervalue(`${item} : 00`)
-                      showModal()
-                    }}
-                  >
-                    <Text className="text-center font-bold text-lg m-1">
-                      {item}
-                    </Text>
-                    <Text className="font-bold text-lg m-1">:</Text>
-                    <Text className="font-bold text-lg m-1">00</Text>
-                  </TouchableOpacity>
-                )
-              );
-            })}
-          </ScrollView>
-        </View>
-        <View style={styles.container}>
-          <Modal
-            transparent={true}
-            animationType="slide"
-            visible={modalVisible}
-            onRequestClose={() => setModalVisible(false)}
-          >
-            <View style={styles.modalOverlay} className="">
-              <View className="flex  bg-white w-80 rounded-lg">
-                <View className="p-2 ">
-                  <View className="flex-row items-center justify-between m-1">
-                    <Text className="font-bold text-lg text-teal-600">
-                      Your Appointment
-                    </Text>
-                    <TouchableOpacity onPress={() => setModalVisible(false)}>
-                      <Entypo name="squared-cross" size={30} color="black" />
-                    </TouchableOpacity>
-                  </View>
-                  <View className="m-1 flex-row items-center justify-between mt-3">
-                    <Image
-                      source={require("../assets/portrait-3d-female-doctor.jpg")}
-                      className="w-20 h-20 rounded-full"
+          <Text className="text-lg text-orange-500 ">Morning</Text>
+          {morningSlots.length > 0 ? (
+            <Text className="font-bold text-lg ml-2 for this period at the moment">
+              No time available for this period at the moment
+            </Text>
+          ) : (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {morningSlots.map((item, key) => {
+                const hour = item.time.toString().padStart(2, "0");
+                const formattedCurrentHour = currentHour
+                  .toString()
+                  .padStart(2, "0");
+                return (
+                  hour < formattedCurrentHour ||
+                  (hour !== formattedCurrentHour && currentHour < 12 && (
+                    <TimeSlots
+                      key={key}
+                      timeslots={timeslots}
+                      onItemSelect={handleTimeSlots}
+                      id={item.id}
+                      time={item.time}
                     />
-                    <View className="ml-2">
-                      <Text className="text-lg font-bold text-teal-700">
-                        Dr Emmanuella
-                      </Text>
-                      <Pressable className="bg-teal-600 p-2 rounded flex-row items-center mt-4">
-                        <Text className="text-white font-bold text-lg mr-2">
-                          Pay & Book
-                        </Text>
-                        <Ionicons
-                          name="arrow-forward"
-                          size={24}
-                          color="white"
-                        />
-                      </Pressable>
-                    </View>
-                  </View>
-                </View>
-                <View className="bg-teal-100 p-2 flex-row items-center justify-around rounded-lg mt-5">
-                  <View className="flex-row items-center">
-                    <MaterialIcons
-                      name="date-range"
-                      size={24}
-                      color="#008080"
-                    />
-                    <Text className="ml-1 text-sm font-bold text-teal-700">
-                      Monday 29, March
-                    </Text>
-                  </View>
-                  <View className="flex-row items-center">
-                    <Feather name="clock" size={24} color="#008080" />
-                    <Text className="ml-1 text-sm text-teal-700 font-bold">
-                      {pickervalue}
-                    </Text>
-                    <Text className="ml-1 text-sm text-teal-700 font-bold">{pickervalue <= 12 ? "AM": "PM"}</Text>
-                  </View>
-                </View>
-              </View>
-            </View>
-          </Modal>
+                  ))
+                );
+              })}
+            </ScrollView>
+          )}
         </View>
+        {/*Modal pop up section */}
+        <Modalpop
+          pickedvalue={pickervalue}
+          modalvalue={modalVisible}
+          day={futureDates[0].data.day}
+          month={futureDates[0].data.month}
+        />
         <View className="p-2 mt-5 ">
-          <Text className="text-lg text-orange-500 ml-2">Evening</Text>
-          <ScrollView
-            className=""
-            horizontal
-            showsHorizontalScrollIndicator={false}
-          >
-           {timeSlots.map((item, key) => {
-              const hour = item.toString().padStart(2, "0"); // Ensure two-digit format
+          <Text className="text-lg text-orange-500">Evening</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {eveningSlots.map((item, key) => {
+              const hour = item.time.toString().padStart(2, "0");
               const formattedCurrentHour = currentHour
                 .toString()
                 .padStart(2, "0");
-
               return (
-                hour !== formattedCurrentHour && ( // Exclude the current hour
-                  <TouchableOpacity
+                hour < formattedCurrentHour ||
+                (hour !== formattedCurrentHour && currentHour >= 12 && (
+                  <TimeSlots
                     key={key}
-                    className="w-36 h-10 border border-gray-400 m-2 rounded justify-center flex-row items-center"
-                    onPress={() => {
-                      setPickervalue(`${item} : 00`);
-                      showModal();
-                    }}
-                  >
-                    <Text className="text-center font-bold text-lg m-1">
-                      {item}
-                    </Text>
-                    <Text className="font-bold text-lg m-1">:</Text>
-                    <Text className="font-bold text-lg m-1">00</Text>
-                  </TouchableOpacity>
-                )
+                    timeslots={timeslots}
+                    onItemSelect={handleTimeSlots}
+                    id={item.id}
+                    time={item.time}
+                  />
+                ))
               );
             })}
           </ScrollView>
@@ -269,3 +185,36 @@ const styles = StyleSheet.create({
   },
 });
 export default Main;
+
+/*
+ 
+
+previous code
+<ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {timeSlots.map((item, key) => {
+              const hour = item.time.toString().padStart(2, "0"); // Ensure two-digit format
+              const formattedCurrentHour = currentHour
+                .toString()
+                .padStart(2, "0");
+              return hour >= 12 ? (
+                <View>
+                  <Text>No time available at this moment </Text>
+                </View>
+              ) : (
+                hour < currentHour ||
+                  (hour !== formattedCurrentHour && ( // Exclude the current hour
+                    // and also since the startime is set to 8 it prevents the display of the time once it is passed
+                    <TimeSlots
+                      key={key}
+                      timeslots={timeslots}
+                      onItemSelect={handleTimeSlots}
+                      id={item.id}
+                      time={item.time}
+                    />
+                  ))
+              );
+            })}
+          </ScrollView>
+
+
+*/

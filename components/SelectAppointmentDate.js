@@ -2,7 +2,7 @@ import { Text, TouchableOpacity,View } from 'react-native'
 import React, { useState } from 'react'
 
 
-const SelectAppointmentDate = ({ id, day, daydate, selectedItemId, onItemSelect }) => {
+const SelectAppointmentDate = ({ id, day, daydate, selectedItemId, onItemSelect,showModal }) => {
   const handleSelect = () => {
     onItemSelect(id);
   };
@@ -15,7 +15,10 @@ const SelectAppointmentDate = ({ id, day, daydate, selectedItemId, onItemSelect 
             ? "w-12 m-2 h-14 mt-1 border items-center justify-center border-teal-400 bg-teal-400 rounded"
             : "w-12 m-2 h-14 mt-1 border items-center justify-center border-teal-400 rounded"
         }
-        onPress={handleSelect}
+        onPress={()=>{
+          handleSelect
+          showModal()
+        }}
         key={id}
       >
         <Text className={"font-bold"}>{daydate.split("/")[1]}</Text>
