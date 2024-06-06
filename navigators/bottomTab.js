@@ -6,6 +6,8 @@ import Profile from '../screen/Profile';
 import SearchDoctor from '../screen/SearchDoctor';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from "@expo/vector-icons";
+import MainHome from '../screen/MainHome';
+import VideoAppointments from '../screen/VideoAppointments';
 
 const Tab = createBottomTabNavigator()
 
@@ -14,12 +16,10 @@ const BottomTab = () => {
     <Tab.Navigator>
       <Tab.Screen
         name="home"
-        component={Main}
+        component={MainHome}
         options={{
           headerShown: false,
-          tabBarIcon: () => (
-            <AntDesign name='home' size={24} color="black"/>
-          )
+          tabBarIcon: () => <AntDesign name="home" size={24} color="black" />,
         }}
       />
       <Tab.Screen
@@ -30,7 +30,6 @@ const BottomTab = () => {
           tabBarIcon: () => (
             <Ionicons name="notifications-outline" size={24} color="black" />
           ),
-        
         }}
       />
 
@@ -39,14 +38,20 @@ const BottomTab = () => {
         component={SearchDoctor}
         options={{
           headerShown: false,
-          tabBarIcon: () => (
-            <Ionicons name="search" size={24} color="black" />
-          ),
+          tabBarIcon: () => <Ionicons name="search" size={24} color="black" />,
         }}
       />
       <Tab.Screen
         name="profile"
         component={Profile}
+        options={{
+          headerShown: false,
+          tabBarIcon: () => <AntDesign name="user" size={24} color="black" />,
+        }}
+      />
+      <Tab.Screen
+        name="videoappointment"
+        component={VideoAppointments}
         options={{
           headerShown: false,
           tabBarIcon: () => <AntDesign name="user" size={24} color="black" />,

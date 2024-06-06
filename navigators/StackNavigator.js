@@ -2,6 +2,8 @@ import React from 'react'
 import { createStackNavigator } from "@react-navigation/stack";
 import DrawerNavigator from './drawerNavigation';
 import Doctor from '../screen/Doctor';
+import Main from '../screen/Main';
+
 
 
 const stack = createStackNavigator();
@@ -24,6 +26,13 @@ const StackNavigator = () => {
         options={{
           headerShown: false,
         }}
+      />
+      <stack.Screen
+      name='appointment'
+      component={Main}
+      options={{ 
+        headerShown:false
+       }}
       />
     </stack.Navigator>
   );

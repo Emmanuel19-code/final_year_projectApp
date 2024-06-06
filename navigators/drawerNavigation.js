@@ -7,6 +7,8 @@ import Help from '../screen/Help';
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
+import SearchDoctor from '../screen/SearchDoctor';
+import { Ionicons } from "@expo/vector-icons";
 
 const Drawer = createDrawerNavigator()
 
@@ -69,6 +71,23 @@ const DrawerNavigator = () => {
           headerShown: false,
           drawerIcon: ({}) => (
             <FontAwesome5 name="hands-helping" size={24} color="black" />
+          ),
+          drawerLabelStyle: {
+            marginLeft: -25,
+            fontSize: 16, // Adjust size as needed
+            fontWeight: "bold", // Adjust weight as needed
+            color: "black", // Adjust color as needed
+          },
+        }}
+      />
+      <Drawer.Screen
+        name="searchdoc"
+        component={SearchDoctor}
+        options={{
+          headerShown: false,
+          drawerLabel: "Search a for Doctor",
+          drawerIcon: ({}) => (
+            <Ionicons name="search" size={24} color="black" />
           ),
           drawerLabelStyle: {
             marginLeft: -25,

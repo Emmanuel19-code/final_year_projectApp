@@ -4,10 +4,9 @@ import {
   Pressable,
   Image,
   ScrollView,
-  TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext,  useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Entypo } from "@expo/vector-icons";
 import { DrawerActions } from "@react-navigation/native";
@@ -56,7 +55,7 @@ const Main = ({ navigation }) => {
             <Pressable onPress={OpenDrawer}>
               <Entypo name="menu" size={30} color="white" />
             </Pressable>
-            <Text className="ml-1 text-white text-lg">Home</Text>
+            <Text className="ml-1 text-white text-lg">Appointment</Text>
           </View>
         </View>
         <View className="m-1 flex-row items-center">

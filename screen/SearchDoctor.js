@@ -8,7 +8,7 @@ import { EvilIcons } from "@expo/vector-icons";
  import { Entypo } from "@expo/vector-icons";
 import DisplayDoc from "../components/DisplayDoc";
 
-const SearchDoctor = () => {
+const SearchDoctor = ({navigation}) => {
     // this is used to set the safeareaview
     const insets = useSafeAreaInsets();
      const [isloading, setIsloading] = useState(false);
@@ -29,12 +29,12 @@ const SearchDoctor = () => {
       }}
     >
       <ScrollView className=" h-full">
-        <View className=" bg-blue-200 h-12 justify-center">
+        <View className="  h-12 justify-center">
           <View className="flex-row items-center ">
             <Pressable onPress={OpenDrawer}>
-              <Entypo name="menu" size={30} color="white" />
+              <Entypo name="menu" size={30} color="black" />
             </Pressable>
-            <Text className="ml-3 text-white text-lg">Doctors</Text>
+            <Text className="ml-3 text-gray-500 text-xl">Doctors</Text>
           </View>
         </View>
         <View className="p-1">
