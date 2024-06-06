@@ -10,11 +10,14 @@ const AppointmentProvider = ({ children }) => {
       const cancelappointment = () =>{
 
       }
-      
+      const appointmentReschedule = () =>{
+
+      }
   return (
       <AppointmentContext.Provider value={{ 
          bookappointment,
-         cancelappointment
+         cancelappointment,
+         appointmentReschedule
        }}>
         {children}
     </AppointmentContext.Provider>

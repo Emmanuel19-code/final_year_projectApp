@@ -8,12 +8,13 @@ const AuthProvider = ({ children }) => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [name,setName] = useState("")
   const RegisterAccount = () => {};
   const loginAccount = async () => {
     await axios(apiurl);
   };
   const forgotpassword = async () => {};
+  const profile = async () =>{}
   return (
     <AuthApiContext.Provider
       value={{
@@ -23,6 +24,9 @@ const AuthProvider = ({ children }) => {
         password,
         setPassword,
         RegisterAccount,
+        name,
+        setName,
+        profile
       }}
     >
       {children}
