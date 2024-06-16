@@ -1,8 +1,10 @@
-import { createContext } from "react";
+import { createContext, useState } from "react";
 
 export const AppointmentContext = createContext();
 
 const AppointmentProvider = ({ children }) => {
+      const [time,setTime] = useState("")
+      const [date,setDate] = useState("")
 
       const bookappointment = () =>{
           

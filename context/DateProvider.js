@@ -13,6 +13,9 @@ const DateTimeProvider = ({ children }) => {
   const [timeSlots, setTimeSlots] = useState([]);
   const [currentHour, setCurrentHour] = useState(0);
   const [futureDates, setFutureDates] = useState([]);
+  const [showModal,setShowModal] = useState(false)
+  const [pickedDay,setPickedDay] = useState("")
+  const [pickedTime, setPickedTime] = useState("");
   const updateDateTime = () => {
     const now = new Date();
     const days = [
@@ -140,6 +143,14 @@ const DateTimeProvider = ({ children }) => {
 
   // Filtered evening slots
   const eveningSlots = timeSlots.filter((item) => item.time >= 12);
+
+  const handlemodal = () =>{
+      if(!showModal){
+         setShowModal(true)
+      }else{
+        showModal(!false)
+      }
+  }
   return (
     <DateTimeContext.Provider
       value={{
@@ -149,7 +160,13 @@ const DateTimeProvider = ({ children }) => {
         currentHour,
         futureDates,
         morningSlots,
-        eveningSlots
+        eveningSlots,
+        handlemodal,
+        showModal,
+        pickedDay,
+        setPickedDay,
+        pickedTime,
+        setPickedTime
       }}
     >
       {children}

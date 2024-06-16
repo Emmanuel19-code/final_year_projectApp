@@ -1,13 +1,10 @@
 import React from 'react'
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Main from '../screen/Main';
 import Notification from '../screen/Notification';
-import Profile from '../screen/Profile';
-import SearchDoctor from '../screen/SearchDoctor';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from "@expo/vector-icons";
 import MainHome from '../screen/MainHome';
-import VideoAppointments from '../screen/VideoAppointments';
+import Appointments from '../screen/Appointments';
 
 const Tab = createBottomTabNavigator()
 
@@ -32,16 +29,15 @@ const BottomTab = () => {
           ),
         }}
       />
-
       <Tab.Screen
-        name="searchdoc"
-        component={SearchDoctor}
-        options={{
-          headerShown: false,
-          tabBarIcon: () => <Ionicons name="search" size={24} color="black" />,
-        }}
+      name='appointments'
+      component={Appointments}
+      options={{ 
+        headerShown:false
+       }}
       />
-      <Tab.Screen
+      {/*
+       <Tab.Screen
         name="profile"
         component={Profile}
         options={{
@@ -49,7 +45,9 @@ const BottomTab = () => {
           tabBarIcon: () => <AntDesign name="user" size={24} color="black" />,
         }}
       />
-      <Tab.Screen
+    */}
+      {/*
+        <Tab.Screen
         name="videoappointment"
         component={VideoAppointments}
         options={{
@@ -57,6 +55,7 @@ const BottomTab = () => {
           tabBarIcon: () => <AntDesign name="user" size={24} color="black" />,
         }}
       />
+        */}
     </Tab.Navigator>
   );
 }

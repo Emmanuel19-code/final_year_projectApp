@@ -4,17 +4,20 @@ import StackNavigator from "./navigators/StackNavigator";
 import DateTimeProvider from "./context/DateProvider";
 import AuthProvider from "./context/authapi";
 import AppointmentProvider from "./context/AppointmentProvider";
+import HealthworkerProvider from "./context/healthworker";
 
 export default function App() {
   return (
     <AuthProvider>
       <AppointmentProvider>
         <DateTimeProvider>
-          <SafeAreaProvider>
-            <NavigationContainer>
-              <StackNavigator />
-            </NavigationContainer>
-          </SafeAreaProvider>
+          <HealthworkerProvider>
+            <SafeAreaProvider>
+              <NavigationContainer>
+                <StackNavigator />
+              </NavigationContainer>
+            </SafeAreaProvider>
+          </HealthworkerProvider>
         </DateTimeProvider>
       </AppointmentProvider>
     </AuthProvider>

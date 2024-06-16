@@ -16,6 +16,9 @@ import VideoNotify from "../components/VideoNotify";
 
 const VideoAppointments = () => {
      const insets = useSafeAreaInsets();
+     const OpenDrawer = () => {
+       navigation.dispatch(DrawerActions.toggleDrawer());
+     };
   return (
     <View
       style={{
@@ -32,7 +35,7 @@ const VideoAppointments = () => {
           <Entypo name="menu" size={32} color="#046C4E" />
         </Pressable>
         <Text className=" ml-3 text-[#046C4E] text-2xl font-bold">
-          Notification
+          Video Call Notifications
         </Text>
       </View>
       <ScrollView className="p-2 m-2" showsVerticalScrollIndicator={false}>

@@ -5,10 +5,12 @@ import {
 } from "react-native";
 import React from "react";
 
+
 const TimeSlots = ({time,onItemSelect,id,timeslots}) => {
-     const handleSelect = () => {
-       onItemSelect(id);
-     };
+       const handleSelect = () => {
+         onItemSelect(id);
+         console.log(timeslots);
+       };
   return (
     <TouchableOpacity
       className={
