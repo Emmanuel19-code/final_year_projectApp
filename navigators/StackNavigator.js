@@ -7,6 +7,7 @@ import Login from "../screen/Login";
 import Register from "../screen/Register";
 import VerifyEmail from "../screen/VerifyEmail";
 import HealthCareAuth from "../screen/HealthCareAuth";
+import ConsultantRegister from "../screen/ConsultantRegister";
 
 const stack = createStackNavigator();
 
@@ -28,10 +29,10 @@ const StackNavigator = () => {
         }}
       />
       <stack.Screen
-       name="healthprofessionalauth"
-       component={HealthCareAuth}
-       options={{ 
-        headerShown:false
+        name="healthprofessionalauth"
+        component={HealthCareAuth}
+        options={{
+          headerShown: false,
         }}
       />
       <stack.Screen
@@ -58,6 +59,13 @@ const StackNavigator = () => {
       <stack.Screen
         name="verifyemail"
         component={VerifyEmail}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <stack.Screen
+        name="consultantregister"
+        component={ConsultantRegister}
         options={{
           headerShown: false,
         }}

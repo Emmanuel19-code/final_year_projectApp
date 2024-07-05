@@ -1,49 +1,45 @@
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
-import React, { useContext, useState,useRef,useEffect } from "react";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import React, { useContext, useState, useRef, useEffect } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 import { AllPostRequest } from "../context/allpostRequest";
 import * as Progress from "react-native-progress";
 
-const Register = ({navigation}) => {
+const ConsultantRegister = ({ navigation }) => {
   const insets = useSafeAreaInsets();
-  const [email,setEmail] = useState("")
-  const [phone,setPhone] = useState("")
-  const [password,setPassword] = useState("")
-  const [name,setName] = useState("")
-  const [confirm_pass,setConfirm_pass] = useState("")
-  const [isloading,setIsloading] = useState(false)
-  const {UserSignUp,error_message,setError_message} = useContext(AllPostRequest)
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [confirm_pass, setConfirm_pass] = useState("");
+  const [healthWorkerId,setHealthWorkerId] = useState("")
+  const [isloading, setIsloading] = useState(false);
+  const { ConsultantSignUp, error_message, setError_message } =
+    useContext(AllPostRequest);
 
-   useEffect(() => {
-     if (error_message) {
-      setIsloading(false)
-       const timer = setTimeout(() => {
-         setError_message("");
-       }, 10000);
-       return () => clearTimeout(timer);
-     }
-   }, [error_message, setError_message]);
+  useEffect(() => {
+    if (error_message) {
+      setIsloading(false);
+      const timer = setTimeout(() => {
+        setError_message("");
+      }, 10000);
+      return () => clearTimeout(timer);
+    }
+  }, [error_message, setError_message]);
 
-  const user = async () => {
+  const consultant = async () => {
     setIsloading(true);
     if (password !== confirm_pass) {
       setError_message("Passwords do not match");
-      setIsloading(false)
+      setIsloading(false);
     }
-    const response = await UserSignUp(name, email, password, phone);
+    const response = await ConsultantSignUp(name,email,password,healthWorkerId, phone);
     if (response) {
       setIsloading(false);
-      navigation.navigate("SomeOtherScreen");
+      navigation.navigate("verifyemail");
     }
   };
- 
-  
+
   return (
     <View
       style={{
@@ -56,25 +52,20 @@ const Register = ({navigation}) => {
     >
       <View className="p-2  h-screen ">
         <View className="mt-5">
-          <Text className="text-xl font-bold m-1">Create Account</Text>
-          <View className="flex flex-row items-center m-1">
-            <Text className="text-gray-300 ">Already have an account?</Text>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("login")}
-              className=""
-            >
-              <Text className="ml-2 text-blue-600  font-bold">Sign In</Text>
-            </TouchableOpacity>
-          </View>
+          <Text className="text-xl font-bold m-1">
+            Consultant Create Account
+          </Text>
           <View className="flex flex-row items-center m-1">
             <Text className="text-gray-300">A Healthcare Professional ?</Text>
-            <TouchableOpacity onPress={() => navigation.navigate("consultantregister")}>
-              <Text className="ml-2 text-blue-600 font-bold">Sign Up Here</Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("healthprofessionalauth")}
+            >
+              <Text className="ml-2 text-blue-600 font-bold">Sign In</Text>
             </TouchableOpacity>
           </View>
         </View>
         <View className="m-2">
-          <Text className="m-1">Full Name</Text>
+          <Text className="m-1">Consultant Full Name</Text>
           <TextInput
             placeholder="***********"
             className="border border-gray-400 p-1"
@@ -89,6 +80,15 @@ const Register = ({navigation}) => {
             className="border border-gray-400 p-1"
             value={email}
             onChangeText={(text) => setEmail(text)}
+          />
+        </View>
+        <View className="m-2">
+          <Text className="m-1">Lincense Number</Text>
+          <TextInput
+            placeholder="***********"
+            className="border border-gray-400 p-1 "
+            value={healthWorkerId}
+            onChangeText={(text) => setHealthWorkerId(text)}
           />
         </View>
         <View className="m-2">
@@ -120,7 +120,7 @@ const Register = ({navigation}) => {
         </View>
         <TouchableOpacity
           className="bg-blue-700 p-3 rounded m-2 flex items-center flex-row justify-center"
-          onPress={user}
+          onPress={consultant}
         >
           {isloading && (
             <View className="mr-4">
@@ -139,4 +139,4 @@ const Register = ({navigation}) => {
   );
 };
 
-export default Register;
+export default ConsultantRegister;

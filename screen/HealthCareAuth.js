@@ -1,9 +1,11 @@
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import React, { useContext, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { AllPostRequest } from "../context/allpostRequest";
 
 const HealthCareAuth = ({navigation}) => {
   const insets = useSafeAreaInsets();
+ 
   return (
     <View
       style={{
@@ -16,20 +18,11 @@ const HealthCareAuth = ({navigation}) => {
     >
       <View className="p-2  h-screen ">
         <View className="mt-5">
-          <Text className="text-xl font-bold m-1">Sign In</Text>
-          <View className="flex flex-row items-center m-1">
-            <Text className="text-gray-300 ">Don't have an account?</Text>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("register")}
-              className=""
-            >
-              <Text className="ml-2 text-blue-600  font-bold">Sign Up</Text>
-            </TouchableOpacity>
-          </View>
+          <Text className="text-xl font-bold m-1">Consultant Sign In</Text>
           <View className="flex flex-row items-center m-1">
             <Text className="text-gray-300">A Healthcare Professional ?</Text>
-            <TouchableOpacity onPress={() => navigation.navigate("register")}>
-              <Text className="ml-2 text-blue-600 font-bold">Sign In Here</Text>
+            <TouchableOpacity onPress={() => navigation.navigate("consultantregister")}>
+              <Text className="ml-2 text-blue-600 font-bold">Sign Up Here</Text>
             </TouchableOpacity>
           </View>
         </View>

@@ -6,7 +6,6 @@ import {
   TextInput,
   Pressable,
   ScrollView,
-  Image,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -14,20 +13,23 @@ import { EvilIcons } from "@expo/vector-icons";
 import { DrawerActions } from "@react-navigation/native";
 import { Entypo } from "@expo/vector-icons";
 import DisplayDoc from "../components/DisplayDoc";
-import { HealthContext } from "../context/healthworker";
+import AllGetRequest from "../context/allgetRequest";
+
 
 const SearchDoctor = ({ navigation }) => {
-  // this is used to set the safeareaview
   const insets = useSafeAreaInsets();
-  //this function is used to toggle the drawer menu
+  const [search,setSearch] = useState("")
+  const [isloading,setIsloading] = useState(false)
   const OpenDrawer = () => {
     navigation.dispatch(DrawerActions.toggleDrawer());
   };
-  const { getAllworkers, isLoading, setSearch, search } =
-    useContext(HealthContext);
-  useEffect(() => {
-    getAllworkers();
-  }, []);
+  //const {error_message} = useContext(AllGetRequest)
+  //useEffect(()=>{
+  //  if(search !== ""){
+  //    setIsloading(true)
+  //    //getAllConsutlant(search);
+  //  }
+  //},[search])
   return (
     <View
       style={{
@@ -60,15 +62,20 @@ const SearchDoctor = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         </View>
-        <DisplayDoc />
-        <DisplayDoc />
-        <DisplayDoc />
-        <DisplayDoc />
-        {isLoading && (
+          <DisplayDoc/>
+          <DisplayDoc/>
+        {/**
+           * {isloading && (
           <View className="flex-1 justify-center items-center">
             <ActivityIndicator size={"large"} color={"blue"} />
           </View>
         )}
+             {error_message && (
+          <Text>Error while getting the doctors.. please try again</Text>
+        )}
+           * 
+           * 
+           */}
       </ScrollView>
     </View>
   );
