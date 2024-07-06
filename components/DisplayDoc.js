@@ -3,7 +3,7 @@ import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-const DisplayDoc = () => {
+const DisplayDoc = ({name,speciality,healthworkerId}) => {
   const navigation = useNavigation()
   return (
     <TouchableOpacity
@@ -17,8 +17,8 @@ const DisplayDoc = () => {
         />
       </View>
       <View className="ml-4 flex-1">
-        <Text className="font-bold text-lg">Dr. Rita</Text>
-        <Text className="text-sm text-gray-500">Dietician</Text>
+        <Text className="font-bold text-lg">Dr {name}</Text>
+        <Text className="text-sm text-gray-500">{speciality}</Text>
       </View>
       <View>
         <Icon name="chevron-right" size={20} color="#4A5568" />

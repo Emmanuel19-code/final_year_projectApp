@@ -8,6 +8,7 @@ const CONSULTANT_BASE_URL = "https://final-year-backend-35ph.onrender.com/api/v1
 
 const AllPostProvider = ({ children }) => {
   const [error_message, setError_message] = useState("");
+  const [sucess_message,setSucess_message] = useState("")
   const UserSignUp = async (name, email, password, phone) => {
     let data = {
       name: name,
@@ -17,10 +18,12 @@ const AllPostProvider = ({ children }) => {
     };
     try {
       const response = await axios.post(`${USER_BASE_URL}/register`, data);
+      console.log(response);
       if (response) {
         return response;
       }
     } catch (error) {
+      console.log(error);
       if (error.response) {
         setError_message(error.response.data.msg);
       }
@@ -32,22 +35,45 @@ const AllPostProvider = ({ children }) => {
       password: password,
     };
     try {
-      const response = await axios.post(`${USER_BASE_URL}/register`, data);
-      console.log(response);
+      const response = await axios.post(`${USER_BASE_URL}/login`, data, {
+        timeout: 10000, // Set timeout to 10 seconds
+      });
+      setSucess_message(response.data.message);
     } catch (error) {
-      if (error.response) {
+      console.log(error);
+      if (error.code === "ECONNABORTED") {
+        setError_message("The request took too long. Please try again.");
+      } else if (!error.response) {
+        setError_message("A network error occurred");
+      } else {
         setError_message(error.response.data.msg);
       }
     }
   };
   //
-  const VerifyUser = async () => {
+  const VerifyUser = async (data) => {
     try {
-      const response = await axios.post(`${USER_BASE_URL}`, data);
+      const response = await axios.post(`${USER_BASE_URL}`, data, {
+        timeout: 10000, // Set timeout to 10 seconds
+        timeoutErrorMessage: "The request took too long. Please try again.",
+      });
       return response;
     } catch (error) {
-      if (error.response) {
-        setError_message(error.response.data.msg);
+      if (error.code === "ECONNABORTED") {
+        // Handle timeout error
+        setError_message(
+          error.message || "The request took too long. Please try again."
+        );
+      } else if (!error.response) {
+        // Handle network error
+        setError_message(
+          "A network error occurred. Please check your internet connection and try again."
+        );
+      } else {
+        // Handle other errors
+        setError_message(
+          error.response.data.msg || "An error occurred. Please try again."
+        );
       }
     }
   };
@@ -82,6 +108,23 @@ const AllPostProvider = ({ children }) => {
        }
     }
   }
+
+  //search for a doctor
+  const SearchConsultant = async (search) =>{
+     const data ={
+       search:search
+     }
+    try {
+      const response = await axios.post(
+        `${CONSULTANT_BASE_URL}/searchworker`,data
+      );
+      return response.data
+    } catch (error) {
+       if (error.response) {
+         setError_message(error.response.data.msg);
+       }
+    }
+  }
   return (
     <AllPostRequest.Provider
       value={{
@@ -91,7 +134,10 @@ const AllPostProvider = ({ children }) => {
         UserSignIn,
         VerifyUser,
         ConsultantSignUp,
-        ConsultantSignIn
+        ConsultantSignIn,
+        setSucess_message,
+        sucess_message,
+        SearchConsultant
       }}
     >
       {children}

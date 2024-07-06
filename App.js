@@ -2,14 +2,15 @@ import { NavigationContainer } from "@react-navigation/native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import StackNavigator from "./navigators/StackNavigator";
 import DateTimeProvider from "./context/DateProvider";
-import AuthProvider from "./context/authapi";
 import AppointmentProvider from "./context/AppointmentProvider";
 import AllPostProvider from "./context/allpostRequest";
 import AllGetProvider from "./context/allgetRequest";
+import store from "./store/store";
+import { Provider } from "react-redux";
 
 export default function App() {
   return (
-    <AuthProvider>
+    <Provider store={store}>
       <AllPostProvider>
         <AllGetProvider>
           <AppointmentProvider>
@@ -23,6 +24,6 @@ export default function App() {
           </AppointmentProvider>
         </AllGetProvider>
       </AllPostProvider>
-    </AuthProvider>
+    </Provider>
   );
 }

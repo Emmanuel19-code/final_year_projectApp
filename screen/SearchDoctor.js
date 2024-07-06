@@ -13,23 +13,42 @@ import { EvilIcons } from "@expo/vector-icons";
 import { DrawerActions } from "@react-navigation/native";
 import { Entypo } from "@expo/vector-icons";
 import DisplayDoc from "../components/DisplayDoc";
-import AllGetRequest from "../context/allgetRequest";
-
+import { AllPostRequest } from "../context/allpostRequest";
 
 const SearchDoctor = ({ navigation }) => {
   const insets = useSafeAreaInsets();
-  const [search,setSearch] = useState("")
-  const [isloading,setIsloading] = useState(false)
+  const [search, setSearch] = useState("");
+  const [isloading, setIsloading] = useState(false);
+  const [data, setData] = useState([]);
   const OpenDrawer = () => {
     navigation.dispatch(DrawerActions.toggleDrawer());
   };
-  //const {error_message} = useContext(AllGetRequest)
-  //useEffect(()=>{
-  //  if(search !== ""){
-  //    setIsloading(true)
-  //    //getAllConsutlant(search);
-  //  }
-  //},[search])
+  const { SearchConsultant, error_message, setError_message } =
+    useContext(AllPostRequest);
+
+  const Search = async () => {
+    if (search.trim() === "") {
+      setData([]);
+      return;
+    }
+    setIsloading(true);
+    let response = await SearchConsultant(search.trim());
+    setIsloading(false);
+    if (response) {
+      setData(response.msg);
+    }
+  };
+
+  useEffect(() => {
+    if (error_message) {
+      setIsloading(false);
+      const timer = setTimeout(() => {
+        setError_message("");
+      }, 10000);
+      return () => clearTimeout(timer);
+    }
+  }, [error_message, setError_message]);
+
   return (
     <View
       style={{
@@ -40,9 +59,9 @@ const SearchDoctor = ({ navigation }) => {
         paddingRight: insets.right,
       }}
     >
-      <ScrollView className=" h-full">
-        <View className="  h-12 justify-center">
-          <View className="flex-row items-center ">
+      <ScrollView className="h-full">
+        <View className="h-12 justify-center">
+          <View className="flex-row items-center">
             <Pressable onPress={OpenDrawer}>
               <Entypo name="menu" size={30} color="black" />
             </Pressable>
@@ -57,25 +76,28 @@ const SearchDoctor = ({ navigation }) => {
               onChangeText={(text) => setSearch(text)}
               className="flex-1"
             />
-            <TouchableOpacity>
+            <TouchableOpacity onPress={Search}>
               <EvilIcons name="search" size={30} color="black" />
             </TouchableOpacity>
           </View>
         </View>
-          <DisplayDoc/>
-          <DisplayDoc/>
-        {/**
-           * {isloading && (
-          <View className="flex-1 justify-center items-center">
-            <ActivityIndicator size={"large"} color={"blue"} />
+        {search !== "" &&
+          data &&
+          data.map((item, index) => (
+            <DisplayDoc
+              key={index}
+              name={item.name}
+              speciality={item?.speciality}
+            />
+          ))}
+        {isloading && (
+          <View className="flex-1 justify-center mt-20 items-center">
+            <ActivityIndicator size={"large"} color={"#3b82f6"} />
           </View>
         )}
-             {error_message && (
-          <Text>Error while getting the doctors.. please try again</Text>
+        {error_message && (
+          <Text className="text-center mt-10">{error_message}</Text>
         )}
-           * 
-           * 
-           */}
       </ScrollView>
     </View>
   );

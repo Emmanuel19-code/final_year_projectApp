@@ -8,69 +8,64 @@ import Register from "../screen/Register";
 import VerifyEmail from "../screen/VerifyEmail";
 import HealthCareAuth from "../screen/HealthCareAuth";
 import ConsultantRegister from "../screen/ConsultantRegister";
+import { useSelector } from "react-redux";
+import { selectloggedIn } from "../store/authSlice";
 
-const stack = createStackNavigator();
+const Stack = createStackNavigator();
 
 const StackNavigator = () => {
+  const isLogged = useSelector(selectloggedIn);
+
   return (
-    <stack.Navigator>
-      <stack.Screen
-        name="login"
-        component={Login}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <stack.Screen
-        name="register"
-        component={Register}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <stack.Screen
-        name="healthprofessionalauth"
-        component={HealthCareAuth}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <stack.Screen
-        name="home"
-        component={DrawerNavigator}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <stack.Screen
-        name="doctor"
-        component={Doctor}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <stack.Screen
-        name="appointment"
-        component={Main}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <stack.Screen
-        name="verifyemail"
-        component={VerifyEmail}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <stack.Screen
-        name="consultantregister"
-        component={ConsultantRegister}
-        options={{
-          headerShown: false,
-        }}
-      />
-    </stack.Navigator>
+    <Stack.Navigator>
+      {isLogged ? (
+        <>
+          <Stack.Screen
+            name="home"
+            component={DrawerNavigator}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="doctor"
+            component={Doctor}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="appointment"
+            component={Main}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="verifyemail"
+            component={VerifyEmail}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="consultantregister"
+            component={ConsultantRegister}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="healthprofessionalauth"
+            component={HealthCareAuth}
+            options={{ headerShown: false }}
+          />
+        </>
+      ) : (
+        <>
+          <Stack.Screen
+            name="login"
+            component={Login}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="register"
+            component={Register}
+            options={{ headerShown: false }}
+          />
+        </>
+      )}
+    </Stack.Navigator>
   );
 };
 

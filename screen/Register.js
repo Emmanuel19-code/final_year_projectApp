@@ -39,7 +39,7 @@ const Register = ({navigation}) => {
     const response = await UserSignUp(name, email, password, phone);
     if (response) {
       setIsloading(false);
-      navigation.navigate("SomeOtherScreen");
+      //navigation.navigate("SomeOtherScreen");
     }
   };
  
