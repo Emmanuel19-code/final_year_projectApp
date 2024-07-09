@@ -29,12 +29,12 @@ const SearchDoctor = ({ navigation }) => {
   const Search = async () => {
     if (search.trim() === "") {
       setData([]);
-      return;
+     return  
     }
     setIsloading(true);
     let response = await SearchConsultant(search.trim());
-    setIsloading(false);
     if (response) {
+      setIsloading(false)
       setData(response.msg);
     }
   };
@@ -82,7 +82,7 @@ const SearchDoctor = ({ navigation }) => {
           </View>
         </View>
         {search !== "" &&
-          data &&
+          data.length > 0 &&
           data.map((item, index) => (
             <DisplayDoc
               key={index}

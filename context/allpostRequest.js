@@ -5,7 +5,8 @@ export const AllPostRequest = createContext();
 
 const USER_BASE_URL ="https://final-year-backend-35ph.onrender.com/api/v1/user";
 const CONSULTANT_BASE_URL = "https://final-year-backend-35ph.onrender.com/api/v1/consultant";
-
+const token =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVJZCI6ImM0NjRmMWQ0IiwibmFtZSI6IkVtbWFudWVsIEFkYW5lIEJvc2VhIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MjA1Mzc5MzcsImV4cCI6MTcyMDYyNDMzN30.DFZdy67oAx2afrTwgGnnBKWrsMseAvikDD-RxO88AE0";
 const AllPostProvider = ({ children }) => {
   const [error_message, setError_message] = useState("");
   const [sucess_message,setSucess_message] = useState("")
@@ -125,6 +126,19 @@ const AllPostProvider = ({ children }) => {
        }
     }
   }
+
+  const UserSendMessage = async (data) =>{
+    try {
+      const response = await axios.post(`${USER_BASE_URL}/send_message`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response
+    } catch (error) {
+      console.log(error);
+    } 
+  }
   return (
     <AllPostRequest.Provider
       value={{
@@ -137,7 +151,8 @@ const AllPostProvider = ({ children }) => {
         ConsultantSignIn,
         setSucess_message,
         sucess_message,
-        SearchConsultant
+        SearchConsultant,
+        UserSendMessage
       }}
     >
       {children}

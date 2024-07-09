@@ -1,6 +1,6 @@
 import { View, Text,ScrollView,Image } from 'react-native'
 import React from 'react'
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import {  useSafeAreaInsets } from "react-native-safe-area-context";
 import MapView, { Marker } from "react-native-maps";
 
 import HospitalOnMap from '../components/HospitalOnMap';

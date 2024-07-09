@@ -10,6 +10,7 @@ import HealthCareAuth from "../screen/HealthCareAuth";
 import ConsultantRegister from "../screen/ConsultantRegister";
 import { useSelector } from "react-redux";
 import { selectloggedIn } from "../store/authSlice";
+import ChatPage from "../screen/ChatPage";
 
 const Stack = createStackNavigator();
 
@@ -36,19 +37,11 @@ const StackNavigator = () => {
             options={{ headerShown: false }}
           />
           <Stack.Screen
-            name="verifyemail"
-            component={VerifyEmail}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="consultantregister"
-            component={ConsultantRegister}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="healthprofessionalauth"
-            component={HealthCareAuth}
-            options={{ headerShown: false }}
+           name="chatpage"
+           component={ChatPage}
+           options={{ 
+               headerShown:false
+            }}
           />
         </>
       ) : (
@@ -61,6 +54,21 @@ const StackNavigator = () => {
           <Stack.Screen
             name="register"
             component={Register}
+            options={{ headerShown: false }}
+          />
+           <Stack.Screen
+            name="verifyemail"
+            component={VerifyEmail}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="consultantregister"
+            component={ConsultantRegister}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="healthprofessionalauth"
+            component={HealthCareAuth}
             options={{ headerShown: false }}
           />
         </>
