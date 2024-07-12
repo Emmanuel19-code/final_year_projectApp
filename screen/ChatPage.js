@@ -4,11 +4,14 @@ import {
   ScrollView,
   TextInput,
   TouchableOpacity,
+  Image,
+  Pressable
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AllGetRequest } from "../context/allgetRequest";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import { AllPostRequest } from "../context/allpostRequest";
 import { io } from "socket.io-client";
 import { useSelector } from "react-redux";
@@ -43,7 +46,7 @@ const ChatPage = ({ route, navigation }) => {
       });
     }
   }, [socket]);
-
+ 
   const fetchMessages = async () => {
     let data = await GetMessagesInConversations(conversationId);
     setData(data);
@@ -72,18 +75,18 @@ const ChatPage = ({ route, navigation }) => {
       console.log(error);
     }
   };
- 
-   
 
   const groupMessagesByDate = (messages) => {
-    return messages.reduce((groups, message) => {
-      const date = moment(message.createdAt).format("YYYY-MM-DD");
-      if (!groups[date]) {
-        groups[date] = [];
-      }
-      groups[date].push(message);
-      return groups;
-    }, {});
+    if (messages) {
+      return messages.reduce((groups, message) => {
+        const date = moment(message.createdAt).format("YYYY-MM-DD");
+        if (!groups[date]) {
+          groups[date] = [];
+        }
+        groups[date].push(message);
+        return groups;
+      }, {});
+    }
   };
 
   const groupedMessages = groupMessagesByDate(data);
@@ -96,57 +99,86 @@ const ChatPage = ({ route, navigation }) => {
         paddingLeft: insets.left,
         paddingRight: insets.right,
       }}
-      className="h-full"
+      className="h-full "
     >
-      <View className="p-1">
-        <Text>{name}</Text>
+      <View className="p-1 flex flex-row items-center border-b border-gray-300 mb-2">
+        <Pressable onPress={()=>navigation.goBack()} className="mr-2">
+          <AntDesign name="arrowleft" size={24} color="black" />
+        </Pressable>
+        <View className="flex flex-row items-center">
+          <Image
+            source={require("../assets/portrait-3d-female-doctor.jpg")}
+            className="w-10 h-10 rounded-full"
+          />
+          <Text className="ml-2">{name}</Text>
+        </View>
       </View>
       <ScrollView className="" showsVerticalScrollIndicator={false}>
-        {Object.keys(groupedMessages).map((date) => (
-          <View key={date}>
-            <Text className="text-center text-gray-500">
-              {moment(date).format("MMMM Do YYYY")}
-            </Text>
-            {groupedMessages[date].map((item) => (
-              <View
-                className={item.sender === userIdentity ? "" : "ml-auto"}
-                key={item._id}
-              >
-                <View
-                  className={
-                    item.sender === userIdentity
-                      ? "bg-gray-300 w-4/5 flex-row m-1 p-3 rounded-md"
-                      : "bg-blue-400 w-4/5 flex-row m-2 p-3 rounded-md"
-                  }
-                >
-                  <View className="flex-1">
-                    <Text
-                      className={
-                        item.sender === userIdentity
-                          ? "text-black"
-                          : "text-white"
-                      }
-                    >
-                      {item.content}
-                    </Text>
-                  </View>
-                  <View className="absolute bottom-0 right-1">
-                    <Text
-                      className={
-                        item.sender === userIdentity
-                          ? "text-black text-xs"
-                          : "text-white text-xs"
-                      }
-                    >
-                      {new Date(item.createdAt).toTimeString().substring(0, 5)}
-                    </Text>
-                  </View>
+        {data &&
+          Object.keys(groupedMessages).map((date) => {
+            const today = moment().format("MMMM D, YYYY");
+            const yesterday = moment()
+              .subtract(1, "days")
+              .format("MMMM D, YYYY");
+            let displayDate = moment(date).format("MMMM D, YYYY");
+
+            if (displayDate === today) {
+              displayDate = "Today";
+            } else if (displayDate === yesterday) {
+              displayDate = "Yesterday";
+            }
+            return (
+              <View key={date}>
+                <View className="justify-center flex flex-row">
+                  <Text className="text-center text-gray-500 text-xs bg-gray-300 w-24 rounded ">
+                    {displayDate}
+                  </Text>
                 </View>
+
+                {groupedMessages[date].map((item) => (
+                  <View
+                    className={item.sender === userIdentity ? "" : "ml-auto"}
+                    key={item._id}
+                  >
+                    <View
+                      className={
+                        item.sender === userIdentity
+                          ? "bg-gray-300 w-4/5 flex-row m-1 p-3 rounded-md"
+                          : "bg-blue-400 w-4/5 flex-row m-2 p-3 rounded-md"
+                      }
+                    >
+                      <View className="flex-1">
+                        <Text
+                          className={
+                            item.sender === userIdentity
+                              ? "text-black"
+                              : "text-white"
+                          }
+                        >
+                          {item.content}
+                        </Text>
+                      </View>
+                      <View className="absolute bottom-0 right-1">
+                        <Text
+                          className={
+                            item.sender === userIdentity
+                              ? "text-black text-xs"
+                              : "text-white text-xs"
+                          }
+                        >
+                          {new Date(item.createdAt)
+                            .toTimeString()
+                            .substring(0, 5)}
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                ))}
               </View>
-            ))}
-          </View>
-        ))}
+            );
+          })}
       </ScrollView>
+
       <View className="p-2 bg-slate-300 flex-row items-center">
         <TextInput
           value={message}

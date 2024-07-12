@@ -11,7 +11,7 @@ const CONSULTANT_BASE_URL =
 const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVJZCI6ImM0NjRmMWQ0IiwibmFtZSI6IkVtbWFudWVsIEFkYW5lIEJvc2VhIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MjA3MjU1MjUsImV4cCI6MTcyMDgxMTkyNX0.1oYq_5Us_PypsDBqCcddZSakGidTiziZUYqXzwyHbow";
 const consultant_token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoZWFsdGh3b3JrZXJJZCI6IkhXMTIzNDU2Iiwicm9sZSI6ImhlYWx0aHdvcmtlciIsImlhdCI6MTcyMDczNzM3MCwiZXhwIjoxNzIwODIzNzcwfQ.RFiI5WK9Y7DEi1KM0GpK1cniFyjF0-W68dz6MD_gND0";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoZWFsdGh3b3JrZXJJZCI6IkhXMTIzNDU4Iiwicm9sZSI6ImhlYWx0aHdvcmtlciIsImlhdCI6MTcyMDc4MTY1NiwiZXhwIjoxNzIwODY4MDU2fQ.3Ld-PNYHxEhHXB4amVbpt8tfVJwgtiGbD2Q_p0RAG9E";
 const AllGetProvider = ({ children }) => {
   const [error_message, setError_message] = useState("");
   const [p_error_message, setP_error_message] = useState("");
@@ -100,6 +100,36 @@ const AllGetProvider = ({ children }) => {
       }
     }
   }
+
+  //getting user details
+  const GetUserInfo = async () =>{
+     try {
+      const response = await axios.get(`${USER_BASE_URL}/profile`,{
+        headers:{
+          Authorization:`Bearer ${token}`
+        }
+      })
+      return response.data.data
+     } catch (error) {
+       console.log(error);
+     }
+  }
+
+  //getting consultant details
+  const GetConsultantInfo = async () =>{
+    try {
+      const response = await axios.get(
+        `${CONSULTANT_BASE_URL}/consultant_profile`,{
+          headers:{
+            Authorization:`Bearer ${consultant_token}`
+          }
+        }
+      );
+      return response.data.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <AllGetRequest.Provider
       value={{
@@ -111,7 +141,9 @@ const AllGetProvider = ({ children }) => {
         setP_error_message,
         InvolvedConversations,
         ConsultantConversations,
-        GetMessagesInConversations
+        GetMessagesInConversations,
+        GetUserInfo,
+        GetConsultantInfo
       }}
     >
       {children}

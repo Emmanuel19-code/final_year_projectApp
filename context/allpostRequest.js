@@ -8,7 +8,7 @@ const CONSULTANT_BASE_URL = "https://final-year-backend-35ph.onrender.com/api/v1
 const token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVJZCI6ImM0NjRmMWQ0IiwibmFtZSI6IkVtbWFudWVsIEFkYW5lIEJvc2VhIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MjA3MjQ4MTAsImV4cCI6MTcyMDgxMTIxMH0.fgMunsqKMYRKP2_C44pb0xBUJGpXfWPyF457Lljn57A";
 const consultant_token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoZWFsdGh3b3JrZXJJZCI6IkhXMTIzNDU2Iiwicm9sZSI6ImhlYWx0aHdvcmtlciIsImlhdCI6MTcyMDczNzM3MCwiZXhwIjoxNzIwODIzNzcwfQ.RFiI5WK9Y7DEi1KM0GpK1cniFyjF0-W68dz6MD_gND0";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoZWFsdGh3b3JrZXJJZCI6IkhXMTIzNDU4Iiwicm9sZSI6ImhlYWx0aHdvcmtlciIsImlhdCI6MTcyMDc4MTY1NiwiZXhwIjoxNzIwODY4MDU2fQ.3Ld-PNYHxEhHXB4amVbpt8tfVJwgtiGbD2Q_p0RAG9E";
   const AllPostProvider = ({ children }) => {
   const [error_message, setError_message] = useState("");
   const [sucess_message,setSucess_message] = useState("")
@@ -153,6 +153,37 @@ const consultant_token =
       console.log(error);
     }
   }
+
+  const UserUpdateProfile = async(data)=>{
+    try {
+      const response = await axios.post(
+        `${USER_BASE_URL}/accountdetailsupdate`,data,{
+          headers:{
+            Authorization:`Bearer ${token}`
+          }
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  const ConsultantUpdateProfile = async(data)=>{
+    try {
+      const response = await axios.post(
+        `${CONSULTANT_BASE_URL}/healthworkerupdate_details`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${consultant_token}`,
+          },
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <AllPostRequest.Provider
       value={{
@@ -167,7 +198,9 @@ const consultant_token =
         sucess_message,
         SearchConsultant,
         UserSendMessage,
-        ConsultantSendMessage
+        ConsultantSendMessage,
+        UserUpdateProfile,
+        ConsultantUpdateProfile
       }}
     >
       {children}

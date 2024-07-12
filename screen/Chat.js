@@ -7,16 +7,16 @@ import Chat from "../components/chat";
 import { selectRole } from "../store/authSlice";
 import { useSelector } from "react-redux";
 
-const SChat = () => {
+const SChat = ({navigation}) => {
   const insets = useSafeAreaInsets();
   const { InvolvedConversations, p_error_message, ConsultantConversations } =
     useContext(AllGetRequest);
   const [data, setData] = useState([]);
   const role = useSelector(selectRole);
-
+  
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [role]);
 
   const fetchData = async () => {
     let data;
