@@ -28,8 +28,7 @@ const SearchDoctor = ({ navigation }) => {
 
   const Search = async () => {
     if (search.trim() === "") {
-      setData([]);
-     return  
+      setData([]); 
     }
     setIsloading(true);
     let response = await SearchConsultant(search.trim());
@@ -81,7 +80,7 @@ const SearchDoctor = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         </View>
-        {search !== "" &&
+        {search != "" &&
           data.length > 0 &&
           data.map((item, index) => (
             <DisplayDoc

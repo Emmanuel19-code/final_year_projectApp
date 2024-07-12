@@ -9,9 +9,9 @@ const USER_BASE_URL =
 const CONSULTANT_BASE_URL =
   "https://final-year-backend-35ph.onrender.com/api/v1/consultant";
 const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVJZCI6ImM0NjRmMWQ0IiwibmFtZSI6IkVtbWFudWVsIEFkYW5lIEJvc2VhIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MjA1Mzc5MzcsImV4cCI6MTcyMDYyNDMzN30.DFZdy67oAx2afrTwgGnnBKWrsMseAvikDD-RxO88AE0";
-//const token =
-//"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoZWFsdGh3b3JrZXJJZCI6IkhXMTIzNDU2Iiwicm9sZSI6ImhlYWx0aHdvcmtlciIsImlhdCI6MTcyMDU0NTE5OCwiZXhwIjoxNzIwNjMxNTk4fQ.1XslTHRFOSqcu8EBM8qhKL6rIRVTuPqXPm5QjT_tieU"
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVJZCI6ImM0NjRmMWQ0IiwibmFtZSI6IkVtbWFudWVsIEFkYW5lIEJvc2VhIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MjA3MjU1MjUsImV4cCI6MTcyMDgxMTkyNX0.1oYq_5Us_PypsDBqCcddZSakGidTiziZUYqXzwyHbow";
+const consultant_token =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoZWFsdGh3b3JrZXJJZCI6IkhXMTIzNDU2Iiwicm9sZSI6ImhlYWx0aHdvcmtlciIsImlhdCI6MTcyMDczNzM3MCwiZXhwIjoxNzIwODIzNzcwfQ.RFiI5WK9Y7DEi1KM0GpK1cniFyjF0-W68dz6MD_gND0";
 const AllGetProvider = ({ children }) => {
   const [error_message, setError_message] = useState("");
   const [p_error_message, setP_error_message] = useState("");
@@ -72,7 +72,7 @@ const AllGetProvider = ({ children }) => {
          `${CONSULTANT_BASE_URL}/get_conversation`,
          {
            headers: {
-             Authorization: `Bearer `,
+             Authorization: `Bearer ${consultant_token}`,
            },
          }
        );
@@ -89,10 +89,10 @@ const AllGetProvider = ({ children }) => {
   const GetMessagesInConversations = async(conversationId)=>{
     try {
       const response = await axios.get(`${MESSAGE_URL}/${conversationId}`)
-      console.log(response.data.messages);
+      //console.log(response.data.messages);
       return response.data.messages
     } catch (error) {
-      console.log(error);
+      //console.log(error);
       if (!error.response) {
         setP_error_message("A network error occured");
       } else {

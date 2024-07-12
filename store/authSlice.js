@@ -5,6 +5,7 @@ export const authSlice = createSlice({
   initialState: {
     loggedIn: true,
     info: null,
+    role:"Admin"
   },
   reducers: {
     Logged: (state, action) => {
@@ -23,4 +24,5 @@ export const authSlice = createSlice({
 export const { Logged, LoggedOut, SetUser } = authSlice.actions;
 export const selectloggedIn = (state) => state.user.loggedIn;
 export const selectInfo = (state) => state.user.info;
+export const selectRole = (state) => state.user.role
 export default authSlice.reducer;

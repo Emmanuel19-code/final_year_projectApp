@@ -2,7 +2,7 @@ import { Text, View, TouchableOpacity, Image } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
-const Chat = ({ conversationId, name, email, healthworkerId,phone }) => {
+const Chat = ({ conversationId, name, email, userIdentity,phone }) => {
     const navigation = useNavigation()
   return (
     <TouchableOpacity
@@ -12,7 +12,7 @@ const Chat = ({ conversationId, name, email, healthworkerId,phone }) => {
           conversationId:conversationId,
           name:name,
           email:email,
-          healthworkerId:healthworkerId,
+          userIdentity:userIdentity,
           phone:phone
         })
       }

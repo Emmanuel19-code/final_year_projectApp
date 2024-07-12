@@ -6,8 +6,10 @@ export const AllPostRequest = createContext();
 const USER_BASE_URL ="https://final-year-backend-35ph.onrender.com/api/v1/user";
 const CONSULTANT_BASE_URL = "https://final-year-backend-35ph.onrender.com/api/v1/consultant";
 const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVJZCI6ImM0NjRmMWQ0IiwibmFtZSI6IkVtbWFudWVsIEFkYW5lIEJvc2VhIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MjA1Mzc5MzcsImV4cCI6MTcyMDYyNDMzN30.DFZdy67oAx2afrTwgGnnBKWrsMseAvikDD-RxO88AE0";
-const AllPostProvider = ({ children }) => {
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVJZCI6ImM0NjRmMWQ0IiwibmFtZSI6IkVtbWFudWVsIEFkYW5lIEJvc2VhIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MjA3MjQ4MTAsImV4cCI6MTcyMDgxMTIxMH0.fgMunsqKMYRKP2_C44pb0xBUJGpXfWPyF457Lljn57A";
+const consultant_token =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoZWFsdGh3b3JrZXJJZCI6IkhXMTIzNDU2Iiwicm9sZSI6ImhlYWx0aHdvcmtlciIsImlhdCI6MTcyMDczNzM3MCwiZXhwIjoxNzIwODIzNzcwfQ.RFiI5WK9Y7DEi1KM0GpK1cniFyjF0-W68dz6MD_gND0";
+  const AllPostProvider = ({ children }) => {
   const [error_message, setError_message] = useState("");
   const [sucess_message,setSucess_message] = useState("")
   const UserSignUp = async (name, email, password, phone) => {
@@ -139,6 +141,18 @@ const AllPostProvider = ({ children }) => {
       console.log(error);
     } 
   }
+  const ConsultantSendMessage = async (data) =>{
+    try {
+      const response = await axios.post(`${CONSULTANT_BASE_URL}/send_message`,data,{
+        headers:{
+          Authorization:`Bearer ${consultant_token}`
+        }
+      })
+      return response
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <AllPostRequest.Provider
       value={{
@@ -152,7 +166,8 @@ const AllPostProvider = ({ children }) => {
         setSucess_message,
         sucess_message,
         SearchConsultant,
-        UserSendMessage
+        UserSendMessage,
+        ConsultantSendMessage
       }}
     >
       {children}

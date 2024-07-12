@@ -2,7 +2,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import StackNavigator from "./navigators/StackNavigator";
 import DateTimeProvider from "./context/DateProvider";
-import AppointmentProvider from "./context/AppointmentProvider";
 import AllPostProvider from "./context/allpostRequest";
 import AllGetProvider from "./context/allgetRequest";
 import store from "./store/store";
@@ -13,7 +12,6 @@ export default function App() {
     <Provider store={store}>
       <AllPostProvider>
         <AllGetProvider>
-          <AppointmentProvider>
             <DateTimeProvider>
               <SafeAreaProvider>
                 <NavigationContainer>
@@ -21,7 +19,6 @@ export default function App() {
                 </NavigationContainer>
               </SafeAreaProvider>
             </DateTimeProvider>
-          </AppointmentProvider>
         </AllGetProvider>
       </AllPostProvider>
     </Provider>
