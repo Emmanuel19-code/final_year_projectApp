@@ -41,7 +41,7 @@ const ChatPage = ({ route, navigation }) => {
 
   useEffect(() => {
     if (socket) {
-      socket.on("newMessage", (message) => {
+      socket.on("sendMessage", (message) => {
         setData((prevMessages) => [...prevMessages, message]);
       });
     }

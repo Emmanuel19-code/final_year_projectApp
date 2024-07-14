@@ -19,7 +19,7 @@ const StackNavigator = () => {
 
   return (
     <Stack.Navigator>
-      {isLogged ? (
+      {!isLogged ? (
         <>
           <Stack.Screen
             name="home"

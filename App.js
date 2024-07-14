@@ -6,12 +6,15 @@ import AllPostProvider from "./context/allpostRequest";
 import AllGetProvider from "./context/allgetRequest";
 import store from "./store/store";
 import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistor } from "./store/store";
 
 export default function App() {
   return (
     <Provider store={store}>
-      <AllPostProvider>
-        <AllGetProvider>
+      <PersistGate persistor={persistor}>
+        <AllPostProvider>
+          <AllGetProvider>
             <DateTimeProvider>
               <SafeAreaProvider>
                 <NavigationContainer>
@@ -19,8 +22,9 @@ export default function App() {
                 </NavigationContainer>
               </SafeAreaProvider>
             </DateTimeProvider>
-        </AllGetProvider>
-      </AllPostProvider>
+          </AllGetProvider>
+        </AllPostProvider>
+      </PersistGate>
     </Provider>
   );
 }

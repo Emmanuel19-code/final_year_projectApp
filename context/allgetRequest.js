@@ -1,5 +1,7 @@
 import React, { createContext, useState } from "react";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { selectAccesstoken, SelectRefreshToken } from "../store/tokenSlice";
 
 export const AllGetRequest = createContext();
 
@@ -8,13 +10,15 @@ const USER_BASE_URL =
   "https://final-year-backend-35ph.onrender.com/api/v1/user";
 const CONSULTANT_BASE_URL =
   "https://final-year-backend-35ph.onrender.com/api/v1/consultant";
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVJZCI6ImM0NjRmMWQ0IiwibmFtZSI6IkVtbWFudWVsIEFkYW5lIEJvc2VhIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MjA3MjU1MjUsImV4cCI6MTcyMDgxMTkyNX0.1oYq_5Us_PypsDBqCcddZSakGidTiziZUYqXzwyHbow";
+//const token =
+//  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVJZCI6ImM0NjRmMWQ0IiwibmFtZSI6IkVtbWFudWVsIEFkYW5lIEJvc2VhIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MjA4NjUxOTAsImV4cCI6MTcyMDk1MTU5MH0.-xLP5Q4MamZF29zys7oushptbrvwVMfQTWO0xqyqhUo";
 const consultant_token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoZWFsdGh3b3JrZXJJZCI6IkhXMTIzNDU4Iiwicm9sZSI6ImhlYWx0aHdvcmtlciIsImlhdCI6MTcyMDc4MTY1NiwiZXhwIjoxNzIwODY4MDU2fQ.3Ld-PNYHxEhHXB4amVbpt8tfVJwgtiGbD2Q_p0RAG9E";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoZWFsdGh3b3JrZXJJZCI6IkhXMTIzNDU4Iiwicm9sZSI6ImhlYWx0aHdvcmtlciIsImlhdCI6MTcyMDg2NTMxMiwiZXhwIjoxNzIwOTUxNzEyfQ.NZF8URD9R4qbaSPgw1PQhdsU-6PSR0Fbx5tkw5WX0EI";
 const AllGetProvider = ({ children }) => {
   const [error_message, setError_message] = useState("");
   const [p_error_message, setP_error_message] = useState("");
+  const accessToken = useSelector(selectAccesstoken);
+  const refreshToken = useSelector(SelectRefreshToken);
   const getAllConsutlant = async (search) => {
     const data = {
       search: search,
@@ -36,7 +40,7 @@ const AllGetProvider = ({ children }) => {
     try {
       const response = await axios.get(`${USER_BASE_URL}/all_appointments`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       });
       return response.data.data;
@@ -52,12 +56,11 @@ const AllGetProvider = ({ children }) => {
       try {
         const response = await axios.get(`${USER_BASE_URL}/get_conversation`, {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         });
         return response.data.data
       } catch (error) {
-         console.log(error);
          if (!error.response) {
            setP_error_message("A network error occured");
          } else {
@@ -104,11 +107,11 @@ const AllGetProvider = ({ children }) => {
   //getting user details
   const GetUserInfo = async () =>{
      try {
-      const response = await axios.get(`${USER_BASE_URL}/profile`,{
-        headers:{
-          Authorization:`Bearer ${token}`
-        }
-      })
+      const response = await axios.get(`${USER_BASE_URL}/profile`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
       return response.data.data
      } catch (error) {
        console.log(error);

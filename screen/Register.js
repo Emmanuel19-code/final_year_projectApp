@@ -1,40 +1,54 @@
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
-import React, { useContext, useState,useRef,useEffect } from "react";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import React, { useContext, useState, useRef, useEffect } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 import { AllPostRequest } from "../context/allpostRequest";
 import * as Progress from "react-native-progress";
 
-const Register = ({navigation}) => {
+const Register = ({ navigation }) => {
   const insets = useSafeAreaInsets();
-  const [email,setEmail] = useState("")
-  const [phone,setPhone] = useState("")
-  const [password,setPassword] = useState("")
-  const [name,setName] = useState("")
-  const [confirm_pass,setConfirm_pass] = useState("")
-  const [isloading,setIsloading] = useState(false)
-  const {UserSignUp,error_message,setError_message} = useContext(AllPostRequest)
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [confirm_pass, setConfirm_pass] = useState("");
+  const [isloading, setIsloading] = useState(false);
+  const [disable, setDisable] = useState(true);
+  const { UserSignUp, error_message, setError_message } =
+    useContext(AllPostRequest);
 
-   useEffect(() => {
-     if (error_message) {
-      setIsloading(false)
-       const timer = setTimeout(() => {
-         setError_message("");
-       }, 10000);
-       return () => clearTimeout(timer);
-     }
-   }, [error_message, setError_message]);
+  useEffect(() => {
+    if (error_message) {
+      setIsloading(false);
+      const timer = setTimeout(() => {
+        setError_message("");
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [error_message, setError_message]);
+
+  useEffect(() => {
+    if (
+      email === "" ||
+      password === "" ||
+      password.length < 8 ||
+      name === "" ||
+      phone === "" ||
+      confirm_pass === "" ||
+      confirm_pass.length < 8
+    ) {
+      setDisable(true);
+    } else {
+      setDisable(false);
+    }
+  }, [email, password, name, phone, confirm_pass]);
 
   const user = async () => {
     setIsloading(true);
+    setDisable(true);
     if (password !== confirm_pass) {
       setError_message("Passwords do not match");
-      setIsloading(false)
+      setIsloading(false);
     }
     const response = await UserSignUp(name, email, password, phone);
     if (response) {
@@ -42,8 +56,7 @@ const Register = ({navigation}) => {
       //navigation.navigate("SomeOtherScreen");
     }
   };
- 
-  
+
   return (
     <View
       style={{
@@ -68,7 +81,9 @@ const Register = ({navigation}) => {
           </View>
           <View className="flex flex-row items-center m-1">
             <Text className="text-gray-300">A Healthcare Professional ?</Text>
-            <TouchableOpacity onPress={() => navigation.navigate("consultantregister")}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("consultantregister")}
+            >
               <Text className="ml-2 text-blue-600 font-bold">Sign Up Here</Text>
             </TouchableOpacity>
           </View>
@@ -119,8 +134,13 @@ const Register = ({navigation}) => {
           />
         </View>
         <TouchableOpacity
-          className="bg-blue-700 p-3 rounded m-2 flex items-center flex-row justify-center"
+          className={
+            disable
+              ? "bg-blue-700 p-3 rounded m-2 flex items-center flex-row justify-center opacity-60"
+              : "bg-blue-700 p-3 rounded m-2 flex items-center flex-row justify-center"
+          }
           onPress={user}
+          disabled={disable}
         >
           {isloading && (
             <View className="mr-4">
@@ -140,3 +160,5 @@ const Register = ({navigation}) => {
 };
 
 export default Register;
+
+

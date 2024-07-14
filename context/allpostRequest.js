@@ -1,17 +1,21 @@
 import React, { createContext, useState } from "react";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { selectAccesstoken, SelectRefreshToken } from "../store/tokenSlice";
 
 export const AllPostRequest = createContext();
 
 const USER_BASE_URL ="https://final-year-backend-35ph.onrender.com/api/v1/user";
 const CONSULTANT_BASE_URL = "https://final-year-backend-35ph.onrender.com/api/v1/consultant";
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVJZCI6ImM0NjRmMWQ0IiwibmFtZSI6IkVtbWFudWVsIEFkYW5lIEJvc2VhIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MjA3MjQ4MTAsImV4cCI6MTcyMDgxMTIxMH0.fgMunsqKMYRKP2_C44pb0xBUJGpXfWPyF457Lljn57A";
 const consultant_token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoZWFsdGh3b3JrZXJJZCI6IkhXMTIzNDU4Iiwicm9sZSI6ImhlYWx0aHdvcmtlciIsImlhdCI6MTcyMDc4MTY1NiwiZXhwIjoxNzIwODY4MDU2fQ.3Ld-PNYHxEhHXB4amVbpt8tfVJwgtiGbD2Q_p0RAG9E";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoZWFsdGh3b3JrZXJJZCI6IkhXMTIzNDU4Iiwicm9sZSI6ImhlYWx0aHdvcmtlciIsImlhdCI6MTcyMDg2NTMxMiwiZXhwIjoxNzIwOTUxNzEyfQ.NZF8URD9R4qbaSPgw1PQhdsU-6PSR0Fbx5tkw5WX0EI";
   const AllPostProvider = ({ children }) => {
   const [error_message, setError_message] = useState("");
-  const [sucess_message,setSucess_message] = useState("")
+  const [successMessage,setSucessMessage] = useState("")
+  const accessToken = useSelector(selectAccesstoken);
+  const refreshToken = useSelector(SelectRefreshToken)
+
+  //registering users
   const UserSignUp = async (name, email, password, phone) => {
     let data = {
       name: name,
@@ -32,16 +36,17 @@ const consultant_token =
       }
     }
   };
+
+  //users sign In into their account
   const UserSignIn = async (email, password) => {
     let data = {
       email: email,
       password: password,
     };
     try {
-      const response = await axios.post(`${USER_BASE_URL}/login`, data, {
-        timeout: 10000, // Set timeout to 10 seconds
-      });
-      setSucess_message(response.data.message);
+      const response = await axios.post(`${USER_BASE_URL}/login`, data,  
+      );
+      return response
     } catch (error) {
       console.log(error);
       if (error.code === "ECONNABORTED") {
@@ -53,7 +58,8 @@ const consultant_token =
       }
     }
   };
-  //
+
+  //user's verify their account
   const VerifyUser = async (data) => {
     try {
       const response = await axios.post(`${USER_BASE_URL}`, data, {
@@ -80,6 +86,7 @@ const consultant_token =
       }
     }
   };
+
   //This is for consultant creating an account 
   const ConsultantSignUp = async (name,email,password,healthWorkerId,phone,) => {
     data = {
@@ -101,13 +108,17 @@ const consultant_token =
       }
     }
   };
+
+  //Doctor's Sign In into their account
   const ConsultantSignIn = async()=>{
     try {
       const response = await axios.post(`${CONSULTANT_BASE_URL}/login`)
       return response
     } catch (error) {
-       if (error.response) {
-         setError_message(error.response.data.msg);
+       if (!error.response) {
+         setError_message("A Network Error Occured");
+       }else{
+        setError_message(error.response.data.msg);
        }
     }
   }
@@ -129,11 +140,12 @@ const consultant_token =
     }
   }
 
+  //user send message
   const UserSendMessage = async (data) =>{
     try {
       const response = await axios.post(`${USER_BASE_URL}/send_message`, data, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       });
       return response
@@ -141,6 +153,8 @@ const consultant_token =
       console.log(error);
     } 
   }
+
+  //consultant send message
   const ConsultantSendMessage = async (data) =>{
     try {
       const response = await axios.post(`${CONSULTANT_BASE_URL}/send_message`,data,{
@@ -154,20 +168,28 @@ const consultant_token =
     }
   }
 
+  //User Update their profile picture
   const UserUpdateProfile = async(data)=>{
     try {
       const response = await axios.post(
         `${USER_BASE_URL}/accountdetailsupdate`,data,{
           headers:{
-            Authorization:`Bearer ${token}`
+            Authorization:`Bearer ${accessToken}`
           }
         }
       );
-      console.log(response);
+      //console.log(response.data.data);
+      return response
     } catch (error) {
-      console.log(error)
+      if(!error.response){
+        setError_message("A network error occured")
+      }else{
+        setError_message(error.response.data.msg)
+      }
     }
   }
+
+  //consultant update their profile picture
   const ConsultantUpdateProfile = async(data)=>{
     try {
       const response = await axios.post(
@@ -180,6 +202,7 @@ const consultant_token =
         }
       );
       console.log(response);
+      return response
     } catch (error) {
       console.log(error);
     }
@@ -194,8 +217,8 @@ const consultant_token =
         VerifyUser,
         ConsultantSignUp,
         ConsultantSignIn,
-        setSucess_message,
-        sucess_message,
+        setSucessMessage,
+        successMessage,
         SearchConsultant,
         UserSendMessage,
         ConsultantSendMessage,

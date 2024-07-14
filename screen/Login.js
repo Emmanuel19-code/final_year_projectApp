@@ -4,39 +4,66 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AllPostRequest } from "../context/allpostRequest";
 import * as Progress from "react-native-progress";
 import { useDispatch } from "react-redux";
-import { Logged } from "../store/authSlice";
+import { Logged, SetUser } from "../store/authSlice";
+import { saveToken } from "../store/tokenSlice";
 
 const Login = ({ navigation }) => {
   const insets = useSafeAreaInsets();
+  //variables
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isloading, setIsloading] = useState(false);
+  const [disable, setDisable] = useState(true);
+  const dispatch = useDispatch();
+  // calling the AllPostRequest Context
   const {
     UserSignIn,
     error_message,
     setError_message,
-    success_message,
-    setSuccess_message,
+    setSucessMessage,
+    successMessage,
   } = useContext(AllPostRequest);
-  const [isloading, setIsloading] = useState(false);
-  const [disable, setDisable] = useState(true);
-  const dispatch = useDispatch()
-  const user = () => {
+ 
+  //calling the function to help users sign In
+  const user = async () => {
     setIsloading(true);
     setDisable(true);
-    UserSignIn(email.trim(), password.trim());
+    const response = await UserSignIn(email.trim(), password.trim());
+    if (response) {
+      console.log(response);
+      setIsloading(false);
+      setDisable(false);
+      //saving the token's using redux
+      dispatch(
+        saveToken({
+          refreshToken: response.data.userInfo.refreshtoken,
+          accessToken: response.data.userInfo.accesstoken,
+        })
+      );
+      //storing the user's information in redux
+      dispatch(
+        SetUser({
+          name: response.data.userInfo.name,
+          email: response.data.userInfo.email,
+          uniqueId: response.data.userInfo.uniqueId,
+        })
+      )
+    }
   };
 
+  //This function deals with any error in response
   useEffect(() => {
     if (error_message) {
       setIsloading(false);
-      setDisable(false)
+      setDisable(false);
       const timer = setTimeout(() => {
         setError_message("");
-      }, 10000);
+      }, 1000);
       return () => clearTimeout(timer);
     }
   }, [error_message, setError_message]);
 
+  //this is used to check to see if all criteria are met before allowing the user to Sign In
   useEffect(() => {
     if (email === "" || password === "" || password.length < 8) {
       setDisable(true);
@@ -45,17 +72,18 @@ const Login = ({ navigation }) => {
     }
   }, [email, password]);
 
+  // This is used to deal with the sucessmessage
   useEffect(() => {
-    if (success_message) {
+    if (successMessage) {
       setIsloading(false);
-      dispatch(Logged())
+      dispatch(Logged());
       const timer = setTimeout(() => {
-        setSuccess_message("");
-        navigation.navigate("home"); // Navigate to Home screen on successful login
-      }, 1000)
+        setSucessMessage("");
+        //navigation.navigate("home");
+      }, 5000);
       return () => clearTimeout(timer);
     }
-  }, [success_message, setSuccess_message, navigation]);
+  }, [successMessage, setSucessMessage, navigation]);
 
   return (
     <View
@@ -92,7 +120,7 @@ const Login = ({ navigation }) => {
           <Text className="m-1">Email</Text>
           <TextInput
             placeholder="***********"
-            className="border border-gray-400 p-1"
+            className="border border-gray-400 p-1 rounded"
             value={email}
             onChangeText={(text) => setEmail(text)}
           />
@@ -101,7 +129,7 @@ const Login = ({ navigation }) => {
           <Text className="m-1">Password</Text>
           <TextInput
             placeholder="***********"
-            className="border border-gray-400 p-1"
+            className="border border-gray-400 p-1 rounded"
             value={password}
             onChangeText={(text) => setPassword(text)}
           />
@@ -112,7 +140,7 @@ const Login = ({ navigation }) => {
               ? "bg-blue-700 p-3 rounded m-2 flex items-center flex-row justify-center opacity-60"
               : "bg-blue-700 p-3 rounded m-2 flex items-center flex-row justify-center"
           }
-         onPress={user}
+          onPress={user}
           disabled={disable}
         >
           {isloading && (
@@ -127,9 +155,9 @@ const Login = ({ navigation }) => {
             {error_message}
           </Text>
         )}
-        {success_message && (
+        {successMessage && (
           <Text className="text-blue-600 text-center mt-4 text-lg font-semibold">
-            {success_message}
+            {successMessage}
           </Text>
         )}
       </View>
