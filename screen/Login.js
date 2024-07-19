@@ -30,7 +30,6 @@ const Login = ({ navigation }) => {
     setDisable(true);
     const response = await UserSignIn(email.trim(), password.trim());
     if (response) {
-      console.log(response);
       setIsloading(false);
       setDisable(false);
       //saving the token's using redux
@@ -43,11 +42,13 @@ const Login = ({ navigation }) => {
       //storing the user's information in redux
       dispatch(
         SetUser({
-          name: response.data.userInfo.name,
-          email: response.data.userInfo.email,
-          uniqueId: response.data.userInfo.uniqueId,
+          uniqueId:response.data.userInfo.uniqueId,
+          email:response.data.userInfo.email,
+          name:response.data.userInfo.name,
+          phone:response.data.userInfo.phone
         })
       )
+      dispatch(Logged(response.data.userInfo.role))
     }
   };
 

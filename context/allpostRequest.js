@@ -2,6 +2,7 @@ import React, { createContext, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { selectAccesstoken, SelectRefreshToken } from "../store/tokenSlice";
+import { selectAuthToken } from "../store/authSlice";
 
 export const AllPostRequest = createContext();
 
@@ -14,7 +15,7 @@ const consultant_token =
   const [successMessage,setSucessMessage] = useState("")
   const accessToken = useSelector(selectAccesstoken);
   const refreshToken = useSelector(SelectRefreshToken)
-
+  const auth_Token = useSelector(selectAuthToken)
   //registering users
   const UserSignUp = async (name, email, password, phone) => {
     let data = {
@@ -25,14 +26,13 @@ const consultant_token =
     };
     try {
       const response = await axios.post(`${USER_BASE_URL}/register`, data);
-      console.log(response);
-      if (response) {
-        return response;
-      }
+      return response
     } catch (error) {
       console.log(error);
-      if (error.response) {
-        setError_message(error.response.data.msg);
+      if (!error.response) {
+        setError_message("A network error occured");
+      }else{
+        setError_message(error.response.data.msg)
       }
     }
   };
@@ -62,12 +62,19 @@ const consultant_token =
   //user's verify their account
   const VerifyUser = async (data) => {
     try {
-      const response = await axios.post(`${USER_BASE_URL}`, data, {
-        timeout: 10000, // Set timeout to 10 seconds
-        timeoutErrorMessage: "The request took too long. Please try again.",
-      });
+      const response = await axios.post(
+        `${USER_BASE_URL}/verifying_account`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${auth_Token}`,
+          },
+        }
+      );
+      console.log(response.data)
       return response;
     } catch (error) {
+      console.log(error);
       if (error.code === "ECONNABORTED") {
         // Handle timeout error
         setError_message(
@@ -110,11 +117,18 @@ const consultant_token =
   };
 
   //Doctor's Sign In into their account
-  const ConsultantSignIn = async()=>{
+  const ConsultantSignIn = async(email,password,healthworkerId)=>{
     try {
-      const response = await axios.post(`${CONSULTANT_BASE_URL}/login`)
+       let data = {
+         email,
+         password,
+         healthworkerId
+       };
+      const response = await axios.post(`${CONSULTANT_BASE_URL}/login`,data)
+      console.log(response.data);
       return response
     } catch (error) {
+      console.log(error.response.data);
        if (!error.response) {
          setError_message("A Network Error Occured");
        }else{
@@ -204,7 +218,7 @@ const consultant_token =
       console.log(response);
       return response
     } catch (error) {
-      console.log(error);
+      console.log(error.response);
     }
   }
   return (

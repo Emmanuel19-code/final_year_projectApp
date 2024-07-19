@@ -28,12 +28,12 @@ const SearchDoctor = ({ navigation }) => {
 
   const Search = async () => {
     if (search.trim() === "") {
-      setData([]); 
+      setData([]);
     }
     setIsloading(true);
     let response = await SearchConsultant(search.trim());
     if (response) {
-      setIsloading(false)
+      setIsloading(false);
       setData(response.msg);
     }
   };
@@ -43,7 +43,7 @@ const SearchDoctor = ({ navigation }) => {
       setIsloading(false);
       const timer = setTimeout(() => {
         setError_message("");
-      }, 10000);
+      }, 5000);
       return () => clearTimeout(timer);
     }
   }, [error_message, setError_message]);
@@ -87,6 +87,11 @@ const SearchDoctor = ({ navigation }) => {
               key={index}
               name={item.name}
               speciality={item?.speciality}
+              phone={item?.phone}
+              email={item?.email}
+              healthworkerId={item?.healthworkerId}
+              starTime={item?.starTime}
+              endTime={item?.endTime}
             />
           ))}
         {isloading && (

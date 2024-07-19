@@ -4,8 +4,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 
 
-const Doctor = ({navigation}) => {
+const Doctor = ({route,navigation}) => {
     const insets = useSafeAreaInsets();
+    const {name,phone,email,healthworkerId,startTime,endTime} = route.params
   return (
     <View
       style={{
@@ -47,7 +48,7 @@ const Doctor = ({navigation}) => {
         </View>
         <View className="p-2 flex-1">
           <View className="border-b-2 border-gray-200 border-dashed m-2 p-1">
-            <Text className="text-lg">Dr Rita</Text>
+            <Text className="text-lg">{name}</Text>
             <Text className="">The Christ Hospital</Text>
             <View className="flex flex-row items-center mb-2">
               <Text className=""></Text>
@@ -57,18 +58,18 @@ const Doctor = ({navigation}) => {
           </View>
           <View className="mt-2 border-b-2 border-gray-200 border-dashed m-2 p-1">
             <Text className="">Working Time</Text>
-            <View className="flex flex-row items-center mb-2">
+            <View className="  mb-2">
               <Text className="">Fri - Sat</Text>
-              <Text className="">10. 00 AM - 11.30 PM</Text>
+              <Text className="">{`${startTime?startTime:""} - ${endTime?endTime:""}`}</Text>
             </View>
           </View>
           <View className="border-b-2 border-gray-200 border-dashed m-2 p-1">
             <Text>About Doctor</Text>
             <Text className="flex-wrap mb-2">
-              Dr. Rita is a board-certified cardiologist with over 15
-              years of experience. She specializes in advanced cardiac care,
-              including non-invasive procedures and patient education. Dr. Smith
-              is dedicated to providing personalized care and improving heart
+              Dr. Rita is a board-certified cardiologist with over 15 years of
+              experience. She specializes in advanced cardiac care, including
+              non-invasive procedures and patient education. Dr. Smith is
+              dedicated to providing personalized care and improving heart
               health through the latest medical advancements and compassionate
               support.
             </Text>
@@ -82,7 +83,11 @@ const Doctor = ({navigation}) => {
         </TouchableOpacity>
         <TouchableOpacity
           className="bg-teal-700 w-44 p-1 rounded"
-          onPress={() => navigation.navigate("appointment")}
+          onPress={() =>
+            navigation.navigate("appointment", {
+              healthworkerId,
+            })
+          }
         >
           <Text className="font-bold text-white text-lg text-center">
             Book Appointment

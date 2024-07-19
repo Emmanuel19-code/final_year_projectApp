@@ -4,6 +4,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 import { AllPostRequest } from "../context/allpostRequest";
 import * as Progress from "react-native-progress";
+import { useDispatch } from "react-redux";
+import { Verification } from "../store/authSlice";
+
 
 const Register = ({ navigation }) => {
   const insets = useSafeAreaInsets();
@@ -14,12 +17,16 @@ const Register = ({ navigation }) => {
   const [confirm_pass, setConfirm_pass] = useState("");
   const [isloading, setIsloading] = useState(false);
   const [disable, setDisable] = useState(true);
+ 
+  const dispatch = useDispatch()
+
   const { UserSignUp, error_message, setError_message } =
     useContext(AllPostRequest);
 
   useEffect(() => {
     if (error_message) {
       setIsloading(false);
+      setDisable(false)
       const timer = setTimeout(() => {
         setError_message("");
       }, 1000);
@@ -44,17 +51,24 @@ const Register = ({ navigation }) => {
   }, [email, password, name, phone, confirm_pass]);
 
   const user = async () => {
-    setIsloading(true);
-    setDisable(true);
-    if (password !== confirm_pass) {
-      setError_message("Passwords do not match");
-      setIsloading(false);
+    try {
+      setIsloading(true);
+      setDisable(true);
+      if (password !== confirm_pass) {
+        setError_message("Passwords do not match");
+        setIsloading(false);
+      }
+      const response = await UserSignUp(name, email.trim(), password.trim(), phone);
+      console.log("this is", response.data);
+      if (response) {
+        setIsloading(false);
+        navigation.navigate("verifyemail");
+        dispatch(Verification(response.data?.token));
+      }
+    } catch (error) {
+      console.log(error);
     }
-    const response = await UserSignUp(name, email, password, phone);
-    if (response) {
-      setIsloading(false);
-      //navigation.navigate("SomeOtherScreen");
-    }
+    
   };
 
   return (

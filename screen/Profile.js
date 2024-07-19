@@ -4,20 +4,18 @@ import {
   TouchableOpacity,
   Pressable,
   TextInput,
-  Button,
   Modal,
-  StyleSheet
+  ScrollView
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { LoggedOut, selectInfo, selectRole } from "../store/authSlice";
+import { LoggedOut, selectInfo, selectRole, SetUser } from "../store/authSlice";
 import { AllPostRequest } from "../context/allpostRequest";
 import { AllGetRequest } from "../context/allgetRequest";
 import { deleteToken } from "../store/tokenSlice";
-
 
 const Profile = ({ navigation }) => {
   const insets = useSafeAreaInsets();
@@ -27,19 +25,19 @@ const Profile = ({ navigation }) => {
   const [address, setAddress] = useState("");
   const [workingDays, setWorkingDays] = useState("");
   const [phone, setPhone] = useState("");
+   const [about, setAbout] = useState("");
   const role = useSelector(selectRole);
   const [data, setData] = useState([]);
-  const [refresh,setRefresh] = useState(false)
+  const [refresh, setRefresh] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const { UserUpdateProfile, ConsultantUpdateProfile,error_response } =
+  const { UserUpdateProfile, ConsultantUpdateProfile, error_response } =
     useContext(AllPostRequest);
-  const { GetUserInfo,GetConsultantInfo } = useContext(AllGetRequest);
-  const info = useSelector(selectInfo)
-  const dispatch = useDispatch()
-
+  const { GetUserInfo, GetConsultantInfo } = useContext(AllGetRequest);
+  const info = useSelector(selectInfo);
+  const dispatch = useDispatch();
   useEffect(() => {
     fetchprofile();
-  }, [role,refresh]);
+  }, [role, refresh]);
 
   const sendPost = async () => {
     try {
@@ -56,7 +54,10 @@ const Profile = ({ navigation }) => {
         response = await ConsultantUpdateProfile(data);
       }
       if (response) {
-        setRefresh(!refresh); 
+        console.log(response);
+        info.phone = response.data.data.phone != info.phone && response.data.data.phone;
+        info.startTime = response.data.data.startTime != info.startTime && response.data.data.startTime
+        setRefresh(!refresh);
       }
     } catch (error) {
       console.log(error);
@@ -72,15 +73,15 @@ const Profile = ({ navigation }) => {
         setData(response);
       }
     } catch (error) {
-      console.log("this",error);
+      console.log("this", error);
     }
   };
 
-  const LogOut = ()=>{
-    dispatch(deleteToken())
-    dispatch(LoggedOut())
-    navigation.push("login")
-  }
+  const LogOut = () => {
+    dispatch(deleteToken());
+    dispatch(LoggedOut());
+    //navigation.replace("login")
+  };
 
   return (
     <View
@@ -90,6 +91,7 @@ const Profile = ({ navigation }) => {
         paddingBottom: insets.bottom,
         paddingLeft: insets.left,
         paddingRight: insets.right,
+        flex:1
       }}
     >
       <View className="flex flex-row items-center justify-between p-1">
@@ -118,14 +120,14 @@ const Profile = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </View>
-      <View className="p-2">
+      <ScrollView className="">
         <View className="m-2">
           <Text className="text-xs text-gray-500 font-bold mb-1">
             Your Unique Id
           </Text>
           <View className="bg-white rounded p-3">
             <Text className="text-gray-300 font-extrabold">
-              {role == "user" ? info?.uniqueId : data?.healthworkerId}
+              {info?.uniqueId}
             </Text>
           </View>
         </View>
@@ -160,7 +162,7 @@ const Profile = ({ navigation }) => {
             </Text>
             <View className="bg-white rounded p-3">
               <Text className="text-gray-300 font-extrabold">
-                {data?.phone}
+                {info?.phone}
               </Text>
             </View>
           </View>
@@ -208,7 +210,7 @@ const Profile = ({ navigation }) => {
                 </Text>
                 <View className="bg-white rounded p-3">
                   <Text className="text-gray-300 font-extrabold">
-                    {data?.startTime}
+                    {info?.startTime}
                   </Text>
                 </View>
               </View>
@@ -232,7 +234,31 @@ const Profile = ({ navigation }) => {
                 </Text>
                 <View className="bg-white rounded p-3">
                   <Text className="text-gray-300 font-extrabold">
-                    {data?.endTime}
+                    {info?.endTime}
+                  </Text>
+                </View>
+              </View>
+            )}
+            {edit ? (
+              <View className="m-2">
+                <Text className="text-xs text-gray-500 font-bold mb-1">
+                  About
+                </Text>
+                <View className="bg-white rounded p-2">
+                  <TextInput
+                    value={about}
+                    onChangeText={(text) => setAbout(text)}
+                  />
+                </View>
+              </View>
+            ) : (
+              <View className="m-2">
+                <Text className="text-xs text-gray-500 font-bold mb-1">
+                  About
+                </Text>
+                <View className="bg-white rounded p-3">
+                  <Text className="text-gray-300 font-extrabold">
+                    {info?.about}
                   </Text>
                 </View>
               </View>
@@ -272,17 +298,8 @@ const Profile = ({ navigation }) => {
             </View>
           </View>
         )}
-        {/*
-          
-           <View className="flex flex-row justify-center mt-2 items-center">
-          <View className="bg-green-700 m-2 w-32 p-2 rounded">
-            <Text className="text-white font-bold text-center">An error Occured</Text>
-          </View>
-        </View>
-          
-          */}
-        <View className="mt-2">
-          <Pressable onPress={() => setModalVisible(true)} className="m-2">
+        <View className="">
+          <Pressable onPress={() => setModalVisible(true)} className="m-3">
             <Text className="text-lg text-red-600">Log Out</Text>
           </Pressable>
         </View>
@@ -301,17 +318,20 @@ const Profile = ({ navigation }) => {
                 Logging out will remove all your info
               </Text>
               <View className="items-center flex-row ml-auto">
-                <Pressable onPress={() => setModalVisible(!modalVisible)} className="m-2">
-                  <Text className="text-lg">Cancel</Text>
+                <Pressable
+                  onPress={() => setModalVisible(!modalVisible)}
+                  className="m-2"
+                >
+                  <Text className="">Cancel</Text>
                 </Pressable>
                 <Pressable className="m-2" onPress={LogOut}>
-                   <Text className="text-lg">Log Out</Text>
+                  <Text className="">Log Out</Text>
                 </Pressable>
               </View>
             </View>
           </View>
         </Modal>
-      </View>
+      </ScrollView>
     </View>
   );
 };

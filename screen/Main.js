@@ -6,7 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import React, { useContext, useState,useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 import { DateTimeContext } from "../context/DateProvider";
@@ -17,22 +17,27 @@ const Main = ({ navigation }) => {
   const insets = useSafeAreaInsets();
   const [selectedItemId, setSelectedItemId] = useState(null);
   const [timedslots, setTimedslots] = useState(null);
-  const [appointmentType,setAppointmentType] = useState("")
+  const [appointmentType, setAppointmentType] = useState("");
   const handleItemSelect = (itemId) => {
     setSelectedItemId((prev) => (prev === itemId ? null : itemId));
   };
-  const { currentHour, futureDates, morningSlots, eveningSlots,setPickedDay,pickedDay,timeSlots } =
-    useContext(DateTimeContext);
+  const {
+    currentHour,
+    futureDates,
+    morningSlots,
+    eveningSlots,
+    setPickedDay,
+    pickedDay,
+    timeSlots,
+  } = useContext(DateTimeContext);
   const handleTimeSlots = (itemId) => {
     setTimedslots((prev) => (prev === itemId ? null : itemId));
   };
-  useEffect(()=>{
-    
-  },[timedslots])
-  useEffect(()=>{
-    let day =futureDates.filter((item)=>item.id === selectedItemId)
-     setPickedDay(day[0]?.data.date)
-  },[selectedItemId])
+  useEffect(() => {}, [timedslots]);
+  useEffect(() => {
+    let day = futureDates.filter((item) => item.id === selectedItemId);
+    setPickedDay(day[0]?.data.date);
+  }, [selectedItemId]);
   //console.log(timeSlots.filter((item)=>{
   //    console.log(item.id === selectedItemId);
   //}));
@@ -187,7 +192,10 @@ const Main = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-          <TouchableOpacity
+          {/*
+            
+            <TouchableOpacity
+            onPressIn={()=>navigation.navigate("payment")}
             className={
               selectedItemId === null ||
               appointmentType === " " ||
@@ -210,6 +218,16 @@ const Main = ({ navigation }) => {
               Confirm Appointment
             </Text>
           </TouchableOpacity>
+            
+             */}
+          <TouchableOpacity
+            onPressIn={() => navigation.navigate("confirmappointmnet")}
+            className={"mt-3 bg-blue-900 p-1 rounded"}
+          >
+            <Text className="m-2 text-white text-center">
+              Confirm Appointment
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
       {/*first part of the main page */}
@@ -217,7 +235,4 @@ const Main = ({ navigation }) => {
   );
 };
 
-
 export default Main;
-
-

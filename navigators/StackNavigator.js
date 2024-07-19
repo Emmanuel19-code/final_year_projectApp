@@ -11,6 +11,7 @@ import ConsultantRegister from "../screen/ConsultantRegister";
 import { useSelector } from "react-redux";
 import { selectloggedIn } from "../store/authSlice";
 import ChatPage from "../screen/ChatPage";
+import Payment from "../screen/Payment";
 
 const Stack = createStackNavigator();
 
@@ -19,7 +20,7 @@ const StackNavigator = () => {
 
   return (
     <Stack.Navigator>
-      {!isLogged ? (
+      {isLogged ? (
         <>
           <Stack.Screen
             name="home"
@@ -37,10 +38,17 @@ const StackNavigator = () => {
             options={{ headerShown: false }}
           />
           <Stack.Screen
-           name="chatpage"
-           component={ChatPage}
-           options={{ 
-               headerShown:false
+            name="chatpage"
+            component={ChatPage}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="confirmappointmnet"
+            component={Payment}
+            options={{
+              headerShown: false,
             }}
           />
         </>
@@ -56,7 +64,7 @@ const StackNavigator = () => {
             component={Register}
             options={{ headerShown: false }}
           />
-           <Stack.Screen
+          <Stack.Screen
             name="verifyemail"
             component={VerifyEmail}
             options={{ headerShown: false }}
