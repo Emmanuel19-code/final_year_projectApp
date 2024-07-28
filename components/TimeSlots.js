@@ -9,7 +9,7 @@ import React from "react";
 const TimeSlots = ({time,onItemSelect,id,timeslots}) => {
        const handleSelect = () => {
          onItemSelect(id);
-         console.log(timeslots);
+        
        };
   return (
     <TouchableOpacity
@@ -21,8 +21,6 @@ const TimeSlots = ({time,onItemSelect,id,timeslots}) => {
       onPress={handleSelect}
     >
       <Text className="text-center font-bold text-lg m-1">{time}</Text>
-      <Text className="font-bold text-lg m-1">:</Text>
-      <Text className="font-bold text-lg m-1">00</Text>
     </TouchableOpacity>
   );
 };

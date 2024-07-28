@@ -1,4 +1,4 @@
-import { View, Text, ActivityIndicator } from "react-native";
+import { View, Text, ActivityIndicator, TouchableOpacity } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ScrollView } from "react-native-gesture-handler";
@@ -7,6 +7,7 @@ import Chat from "../components/chat";
 import { selectRole } from "../store/authSlice";
 import { useSelector } from "react-redux";
 import { Image } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
 
 const SChat = ({ navigation }) => {
   const insets = useSafeAreaInsets();
@@ -33,6 +34,7 @@ const SChat = ({ navigation }) => {
     }
     setData(data);
   };
+  console.log(data, p_error_message);
   //useEffect(() => {
   //  if (p_error_message) {
   //    const timer = setTimeout(() => {
@@ -52,7 +54,7 @@ const SChat = ({ navigation }) => {
     >
       <Text className="text-black p-2 text-lg">Chats</Text>
       <ScrollView className="">
-        {data ? (
+        {data?.length > 0 ? (
           data.map(
             (item, index) =>
               item && (
@@ -75,9 +77,19 @@ const SChat = ({ navigation }) => {
             <Text className="m-2 text-lg">{`${p_error_message}`}</Text>
             <Image
               source={require("../assets/message.png")}
-              className="w-32 h-32 mb-10"
+              className="w-32 h-32 "
             />
           </View>
+        )}
+        {role != "user" && (
+          <TouchableOpacity
+            onPress={()=>navigation.navigate("appointments")}
+            className="absolute bg-blue-600 w-12 
+          h-12 bottom-20 p-1 flex 
+          justify-center items-center right-4 rounded-full"
+          >
+            <AntDesign name="adduser" size={24} color="white" />
+          </TouchableOpacity>
         )}
       </ScrollView>
     </View>

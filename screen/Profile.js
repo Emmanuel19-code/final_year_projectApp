@@ -34,6 +34,7 @@ const Profile = ({ navigation }) => {
     useContext(AllPostRequest);
   const { GetUserInfo, GetConsultantInfo } = useContext(AllGetRequest);
   const info = useSelector(selectInfo);
+  console.log(info);
   const dispatch = useDispatch();
   useEffect(() => {
     fetchprofile();
@@ -80,7 +81,6 @@ const Profile = ({ navigation }) => {
   const LogOut = () => {
     dispatch(deleteToken());
     dispatch(LoggedOut());
-    //navigation.replace("login")
   };
 
   return (

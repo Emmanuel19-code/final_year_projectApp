@@ -1,4 +1,10 @@
-import { View, Text, TextInput, TouchableOpacity,ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AllPostRequest } from "../context/allpostRequest";
@@ -14,8 +20,8 @@ const HealthCareAuth = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [isloading, setIsloading] = useState(false);
   const [disable, setDisable] = useState(true);
- 
-  const dispatch = useDispatch()
+
+  const dispatch = useDispatch();
   const { ConsultantSignIn, error_message, setError_message } =
     useContext(AllPostRequest);
   const staff = async () => {
@@ -26,46 +32,31 @@ const HealthCareAuth = ({ navigation }) => {
       password.trim(),
       healthworkerId.trim()
     );
-    if(response){
+    if (response) {
       if (response) {
         setIsloading(false);
         setDisable(false);
-        //saving the token's using redux
         dispatch(
           saveToken({
             refreshToken: response.data.userInfo.refreshtoken,
             accessToken: response.data.userInfo.accesstoken,
           })
         );
-        //storing the user's information in redux
-        
-        console.log(response.data.userInfo.uniqueId);
-        dispatch(
-          SetUser({
-            uniqueId: response.data.userInfo.uniqueId,
-            email: response.data.userInfo.email,
-            name: response.data.userInfo.name,
-            phone: response.data.userInfo.phone,
-            startTime: response.data.userInfo.startTime,
-            endTime: response.data.userInfo.endTime,
-            workingdays:response.data.userInfo.workingdays,
-            about:response.data.userInfo.about
-          })
-        );
+        dispatch(SetUser(response.data.userInfo));
         dispatch(Logged("admin"));
       }
     }
   };
-useEffect(() => {
-  if (error_message) {
-    setIsloading(false);
-    setDisable(false);
-    const timer = setTimeout(() => {
-      setError_message("");
-    }, 1000);
-    return () => clearTimeout(timer);
-  }
-}, [error_message, setError_message]);
+  useEffect(() => {
+    if (error_message) {
+      setIsloading(false);
+      setDisable(false);
+      const timer = setTimeout(() => {
+        setError_message("");
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [error_message, setError_message]);
   useEffect(() => {
     if (email === "" || password === "" || password.length < 8) {
       setDisable(true);

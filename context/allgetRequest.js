@@ -10,8 +10,6 @@ const USER_BASE_URL =
   "https://final-year-backend-35ph.onrender.com/api/v1/user";
 const CONSULTANT_BASE_URL =
   "https://final-year-backend-35ph.onrender.com/api/v1/consultant";
-//const token =
-//  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVJZCI6ImM0NjRmMWQ0IiwibmFtZSI6IkVtbWFudWVsIEFkYW5lIEJvc2VhIiwicm9sZSI6InVzZXIiLCJpYXQiOjE3MjA4NjUxOTAsImV4cCI6MTcyMDk1MTU5MH0.-xLP5Q4MamZF29zys7oushptbrvwVMfQTWO0xqyqhUo";
 const consultant_token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoZWFsdGh3b3JrZXJJZCI6IkhXMTIzNDU4Iiwicm9sZSI6ImhlYWx0aHdvcmtlciIsImlhdCI6MTcyMDg2NTMxMiwiZXhwIjoxNzIwOTUxNzEyfQ.NZF8URD9R4qbaSPgw1PQhdsU-6PSR0Fbx5tkw5WX0EI";
 const AllGetProvider = ({ children }) => {
@@ -75,7 +73,7 @@ const AllGetProvider = ({ children }) => {
          `${CONSULTANT_BASE_URL}/get_conversation`,
          {
            headers: {
-             Authorization: `Bearer ${consultant_token}`,
+             Authorization: `Bearer ${accessToken}`,
            },
          }
        );
@@ -124,7 +122,7 @@ const AllGetProvider = ({ children }) => {
       const response = await axios.get(
         `${CONSULTANT_BASE_URL}/consultant_profile`,{
           headers:{
-            Authorization:`Bearer ${consultant_token}`
+            Authorization:`Bearer ${accessToken}`
           }
         }
       );
@@ -133,6 +131,21 @@ const AllGetProvider = ({ children }) => {
       console.log(error);
     }
   }
+
+  //GEtting the appointments for a doctor
+  const GetMyReceivedAppointments = async () =>{
+     try{
+      const response = await axios.get(`${CONSULTANT_BASE_URL}/my_received_appointments`,{
+         headers:{
+          Authorization:`Bearer ${accessToken}`
+         }
+      })
+     }
+     catch(error){
+
+     }
+  }
+
   return (
     <AllGetRequest.Provider
       value={{

@@ -11,46 +11,36 @@ import SearchDoctor from "../screen/SearchDoctor";
 import { Ionicons } from "@expo/vector-icons";
 import Profile from "../screen/Profile";
 import SChat from "../screen/Chat";
+import { useSelector } from "react-redux";
+import { selectRole } from "../store/authSlice";
 
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => {
+  const role = useSelector(selectRole)
   return (
     <Drawer.Navigator>
-      <Drawer.Screen
-        name="Home"
-        component={BottomTab}
-        options={{
-          headerShown: false,
-          drawerIcon: ({ color, size }) => (
-            <AntDesign name="home" size={24} color="black" />
-          ),
-          drawerLabel: "Home",
-          drawerLabelStyle: {
-            marginLeft: -25,
-            fontSize: 16,
-            fontWeight: "bold",
-            color: "black",
-          },
-        }}
-      />
-      <Drawer.Screen
-        name="Hospital Near Me"
-        component={NearbyHospital}
-        options={{
-          headerShown: false,
-          drawerIcon: ({ color, size }) => (
-            <Entypo name="location" size={24} color="black" />
-          ),
-          drawerLabelStyle: {
-            marginLeft: -25,
-            fontSize: 16,
-            fontWeight: "bold",
-            color: "black",
-          },
-        }}
-      />
-      {/*
+      {role == "user" ? (
+        <>
+          <Drawer.Screen
+            name="Home"
+            component={BottomTab}
+            options={{
+              headerShown: false,
+              drawerIcon: ({ color, size }) => (
+                <AntDesign name="home" size={24} color="black" />
+              ),
+              drawerLabel: "Home",
+              drawerLabelStyle: {
+                marginLeft: -25,
+                fontSize: 16,
+                fontWeight: "bold",
+                color: "black",
+              },
+            }}
+          />
+        
+          {/*
          <Drawer.Screen
         name="News"
         component={News}
@@ -68,69 +58,129 @@ const DrawerNavigator = () => {
         }}
       />
         */}
-      <Drawer.Screen
-        name="Help"
-        component={Help}
-        options={{
-          headerShown: false,
-          drawerIcon: ({}) => (
-            <FontAwesome5 name="hands-helping" size={24} color="black" />
-          ),
-          drawerLabelStyle: {
-            marginLeft: -25,
-            fontSize: 16,
-            fontWeight: "bold",
-            color: "black",
-          },
-        }}
-      />
-      <Drawer.Screen
-        name="searchdoc"
-        component={SearchDoctor}
-        options={{
-          headerShown: false,
-          drawerLabel: "Search a for Doctor",
-          drawerIcon: ({}) => (
-            <Ionicons name="search" size={24} color="black" />
-          ),
-          drawerLabelStyle: {
-            marginLeft: -25,
-            fontSize: 16,
-            fontWeight: "bold",
-            color: "black",
-          },
-        }}
-      />
-      <Drawer.Screen
-        name="chat"
-        component={SChat}
-        options={{
-          headerShown: false,
-          drawerLabel: "Chats",
-          drawerIcon: ({}) => <AntDesign name="message1" size={24} color="black" />,
-          drawerLabelStyle: {
-            marginLeft: -25,
-            fontSize: 16,
-            fontWeight: "bold",
-            color: "black",
-          },
-        }}
-      />
-      <Drawer.Screen
-        name="profile"
-        component={Profile}
-        options={{
-          headerShown: false,
-          drawerLabel: "Profile",
-          drawerIcon: ({}) => <AntDesign name="user" size={24} color="black" />,
-          drawerLabelStyle: {
-            marginLeft: -25,
-            fontSize: 16,
-            fontWeight: "bold",
-            color: "black",
-          },
-        }}
-      />
+          <Drawer.Screen
+            name="Help"
+            component={Help}
+            options={{
+              headerShown: false,
+              drawerIcon: ({}) => (
+                <FontAwesome5 name="hands-helping" size={24} color="black" />
+              ),
+              drawerLabelStyle: {
+                marginLeft: -25,
+                fontSize: 16,
+                fontWeight: "bold",
+                color: "black",
+              },
+            }}
+          />
+          <Drawer.Screen
+            name="searchdoc"
+            component={SearchDoctor}
+            options={{
+              headerShown: false,
+              drawerLabel: "Search a for Doctor",
+              drawerIcon: ({}) => (
+                <Ionicons name="search" size={24} color="black" />
+              ),
+              drawerLabelStyle: {
+                marginLeft: -25,
+                fontSize: 16,
+                fontWeight: "bold",
+                color: "black",
+              },
+            }}
+          />
+          <Drawer.Screen
+            name="chat"
+            component={SChat}
+            options={{
+              headerShown: false,
+              drawerLabel: "Chats",
+              drawerIcon: ({}) => (
+                <AntDesign name="message1" size={24} color="black" />
+              ),
+              drawerLabelStyle: {
+                marginLeft: -25,
+                fontSize: 16,
+                fontWeight: "bold",
+                color: "black",
+              },
+            }}
+          />
+          <Drawer.Screen
+            name="profile"
+            component={Profile}
+            options={{
+              headerShown: false,
+              drawerLabel: "Profile",
+              drawerIcon: ({}) => (
+                <AntDesign name="user" size={24} color="black" />
+              ),
+              drawerLabelStyle: {
+                marginLeft: -25,
+                fontSize: 16,
+                fontWeight: "bold",
+                color: "black",
+              },
+            }}
+          />
+        </>
+      ) : (
+        <>
+          <Drawer.Screen
+            name="Home"
+            component={BottomTab}
+            options={{
+              headerShown: false,
+              drawerIcon: ({ color, size }) => (
+                <AntDesign name="home" size={24} color="black" />
+              ),
+              drawerLabel: "Home",
+              drawerLabelStyle: {
+                marginLeft: -25,
+                fontSize: 16,
+                fontWeight: "bold",
+                color: "black",
+              },
+            }}
+          /> 
+          <Drawer.Screen
+            name="chat"
+            component={SChat}
+            options={{
+              headerShown: false,
+              drawerLabel: "Chats",
+              drawerIcon: ({}) => (
+                <AntDesign name="message1" size={24} color="black" />
+              ),
+              drawerLabelStyle: {
+                marginLeft: -25,
+                fontSize: 16,
+                fontWeight: "bold",
+                color: "black",
+              },
+            }}
+          />
+          <Drawer.Screen
+            name="profile"
+            component={Profile}
+            options={{
+              headerShown: false,
+              drawerLabel: "Profile",
+              drawerIcon: ({}) => (
+                <AntDesign name="user" size={24} color="black" />
+              ),
+              drawerLabelStyle: {
+                marginLeft: -25,
+                fontSize: 16,
+                fontWeight: "bold",
+                color: "black",
+              },
+            }}
+          />
+        </>
+      )}
     </Drawer.Navigator>
   );
 };

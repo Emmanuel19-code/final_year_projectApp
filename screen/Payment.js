@@ -16,12 +16,12 @@ const Payment = () => {
         paddingRight: insets.right,
         flex: 1,
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
       }}
     >
       <Paystack
-        paystackKey="your-public-key-here"
-        billingEmail="paystackwebview@something.com"
+        paystackKey="pk_test_6cbf6c96d9481f60b1fe9dad6e6e0614b4e3708e"
+        billingEmail="emmanueladane52@gmail.com"
         amount={"25000.00"}
         onCancel={(e) => {
           // handle response here
@@ -38,7 +38,7 @@ const Payment = () => {
           backgroundColor: "blue",
           padding: 10,
           marginTop: 20,
-          borderRadius: 5
+          borderRadius: 5,
         }}
         onPress={() => {
           if (paystackWebViewRef.current) {

@@ -31,9 +31,10 @@ const ChatPage = ({ route, navigation }) => {
   useEffect(() => {
     const newSocket = io("https://final-year-backend-35ph.onrender.com");
     setSocket(newSocket);
-    newSocket.emit("joinRoom", conversationId);
-    return () => newSocket.close();
-  }, [conversationId]);
+    socket.on("connection",()=>console.log("connected"))
+    newSocket.emit("joinConversation", {conversationId:conversationId,name:name,userIdentity:userIdentity});
+    //return () => newSocket.close();
+  }, [conversationId,name,userIdentity]);
 
   useEffect(() => {
     fetchMessages();
@@ -41,7 +42,7 @@ const ChatPage = ({ route, navigation }) => {
 
   useEffect(() => {
     if (socket) {
-      socket.on("sendMessage", (message) => {
+      socket.on(`${conversationId}`, (message) => {
         setData((prevMessages) => [...prevMessages, message]);
       });
     }
@@ -61,13 +62,13 @@ const ChatPage = ({ route, navigation }) => {
       if (role === "user") {
         let response = await UserSendMessage(data);
         if (response) {
-          socket.emit("sendMessage", data);
+          socket.emit(`${conversationId}`, data);
           setMessage("");
         }
       } else {
         let response = await ConsultantSendMessage(data);
         if (response) {
-          socket.emit("sendMessage", data);
+          socket.emit(`${conversationId}`, data);
           setMessage("");
         }
       }

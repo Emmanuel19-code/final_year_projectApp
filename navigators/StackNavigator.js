@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import { selectloggedIn } from "../store/authSlice";
 import ChatPage from "../screen/ChatPage";
 import Payment from "../screen/Payment";
+import MeetingRoom from "../screen/MeetingRoom";
 
 const Stack = createStackNavigator();
 
@@ -47,6 +48,13 @@ const StackNavigator = () => {
           <Stack.Screen
             name="confirmappointmnet"
             component={Payment}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="meeting"
+            component={MeetingRoom}
             options={{
               headerShown: false,
             }}

@@ -86,6 +86,7 @@ const Doctor = ({route,navigation}) => {
           onPress={() =>
             navigation.navigate("appointment", {
               healthworkerId,
+              name
             })
           }
         >

@@ -41,12 +41,9 @@ const Login = ({ navigation }) => {
       );
       //storing the user's information in redux
       dispatch(
-        SetUser({
-          uniqueId:response.data.userInfo.uniqueId,
-          email:response.data.userInfo.email,
-          name:response.data.userInfo.name,
-          phone:response.data.userInfo.phone
-        })
+        SetUser(
+        response.data.userInfo
+        )
       )
       dispatch(Logged(response.data.userInfo.role))
     }

@@ -12,35 +12,32 @@ import { Feather } from "@expo/vector-icons";
 import { DateTimeContext } from "../context/DateProvider";
 import SelectAppointmentDate from "../components/SelectAppointmentDate";
 import TimeSlots from "../components/TimeSlots";
+import moment from "moment";
 
-const Main = ({ navigation }) => {
+const Main = ({ navigation, route }) => {
   const insets = useSafeAreaInsets();
   const [selectedItemId, setSelectedItemId] = useState(null);
   const [timedslots, setTimedslots] = useState(null);
   const [appointmentType, setAppointmentType] = useState("");
+  const { futureDates, pickedDay, setPickedDay, GenerateTimeSlots } =
+    useContext(DateTimeContext);
+  const [time_slot, setTime_slot] = useState([]);
+
+  const { name } = route.params;
+
   const handleItemSelect = (itemId) => {
     setSelectedItemId((prev) => (prev === itemId ? null : itemId));
+    setPickedDay((prev) => (prev === itemId ? null : itemId));
   };
-  const {
-    currentHour,
-    futureDates,
-    morningSlots,
-    eveningSlots,
-    setPickedDay,
-    pickedDay,
-    timeSlots,
-  } = useContext(DateTimeContext);
   const handleTimeSlots = (itemId) => {
     setTimedslots((prev) => (prev === itemId ? null : itemId));
   };
-  useEffect(() => {}, [timedslots]);
+
   useEffect(() => {
-    let day = futureDates.filter((item) => item.id === selectedItemId);
-    setPickedDay(day[0]?.data.date);
-  }, [selectedItemId]);
-  //console.log(timeSlots.filter((item)=>{
-  //    console.log(item.id === selectedItemId);
-  //}));
+    let date = moment(futureDates[pickedDay]?.data.date, "MM/DD/YYYY");
+    setTime_slot(GenerateTimeSlots(date.format("YYYY-MM-DD")));
+  }, []);
+
   return (
     <View
       style={{
@@ -60,11 +57,11 @@ const Main = ({ navigation }) => {
           <View className="m-1 flex-row items-center">
             <Image
               source={require("../assets/portrait-3d-female-doctor.jpg")}
-              className="w-20 h-20 rounded-full"
+              className="w-14 h-14 rounded-full"
             />
-            <View className="ml-4">
-              <Text className="text-white font-bold text-xl">Dr Rita </Text>
-              <Text className="text-white text-xl ">Heart Surgeon</Text>
+            <View className="ml-2">
+              <Text className="text-white font-bold">{name}</Text>
+              <Text className="text-white ">Heart Surgeon</Text>
             </View>
           </View>
         </View>
@@ -93,64 +90,34 @@ const Main = ({ navigation }) => {
               })}
             </ScrollView>
           </View>
+
           <View className="p-2 mt-5 ">
             <Text className="text-lg text-orange-500 ">Morning</Text>
-            {morningSlots.length > 0 ? (
+            {time_slot?.length < 0 ? (
               <Text className="font-bold text-lg ml-2 for this period at the moment">
                 No time available for this period at the moment
               </Text>
             ) : (
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {morningSlots.map((item, key) => {
-                  const hour = item.time.toString().padStart(2, "0");
-                  const formattedCurrentHour = currentHour
-                    .toString()
-                    .padStart(2, "0");
+                {time_slot.map((item, key) => {
+                  let currentHour = item.time.split(":")[0];
+                  //console.log(currentHour);
+                  //console.log(new Date().getHours());
+                  console.log("this is cool", item.time);
                   return (
-                    hour < formattedCurrentHour ||
-                    (hour !== formattedCurrentHour && currentHour < 12 && (
-                      <TimeSlots
-                        key={key}
-                        timeslots={timedslots}
-                        onItemSelect={handleTimeSlots}
-                        id={item.id}
-                        time={item.time}
-                      />
-                    ))
+                    <TimeSlots
+                      key={key}
+                      timeslots={timedslots}
+                      onItemSelect={handleTimeSlots}
+                      id={item.id}
+                      time={item.time}
+                    />
                   );
                 })}
               </ScrollView>
             )}
           </View>
-          <View className="p-2 mt-5 ">
-            <Text className="text-lg text-orange-500 ">Evening</Text>
-            {eveningSlots.length < 0 ? (
-              <Text className="font-bold text-lg ml-2 for this period at the moment">
-                No time available for this period at the moment
-              </Text>
-            ) : (
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {eveningSlots.map((item, key) => {
-                  const hour = item.time.toString().padStart(2, "0");
-                  const formattedCurrentHour = currentHour
-                    .toString()
-                    .padStart(2, "0");
-                  return (
-                    hour < formattedCurrentHour ||
-                    (hour !== formattedCurrentHour && currentHour < 12 && (
-                      <TimeSlots
-                        key={key}
-                        timeslots={timedslots}
-                        onItemSelect={handleTimeSlots}
-                        id={item.id}
-                        time={item.time}
-                      />
-                    ))
-                  );
-                })}
-              </ScrollView>
-            )}
-          </View>
+
           <View className="mt-5">
             <Text className="text-lg text-orange-500">Appointment Type</Text>
             <View className="flex flex-row items-center">
@@ -192,34 +159,7 @@ const Main = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-          {/*
-            
-            <TouchableOpacity
-            onPressIn={()=>navigation.navigate("payment")}
-            className={
-              selectedItemId === null ||
-              appointmentType === " " ||
-              timedslots === null
-                ? "mt-3 bg-blue-900 p-1 rounded opacity-30"
-                : "mt-3 bg-blue-900 p-1 rounded"
-            }
-            disabled={
-              selectedItemId === null ||
-              appointmentType == " " ||
-              timedslots === null
-                ? true
-                : false
-            }
-            onPress={() => {
-              console.log("hello");
-            }}
-          >
-            <Text className="m-2 text-white text-center">
-              Confirm Appointment
-            </Text>
-          </TouchableOpacity>
-            
-             */}
+
           <TouchableOpacity
             onPressIn={() => navigation.navigate("confirmappointmnet")}
             className={"mt-3 bg-blue-900 p-1 rounded"}
@@ -230,7 +170,6 @@ const Main = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </View>
-      {/*first part of the main page */}
     </View>
   );
 };

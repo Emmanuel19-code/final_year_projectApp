@@ -125,7 +125,6 @@ const consultant_token =
          healthworkerId
        };
       const response = await axios.post(`${CONSULTANT_BASE_URL}/login`,data)
-      console.log(response.data);
       return response
     } catch (error) {
       console.log(error.response.data);
@@ -221,6 +220,24 @@ const consultant_token =
       console.log(error.response);
     }
   }
+
+  //consultant Starting A conversation with client
+  const ConsultantStartConversation = async(data) =>{
+     try {
+       const response = await axios.post(
+         `${CONSULTANT_BASE_URL}/create_conversation`,
+         data,
+         {
+           headers: {
+             Authorization: `Bearer ${consultant_token}`,
+           },
+         }
+       );
+       return response;
+     } catch (error) {
+       console.log(error.response);
+     }
+  }
   return (
     <AllPostRequest.Provider
       value={{
@@ -237,7 +254,8 @@ const consultant_token =
         UserSendMessage,
         ConsultantSendMessage,
         UserUpdateProfile,
-        ConsultantUpdateProfile
+        ConsultantUpdateProfile,
+        ConsultantStartConversation
       }}
     >
       {children}
