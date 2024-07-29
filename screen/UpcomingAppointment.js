@@ -17,29 +17,35 @@ const UpcomingAppointment = () => {
     fetchData();
   }, []);
   const fetchData = async () => {
-    setIsloading(true)
-    const response = await getMyAppointments();
-     if(response){
-      setIsloading(false)
-      setData(response);
-     }
+    setIsloading(true);
+    try {
+      const response = await getMyAppointments();
+      if (response && response.data) {
+        const filteredData = response.data.booked.filter(
+          (item) => item.status === "scheduled"
+        );
+        setData(filteredData);
+        setIsloading(false);
+      }
+    } catch (error) {
+      setIsloading(false);
+      console.log(error);
+    }
   };
   return (
     <ScrollView className="h-screen" showsVerticalScrollIndicator={false}>
       {data &&
         data.map((item, index) => {
-          if (item.status != "canceled") {
-            return (
-              <UpcomingSlots
-                key={item._id}
-                appoitmentId={item._id}
-                date={item.appointmentDate}
-                time={item.appointmentTime}
-                status={item.status}
-                appointmentType={item.appointmentType}
-              />
-            );
-          }
+          return (
+            <UpcomingSlots
+              key={item._id}
+              appoitmentId={item._id}
+              date={item.appointmentDate}
+              time={item.appointmentTime}
+              status={item.status}
+              appointmentType={item.appointmentType}
+            />
+          );
         })}
       {p_error_message ? (
         <Text className="text-center mt-10 font-bold">{p_error_message}</Text>
@@ -48,7 +54,6 @@ const UpcomingAppointment = () => {
           <ActivityIndicator size={"large"} color={"#3b82f6"} />
         </View>
       )}
-
     </ScrollView>
   );
 };

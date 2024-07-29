@@ -17,6 +17,7 @@ const AllGetProvider = ({ children }) => {
   const [p_error_message, setP_error_message] = useState("");
   const accessToken = useSelector(selectAccesstoken);
   const refreshToken = useSelector(SelectRefreshToken);
+
   const getAllConsutlant = async (search) => {
     const data = {
       search: search,
@@ -135,13 +136,30 @@ const AllGetProvider = ({ children }) => {
   //GEtting the appointments for a doctor
   const GetMyReceivedAppointments = async () =>{
      try{
-      const response = await axios.get(`${CONSULTANT_BASE_URL}/my_received_appointments`,{
-         headers:{
-          Authorization:`Bearer ${accessToken}`
-         }
-      })
+      const response = await axios.get(
+        `${CONSULTANT_BASE_URL}/my_received_appointmetns`,
+        {
+          headers: {
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoZWFsdGh3b3JrZXJJZCI6IkhXMTIzNDU4Iiwicm9sZSI6ImhlYWx0aHdvcmtlciIsImlhdCI6MTcyMjI2MjE1NCwiZXhwIjoxNzIyMzQ4NTU0fQ.8bPGWiXT3H6AYC7hEjCay1N3eqS7WWKC48riajbsPfs`,
+          },
+        }
+      );
+      return response
      }
      catch(error){
+         console.log(error.response);
+     }
+  }
+
+  const GetAllAppointment = async () =>{
+     try{
+        const response = await axios.get(`${CONSULTANT_BASE_URL}/`,{
+          headers:{
+            Authorization:`Bearer ${accessToken}`
+          }
+        })
+        console.log(response);
+     }catch(error){
 
      }
   }
@@ -159,7 +177,9 @@ const AllGetProvider = ({ children }) => {
         ConsultantConversations,
         GetMessagesInConversations,
         GetUserInfo,
-        GetConsultantInfo
+        GetConsultantInfo,
+        GetAllAppointment,
+        GetMyReceivedAppointments,
       }}
     >
       {children}

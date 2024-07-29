@@ -210,7 +210,7 @@ const consultant_token =
         data,
         {
           headers: {
-            Authorization: `Bearer ${consultant_token}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );
@@ -229,7 +229,7 @@ const consultant_token =
          data,
          {
            headers: {
-             Authorization: `Bearer ${consultant_token}`,
+             Authorization: `Bearer ${accessToken}`,
            },
          }
        );

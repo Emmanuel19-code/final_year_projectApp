@@ -6,20 +6,39 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { DrawerActions } from "@react-navigation/native";
 import { useSelector } from "react-redux";
 import { selectInfo, selectRole } from "../store/authSlice";
 import { Ionicons } from "@expo/vector-icons";
-import {Entypo} from "@expo/vector-icons"
+import { Entypo } from "@expo/vector-icons";
+import { io } from "socket.io-client";
+
 const MainHome = ({ navigation }) => {
   const insets = useSafeAreaInsets();
   const OpenDrawer = () => {
     navigation.dispatch(DrawerActions.toggleDrawer());
   };
+  const [socket, setSocket] = useState(null);
   const info = useSelector(selectInfo);
   const role = useSelector(selectRole);
+  
+ useEffect(() => {
+   const newSocket = io("http://localhost:5000");
+   setSocket(newSocket);
+   newSocket.on("connection", () => {
+     console.log("Connected to server");
+     newSocket.emit("joined", "emmanuel");
+   });
+   newSocket.on("newppointment", (message) => {
+     console.log("Received newppointment:", message);
+   });
+   return () => {
+     newSocket.disconnect();
+   };
+ }, []);
+  
   return (
     <View
       style={{

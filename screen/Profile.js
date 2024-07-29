@@ -34,7 +34,6 @@ const Profile = ({ navigation }) => {
     useContext(AllPostRequest);
   const { GetUserInfo, GetConsultantInfo } = useContext(AllGetRequest);
   const info = useSelector(selectInfo);
-  console.log(info);
   const dispatch = useDispatch();
   useEffect(() => {
     fetchprofile();
@@ -55,7 +54,6 @@ const Profile = ({ navigation }) => {
         response = await ConsultantUpdateProfile(data);
       }
       if (response) {
-        console.log(response);
         info.phone = response.data.data.phone != info.phone && response.data.data.phone;
         info.startTime = response.data.data.startTime != info.startTime && response.data.data.startTime
         setRefresh(!refresh);

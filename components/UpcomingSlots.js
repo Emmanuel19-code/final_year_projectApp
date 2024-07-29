@@ -17,6 +17,7 @@ const UpcomingSlots = ({
   icon_name,
   type,
   navigation,
+  id
 }) => {
   const role = useSelector(selectRole);
   const { ConsultantStartConversation } = useContext(AllPostRequest);
@@ -75,7 +76,7 @@ const UpcomingSlots = ({
           <TouchableOpacity
             className="bg-blue-400  rounded w-36 flex flex-row items-center p-2"
             onPress={
-              type == "message" ? start : () => navigation.navigate("meeting")
+              type === "message" ? start : () => navigation.navigate("meeting")
             }
           >
             <View className="mr-2 ">
