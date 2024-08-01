@@ -21,10 +21,34 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.emmanuelbos.telemedicine"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "336d57c0-4aff-4bf4-aa6e-a2ba5eb69b6b"
+      }
+    },
+    "plugins": [
+      "@stream-io/video-react-native-sdk",
+      [
+        "@config-plugins/react-native-webrtc",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone"
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow CONSULTANT CONNECT to access your camera",
+          "microphonePermission": "Allow CONSULTANT CONNECT to access your microphone",
+          "recordAudioAndroid": true
+        }
+      ]
+    ]
   }
 }

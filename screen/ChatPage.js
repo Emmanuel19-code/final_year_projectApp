@@ -13,10 +13,10 @@ import { AllGetRequest } from "../context/allgetRequest";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { AllPostRequest } from "../context/allpostRequest";
-import { io } from "socket.io-client";
 import { useSelector } from "react-redux";
 import { selectRole } from "../store/authSlice";
 import moment from "moment";
+import Pusher from "pusher-js/react-native";
 
 const ChatPage = ({ route, navigation }) => {
   const insets = useSafeAreaInsets();
@@ -25,29 +25,25 @@ const ChatPage = ({ route, navigation }) => {
   const { UserSendMessage, ConsultantSendMessage } = useContext(AllPostRequest);
   const [data, setData] = useState([]);
   const [message, setMessage] = useState("");
-  const [socket, setSocket] = useState(null);
   const role = useSelector(selectRole);
+  const [newmessage,setNewmessage] = useState([])
+  
 
   useEffect(() => {
-    const newSocket = io("https://final-year-backend-35ph.onrender.com");
-    setSocket(newSocket);
-    socket.on("connection",()=>console.log("connected"))
-    newSocket.emit("joinConversation", {conversationId:conversationId,name:name,userIdentity:userIdentity});
-    //return () => newSocket.close();
-  }, [conversationId,name,userIdentity]);
-
-  useEffect(() => {
+    PusherConnection()
     fetchMessages();
-  }, [message]);
+  }, [message,newmessage]);
 
-  useEffect(() => {
-    if (socket) {
-      socket.on(`${conversationId}`, (message) => {
-        setData((prevMessages) => [...prevMessages, message]);
-      });
-    }
-  }, [socket]);
- 
+  const PusherConnection = async () => {
+    const pusher = new Pusher("ee44b081730b6cc9b1d7", {
+      cluster: "eu",
+    });
+    const channel = pusher.subscribe(`${conversationId}`);
+    channel.bind("new-message", (data) => {
+      setNewmessage(data);
+    });
+  };
+  
   const fetchMessages = async () => {
     let data = await GetMessagesInConversations(conversationId);
     setData(data);
@@ -62,13 +58,11 @@ const ChatPage = ({ route, navigation }) => {
       if (role === "user") {
         let response = await UserSendMessage(data);
         if (response) {
-          socket.emit(`${conversationId}`, data);
           setMessage("");
         }
       } else {
         let response = await ConsultantSendMessage(data);
         if (response) {
-          socket.emit(`${conversationId}`, data);
           setMessage("");
         }
       }
@@ -179,7 +173,6 @@ const ChatPage = ({ route, navigation }) => {
             );
           })}
       </ScrollView>
-
       <View className="p-2 bg-slate-300 flex-row items-center">
         <TextInput
           value={message}

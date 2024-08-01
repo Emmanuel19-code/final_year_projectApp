@@ -1,6 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authReducer from "./authSlice";
 import tokenReducer from "./tokenSlice";
+import messageReducer from "./messageSlice"
 import {
   persistStore,
   persistReducer,
@@ -22,6 +23,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   user: authReducer,
   token: tokenReducer,
+  message:messageReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

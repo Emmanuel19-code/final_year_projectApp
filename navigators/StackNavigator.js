@@ -13,6 +13,8 @@ import { selectloggedIn } from "../store/authSlice";
 import ChatPage from "../screen/ChatPage";
 import Payment from "../screen/Payment";
 import MeetingRoom from "../screen/MeetingRoom";
+import VideoScreen from "../screen/VideoScreen";
+import MedicalSpecialist from "../screen/MedicalSpecialist";
 
 const Stack = createStackNavigator();
 
@@ -58,6 +60,21 @@ const StackNavigator = () => {
             options={{
               headerShown: false,
             }}
+          />
+          <Stack.Screen
+            name="video"
+            component={VideoScreen}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="specialty"
+            component={MedicalSpecialist}
+            options={{ 
+               title:"Our Specialist",
+               headerTitleAlign:"center"
+             }}
           />
         </>
       ) : (

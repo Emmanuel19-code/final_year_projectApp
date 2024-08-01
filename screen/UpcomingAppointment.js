@@ -32,6 +32,7 @@ const UpcomingAppointment = () => {
       console.log(error);
     }
   };
+ 
   return (
     <ScrollView className="h-screen" showsVerticalScrollIndicator={false}>
       {data &&

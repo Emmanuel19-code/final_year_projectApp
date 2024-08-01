@@ -21,6 +21,7 @@ const MeetingRoom = ({ navigation }) => {
       setName={setName}
       meeting_id={meeting_id}
       setMeeting_id={setMeeting_id}
+      navigation={navigation}
     />
     </View>
   );

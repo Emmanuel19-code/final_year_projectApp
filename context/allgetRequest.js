@@ -10,6 +10,8 @@ const USER_BASE_URL =
   "https://final-year-backend-35ph.onrender.com/api/v1/user";
 const CONSULTANT_BASE_URL =
   "https://final-year-backend-35ph.onrender.com/api/v1/consultant";
+const NOTIFICATINO_URL =
+  "https://final-year-backend-35ph.onrender.com/api/v1/notifcations";
 const consultant_token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoZWFsdGh3b3JrZXJJZCI6IkhXMTIzNDU4Iiwicm9sZSI6ImhlYWx0aHdvcmtlciIsImlhdCI6MTcyMDg2NTMxMiwiZXhwIjoxNzIwOTUxNzEyfQ.NZF8URD9R4qbaSPgw1PQhdsU-6PSR0Fbx5tkw5WX0EI";
 const AllGetProvider = ({ children }) => {
@@ -140,30 +142,45 @@ const AllGetProvider = ({ children }) => {
         `${CONSULTANT_BASE_URL}/my_received_appointmetns`,
         {
           headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoZWFsdGh3b3JrZXJJZCI6IkhXMTIzNDU4Iiwicm9sZSI6ImhlYWx0aHdvcmtlciIsImlhdCI6MTcyMjI2MjE1NCwiZXhwIjoxNzIyMzQ4NTU0fQ.8bPGWiXT3H6AYC7hEjCay1N3eqS7WWKC48riajbsPfs`,
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );
       return response
      }
      catch(error){
-         console.log(error.response);
+         console.log(error.response.data);
      }
   }
 
   const GetAllAppointment = async () =>{
      try{
-        const response = await axios.get(`${CONSULTANT_BASE_URL}/`,{
+        const response = await axios.get(`${CONSULTANT_BASE_URL}/all_appointments`,{
           headers:{
             Authorization:`Bearer ${accessToken}`
           }
         })
-        console.log(response);
+        return response
      }catch(error){
-
+        console.log(error);
      }
   }
 
+  const GetNotification = async()=>{
+    try {
+      const response = await axios.get(
+        `${NOTIFICATINO_URL}/all_notifications`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      return response
+    } catch (error) {
+      console.log("error",error.response)
+    }
+  }
   return (
     <AllGetRequest.Provider
       value={{
@@ -180,6 +197,7 @@ const AllGetProvider = ({ children }) => {
         GetConsultantInfo,
         GetAllAppointment,
         GetMyReceivedAppointments,
+        GetNotification
       }}
     >
       {children}
