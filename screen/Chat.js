@@ -34,7 +34,7 @@ const SChat = ({ navigation }) => {
     }
     setData(data);
   };
-  console.log(data, p_error_message);
+  
   //useEffect(() => {
   //  if (p_error_message) {
   //    const timer = setTimeout(() => {
@@ -83,7 +83,7 @@ const SChat = ({ navigation }) => {
         )}
         {role != "user" && (
           <TouchableOpacity
-            onPress={()=>navigation.navigate("appointments")}
+            onPress={() => navigation.navigate("appointments")}
             className="absolute bg-blue-600 w-12 
           h-12 bottom-20 p-1 flex 
           justify-center items-center right-4 rounded-full"

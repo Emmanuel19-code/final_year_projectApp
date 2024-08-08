@@ -11,6 +11,11 @@ import Pusher from "pusher-js/react-native";
 import { PUSHER_KEY } from "@env";
 import { useSelector } from "react-redux";
 import { selectInfo } from "../store/authSlice";
+import {
+  setNotificationFlag,
+  clearNotificationFlag,
+} from "../store/notificationSlice";
+import { useDispatch } from "react-redux";
 
 const Notification = ({ navigation }) => {
   const insets = useSafeAreaInsets();
@@ -19,16 +24,20 @@ const Notification = ({ navigation }) => {
   const [newNotification, setNewNotification] = useState(null);
   const { GetNotification } = useContext(AllGetRequest);
   const role = useSelector(selectInfo);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     PusherConnection();
     FetchNotification();
+    dispatch(clearNotificationFlag());
   }, []);
 
   useEffect(() => {
     if (newNotification) {
       FetchNotification();
+      dispatch(setNotificationFlag());
     }
+    console.log(newNotification);
   }, [newNotification]);
 
   const PusherConnection = () => {
@@ -55,10 +64,10 @@ const Notification = ({ navigation }) => {
     try {
       const response = await GetNotification();
       if (response) {
-        setData(response.data.all_notice);
+        setData(response.data?.all_notice);
       }
     } catch (error) {
-      console.error("Error fetching notifications:", error);
+      console.error("Error fetching notifications:", error.response);
     }
   };
 
@@ -77,7 +86,6 @@ const Notification = ({ navigation }) => {
   };
 
   const groupedNotification = groupNotificationByDate(data);
-  console.log("Grouped Notifications:", groupedNotification);
 
   return (
     <Pressable
@@ -130,20 +138,25 @@ const Notification = ({ navigation }) => {
                     {displayDate}
                   </Text>
                 </View>
-                {groupedNotification[date].map((item) => (
-                  <Swipeable
-                    key={item._id}
-                    renderRightActions={RenderRightActions}
-                  >
-                    <Notifcation
-                      title={item.title}
-                      message={item.message}
-                      status={item.read}
-                      id={item._id}
-                      data={item.data && item.data}
-                    />
-                  </Swipeable>
-                ))}
+                {groupedNotification[date].map((item) => {
+                  return (
+                    <Swipeable
+                      key={item._id}
+                      renderRightActions={RenderRightActions}
+                    >
+                      <Notifcation
+                        title={item.title}
+                        message={item.message}
+                        status={item.read}
+                        id={item._id}
+                        data={item.data && item.data}
+                        displayDate={new Date(item.createdAt)
+                          .toTimeString()
+                          .substring(0, 5)}
+                      />
+                    </Swipeable>
+                  );
+                })}
               </View>
             );
           })

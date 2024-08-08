@@ -5,7 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
-  Pressable
+  Pressable,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -26,13 +26,12 @@ const ChatPage = ({ route, navigation }) => {
   const [data, setData] = useState([]);
   const [message, setMessage] = useState("");
   const role = useSelector(selectRole);
-  const [newmessage,setNewmessage] = useState([])
-  
+  const [newmessage, setNewmessage] = useState([]);
 
   useEffect(() => {
-    PusherConnection()
+    PusherConnection();
     fetchMessages();
-  }, [message,newmessage]);
+  }, [message, newmessage]);
 
   const PusherConnection = async () => {
     const pusher = new Pusher("ee44b081730b6cc9b1d7", {
@@ -43,7 +42,7 @@ const ChatPage = ({ route, navigation }) => {
       setNewmessage(data);
     });
   };
-  
+
   const fetchMessages = async () => {
     let data = await GetMessagesInConversations(conversationId);
     setData(data);
@@ -97,7 +96,7 @@ const ChatPage = ({ route, navigation }) => {
       className="h-full "
     >
       <View className="p-1 flex flex-row items-center border-b border-gray-300 mb-2">
-        <Pressable onPress={()=>navigation.goBack()} className="mr-2">
+        <Pressable onPress={() => navigation.goBack()} className="mr-2">
           <AntDesign name="arrowleft" size={24} color="black" />
         </Pressable>
         <View className="flex flex-row items-center">
@@ -125,7 +124,7 @@ const ChatPage = ({ route, navigation }) => {
             return (
               <View key={date}>
                 <View className="justify-center flex flex-row">
-                  <Text className="text-center text-gray-500 text-xs bg-gray-300 w-24 rounded ">
+                  <Text className="text-center text-gray-500 text-xs  w-24 rounded ">
                     {displayDate}
                   </Text>
                 </View>

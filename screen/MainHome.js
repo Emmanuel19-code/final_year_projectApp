@@ -5,7 +5,6 @@ import {
   Pressable,
   ScrollView,
   TouchableOpacity,
-  Alert,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";

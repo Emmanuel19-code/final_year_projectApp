@@ -1,14 +1,24 @@
-import React from 'react'
+import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Notification from '../screen/Notification';
-import { Ionicons } from '@expo/vector-icons';
+import Notification from "../screen/Notification";
+import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-import MainHome from '../screen/MainHome';
-import MaterialTobTab from './materialtoptab';
+import MainHome from "../screen/MainHome";
+import MaterialTobTab from "./materialtoptab";
+import {
+  clearNotificationFlag,
+  selectNotificationFlag,
+} from "../store/notificationSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { View, TouchableOpacity } from "react-native";
+import { selectRole } from "../store/authSlice";
 
-const Tab = createBottomTabNavigator()
+const Tab = createBottomTabNavigator();
 
-const BottomTab = ({navigation}) => {
+const BottomTab = ({ navigation }) => {
+  const hasNewNotification = useSelector(selectNotificationFlag);
+  const dispatch = useDispatch();
+  const role = useSelector(selectRole)
   return (
     <Tab.Navigator>
       <Tab.Screen
@@ -16,7 +26,9 @@ const BottomTab = ({navigation}) => {
         component={MainHome}
         options={{
           headerShown: false,
-          tabBarIcon: () => <AntDesign name="home" size={24} color="black" />,
+          tabBarIcon: ({ color, size }) => (
+            <AntDesign name="home" size={size} color={color} />
+          ),
         }}
       />
       <Tab.Screen
@@ -24,8 +36,25 @@ const BottomTab = ({navigation}) => {
         component={Notification}
         options={{
           headerShown: false,
-          tabBarIcon: () => (
-            <Ionicons name="notifications-outline" size={24} color="black" />
+          tabBarIcon: ({ color, size }) => (
+            <TouchableOpacity onPress={() => dispatch(clearNotificationFlag())}>
+              <Ionicons name="notifications" color={color} size={size} />
+              {hasNewNotification && (
+                <View
+                  style={{
+                    position: "absolute",
+                    right: -6,
+                    top: -3,
+                    backgroundColor: "red",
+                    borderRadius: 6,
+                    width: 12,
+                    height: 12,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                ></View>
+              )}
+            </TouchableOpacity>
           ),
         }}
       />
@@ -34,14 +63,14 @@ const BottomTab = ({navigation}) => {
         component={MaterialTobTab}
         options={{
           title: "Appointments",
-          tabBarIcon: ()=>(
-            <Ionicons name="calendar" size={24} color="black"/>
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="calendar" size={size} color={color} />
           ),
-          headerTitleAlign:'center'
+          headerTitleAlign: "center",
         }}
       />
     </Tab.Navigator>
   );
-}
+};
 
-export default BottomTab
+export default BottomTab;

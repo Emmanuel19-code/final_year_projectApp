@@ -19,7 +19,7 @@ const VideoAppointments = ({ navigation }) => {
     try {
       let response = await GetMyReceivedAppointments();
       if (response && response.data) {
-        const filteredData = response.data.booked.filter(
+        const filteredData = response.data?.booked?.filter(
           (item) => item.appointmentType === "video"
         );
         setData(filteredData);

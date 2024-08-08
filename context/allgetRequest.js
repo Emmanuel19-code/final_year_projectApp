@@ -12,8 +12,7 @@ const CONSULTANT_BASE_URL =
   "https://final-year-backend-35ph.onrender.com/api/v1/consultant";
 const NOTIFICATINO_URL =
   "https://final-year-backend-35ph.onrender.com/api/v1/notifcations";
-const consultant_token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoZWFsdGh3b3JrZXJJZCI6IkhXMTIzNDU4Iiwicm9sZSI6ImhlYWx0aHdvcmtlciIsImlhdCI6MTcyMDg2NTMxMiwiZXhwIjoxNzIwOTUxNzEyfQ.NZF8URD9R4qbaSPgw1PQhdsU-6PSR0Fbx5tkw5WX0EI";
+
 const AllGetProvider = ({ children }) => {
   const [error_message, setError_message] = useState("");
   const [p_error_message, setP_error_message] = useState("");
@@ -93,10 +92,8 @@ const AllGetProvider = ({ children }) => {
   const GetMessagesInConversations = async(conversationId)=>{
     try {
       const response = await axios.get(`${MESSAGE_URL}/${conversationId}`)
-      //console.log(response.data.messages);
       return response.data.messages
     } catch (error) {
-      //console.log(error);
       if (!error.response) {
         setP_error_message("A network error occured");
       } else {

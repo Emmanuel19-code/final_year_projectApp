@@ -24,7 +24,7 @@ const PastAppointment = () => {
     setIsLoading(false);
   };
 
-  const pastAppointments = data.filter((item) => {
+  const pastAppointments = data?.filter((item) => {
     const [appointmentDate, appointmentMonth] = item.appointmentDate.split("/");
     const currentDay = new Date().getDate();
     const currentMonth = new Date().getMonth() + 1;
@@ -45,13 +45,16 @@ const PastAppointment = () => {
       {!isLoading && errorMessage ? (
         <Text className="text-center mt-10 font-bold">{errorMessage}</Text>
       ) : null}
-      {!isLoading && !errorMessage && pastAppointments.length === 0 && (
-        <Text className="text-center mt-10 font-bold">
-          There are no past appointments.
-        </Text>
-      )}
       {!isLoading &&
         !errorMessage &&
+        data.length === 0 && ( 
+          <Text className="text-center mt-10 font-bold">
+            There are no past appointments.
+          </Text>
+        )}
+      {!isLoading &&
+        !errorMessage &&
+        data.length > 0 && 
         pastAppointments.map((item) => (
           <PastAppointmentSlot
             key={item._id}

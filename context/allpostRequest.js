@@ -170,14 +170,18 @@ const consultant_token =
   //consultant send message
   const ConsultantSendMessage = async (data) =>{
     try {
-      const response = await axios.post(`${CONSULTANT_BASE_URL}/send_message`,data,{
-        headers:{
-          Authorization:`Bearer ${consultant_token}`
+      const response = await axios.post(
+        `${CONSULTANT_BASE_URL}/send_message`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
-      })
+      );
       return response
     } catch (error) {
-      console.log(error);
+      console.log(error.response.data);
     }
   }
 

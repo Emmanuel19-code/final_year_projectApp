@@ -48,7 +48,8 @@
           "microphonePermission": "Allow CONSULTANT CONNECT to access your microphone",
           "recordAudioAndroid": true
         }
-      ]
+      ],
+      "expo-asset"
     ]
   }
 }

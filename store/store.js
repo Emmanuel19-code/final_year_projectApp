@@ -2,6 +2,7 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authReducer from "./authSlice";
 import tokenReducer from "./tokenSlice";
 import messageReducer from "./messageSlice"
+import notificationReducer from "./notificationSlice"
 import {
   persistStore,
   persistReducer,
@@ -23,7 +24,8 @@ const persistConfig = {
 const rootReducer = combineReducers({
   user: authReducer,
   token: tokenReducer,
-  message:messageReducer
+  message:messageReducer,
+  notification:notificationReducer
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
