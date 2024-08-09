@@ -6,16 +6,18 @@ import { selectAuthToken } from "../store/authSlice";
 
 export const AllPostRequest = createContext();
 
-const USER_BASE_URL ="https://final-year-backend-35ph.onrender.com/api/v1/user";
-const CONSULTANT_BASE_URL = "https://final-year-backend-35ph.onrender.com/api/v1/consultant";
+const USER_BASE_URL =
+  "https://final-year-backend-35ph.onrender.com/api/v1/user";
+const CONSULTANT_BASE_URL =
+  "https://final-year-backend-35ph.onrender.com/api/v1/consultant";
 const consultant_token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoZWFsdGh3b3JrZXJJZCI6IkhXMTIzNDU4Iiwicm9sZSI6ImhlYWx0aHdvcmtlciIsImlhdCI6MTcyMDg2NTMxMiwiZXhwIjoxNzIwOTUxNzEyfQ.NZF8URD9R4qbaSPgw1PQhdsU-6PSR0Fbx5tkw5WX0EI";
-  const AllPostProvider = ({ children }) => {
+const AllPostProvider = ({ children }) => {
   const [error_message, setError_message] = useState("");
-  const [successMessage,setSucessMessage] = useState("")
+  const [successMessage, setSucessMessage] = useState("");
   const accessToken = useSelector(selectAccesstoken);
-  const refreshToken = useSelector(SelectRefreshToken)
-  const auth_Token = useSelector(selectAuthToken)
+  const refreshToken = useSelector(SelectRefreshToken);
+  const auth_Token = useSelector(selectAuthToken);
   //registering users
   const UserSignUp = async (name, email, password, phone) => {
     let data = {
@@ -26,13 +28,13 @@ const consultant_token =
     };
     try {
       const response = await axios.post(`${USER_BASE_URL}/register`, data);
-      return response
+      return response;
     } catch (error) {
       console.log(error);
       if (!error.response) {
         setError_message("A network error occured");
-      }else{
-        setError_message(error.response.data.msg)
+      } else {
+        setError_message(error.response.data.msg);
       }
     }
   };
@@ -44,9 +46,8 @@ const consultant_token =
       password: password,
     };
     try {
-      const response = await axios.post(`${USER_BASE_URL}/login`, data,  
-      );
-      return response
+      const response = await axios.post(`${USER_BASE_URL}/login`, data);
+      return response;
     } catch (error) {
       console.log(error);
       if (error.code === "ECONNABORTED") {
@@ -71,7 +72,7 @@ const consultant_token =
           },
         }
       );
-      console.log(response.data)
+      console.log(response.data);
       return response;
     } catch (error) {
       console.log(error);
@@ -94,20 +95,27 @@ const consultant_token =
     }
   };
 
-  //This is for consultant creating an account 
-  const ConsultantSignUp = async (name,email,password,healthWorkerId,phone,) => {
+  //This is for consultant creating an account
+  const ConsultantSignUp = async (
+    name,
+    email,
+    password,
+    healthWorkerId,
+    phone
+  ) => {
     data = {
-      name:name,
-      email:email,
-      password:password,
-      healthWorkerId:healthWorkerId,
-      phone:phone,
+      name: name,
+      email: email,
+      password: password,
+      healthWorkerId: healthWorkerId,
+      phone: phone,
     };
     try {
       const response = await axios.post(
-        `${CONSULTANT_BASE_URL}/registerhealthworker`,data
+        `${CONSULTANT_BASE_URL}/registerhealthworker`,
+        data
       );
-      console.log("this is ",response);
+      console.log("this is ", response);
       return response;
     } catch (error) {
       if (error.response) {
@@ -117,58 +125,59 @@ const consultant_token =
   };
 
   //Doctor's Sign In into their account
-  const ConsultantSignIn = async(email,password,healthworkerId)=>{
+  const ConsultantSignIn = async (email, password, healthworkerId) => {
     try {
-       let data = {
-         email,
-         password,
-         healthworkerId
-       };
-      const response = await axios.post(`${CONSULTANT_BASE_URL}/login`,data)
-      return response
+      let data = {
+        email,
+        password,
+        healthworkerId,
+      };
+      const response = await axios.post(`${CONSULTANT_BASE_URL}/login`, data);
+      return response;
     } catch (error) {
       console.log(error.response.data);
-       if (!error.response) {
-         setError_message("A Network Error Occured");
-       }else{
+      if (!error.response) {
+        setError_message("A Network Error Occured");
+      } else {
         setError_message(error.response.data.msg);
-       }
+      }
     }
-  }
+  };
 
   //search for a doctor
-  const SearchConsultant = async (search) =>{
-     const data ={
-       search:search
-     }
+  const SearchConsultant = async (search) => {
+    const data = {
+      search: search,
+    };
     try {
       const response = await axios.post(
-        `${CONSULTANT_BASE_URL}/searchworker`,data
+        `${CONSULTANT_BASE_URL}/searchworker`,
+        data
       );
-      return response.data
+      return response.data;
     } catch (error) {
-       if (error.response) {
-         setError_message(error.response.data.msg);
-       }
+      if (error.response) {
+        setError_message(error.response.data.msg);
+      }
     }
-  }
+  };
 
   //user send message
-  const UserSendMessage = async (data) =>{
+  const UserSendMessage = async (data) => {
     try {
       const response = await axios.post(`${USER_BASE_URL}/send_message`, data, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      return response
+      return response;
     } catch (error) {
       console.log(error);
-    } 
-  }
+    }
+  };
 
   //consultant send message
-  const ConsultantSendMessage = async (data) =>{
+  const ConsultantSendMessage = async (data) => {
     try {
       const response = await axios.post(
         `${CONSULTANT_BASE_URL}/send_message`,
@@ -179,35 +188,37 @@ const consultant_token =
           },
         }
       );
-      return response
+      return response;
     } catch (error) {
       console.log(error.response.data);
     }
-  }
+  };
 
   //User Update their profile picture
-  const UserUpdateProfile = async(data)=>{
+  const UserUpdateProfile = async (data) => {
     try {
       const response = await axios.post(
-        `${USER_BASE_URL}/accountdetailsupdate`,data,{
-          headers:{
-            Authorization:`Bearer ${accessToken}`
-          }
+        `${USER_BASE_URL}/accountdetailsupdate`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
       );
       //console.log(response.data.data);
-      return response
+      return response;
     } catch (error) {
-      if(!error.response){
-        setError_message("A network error occured")
-      }else{
-        setError_message(error.response.data.msg)
+      if (!error.response) {
+        setError_message("A network error occured");
+      } else {
+        setError_message(error.response.data.msg);
       }
     }
-  }
+  };
 
   //consultant update their profile picture
-  const ConsultantUpdateProfile = async(data)=>{
+  const ConsultantUpdateProfile = async (data) => {
     try {
       const response = await axios.post(
         `${CONSULTANT_BASE_URL}/healthworkerupdate_details`,
@@ -219,29 +230,42 @@ const consultant_token =
         }
       );
       console.log(response);
-      return response
+      return response;
     } catch (error) {
       console.log(error.response);
     }
-  }
+  };
 
   //consultant Starting A conversation with client
-  const ConsultantStartConversation = async(data) =>{
-     try {
-       const response = await axios.post(
-         `${CONSULTANT_BASE_URL}/create_conversation`,
-         data,
-         {
-           headers: {
-             Authorization: `Bearer ${accessToken}`,
-           },
-         }
-       );
-       return response;
-     } catch (error) {
-       console.log(error.response);
-     }
-  }
+  const ConsultantStartConversation = async (data) => {
+    try {
+      const response = await axios.post(
+        `${CONSULTANT_BASE_URL}/create_conversation`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      return response;
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
+
+  // MAKING PAYMENTS
+  const CreatePaymentIntent = async (data) => {
+    try {
+      const response = await axios.post(
+        `https://final-year-backend-35ph.onrender.com/api/v1/payment/make_payments`,
+        data
+      );
+      return response.data
+    } catch (error) {
+       console.log(error.response)
+    }
+  };
   return (
     <AllPostRequest.Provider
       value={{
@@ -259,7 +283,8 @@ const consultant_token =
         ConsultantSendMessage,
         UserUpdateProfile,
         ConsultantUpdateProfile,
-        ConsultantStartConversation
+        ConsultantStartConversation,
+        CreatePaymentIntent,
       }}
     >
       {children}

@@ -15,6 +15,8 @@ import Payment from "../screen/Payment";
 import MeetingRoom from "../screen/MeetingRoom";
 import VideoScreen from "../screen/VideoScreen";
 import MedicalSpecialist from "../screen/MedicalSpecialist";
+import SpecialityMembers from "../screen/SpecialityMembers";
+import Preview from "../screen/Preview";
 
 const Stack = createStackNavigator();
 
@@ -55,6 +57,13 @@ const StackNavigator = () => {
             }}
           />
           <Stack.Screen
+            name="previewappointment"
+            component={Preview}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
             name="meeting"
             component={MeetingRoom}
             options={{
@@ -71,10 +80,18 @@ const StackNavigator = () => {
           <Stack.Screen
             name="specialty"
             component={MedicalSpecialist}
-            options={{ 
-               title:"Our Specialist",
-               headerTitleAlign:"center"
-             }}
+            options={{
+              title: "Our Specialist",
+              headerTitleAlign: "center",
+            }}
+          />
+          <Stack.Screen
+            name="specialtymember"
+            component={SpecialityMembers}
+            options={{
+              title: "Available Doctors",
+              headerTitleAlign: "center",
+            }}
           />
         </>
       ) : (

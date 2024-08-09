@@ -161,7 +161,7 @@ const Main = ({ navigation, route }) => {
           </View>
 
           <TouchableOpacity
-            onPressIn={() => navigation.navigate("confirmappointmnet")}
+            onPressIn={() => navigation.navigate("previewappointment")}
             className={"mt-3 bg-blue-900 p-1 rounded"}
           >
             <Text className="m-2 text-white text-center">
