@@ -49,7 +49,16 @@
           "recordAudioAndroid": true
         }
       ],
-      "expo-asset"
+      "expo-asset",
+      [
+      "expo-build-properties",
+      {
+        "android": {
+          "minSdkVersion": 24,
+          "extraMavenRepos": ["../../node_modules/@notifee/react-native/android/libs"]
+        }
+      }
+    ]
     ]
   }
 }

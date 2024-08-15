@@ -7,10 +7,11 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
-import { MaterialIcons } from "@expo/vector-icons";
 import moment from "moment";
+import { useNavigation } from "@react-navigation/native";
 
-const Notifcation = ({ title, message, status, id, data, displayDate }) => {
+
+const Notifcation = ({ title, message, status, id, data, displayTime,displayDate }) => {
   const [dropdown, setDropdown] = useState(false);
   const randomColors = ["#D1C4E9", "#20B2AA", "#228B22", "#F5F5DC", "#FFFFE0"];
   const getRandomColor = () => {
@@ -24,9 +25,22 @@ const Notifcation = ({ title, message, status, id, data, displayDate }) => {
     return randomColors[Math.floor(Math.random() * randomColors.length)];
   };
   const backgroundColor = getRandomColor();
-  
+  const navigation = useNavigation()
   return (
-    <TouchableOpacity className="w-full p-2 m-1 flex flex-row justify-between">
+    <TouchableOpacity
+      className="w-full p-2 m-1 flex flex-row justify-between"
+      onPress={() =>
+        navigation.navigate("notificationdetails", {
+          headerTitle: title,
+          notificationId: id,
+          message: message,
+          data: data,
+          title: title,
+          backgroundColor: backgroundColor,
+          displayDate,
+        })
+      }
+    >
       <View
         style={{
           backgroundColor,
@@ -37,7 +51,9 @@ const Notifcation = ({ title, message, status, id, data, displayDate }) => {
           alignItems: "center",
         }}
       >
-        <Text className="text-center text-white">AC</Text>
+        <Text className="text-center text-white">
+          {title.split(" ")[0][0]} {title.split(" ")[1][0]}
+        </Text>
       </View>
       <View className="flex-1 ml-2">
         <View className="flex-row items-center">
@@ -90,7 +106,7 @@ const Notifcation = ({ title, message, status, id, data, displayDate }) => {
           </View>
         )}
       </View>
-      <Text className="text-xs">{displayDate}</Text>
+      <Text className="text-xs">{displayTime}</Text>
     </TouchableOpacity>
   );
 };

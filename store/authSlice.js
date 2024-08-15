@@ -18,7 +18,6 @@ export const authSlice = createSlice({
       state.info = null
     },
     SetUser: (state, action) => {
-      console.log(action);
       state.info = action.payload;
     },
     Verification:(state,action)=>{    

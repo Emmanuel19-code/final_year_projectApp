@@ -1,5 +1,4 @@
 import React, { useContext, useRef, useState } from "react";
-import { Paystack } from "react-native-paystack-webview";
 import { View, TouchableOpacity, Text, TextInput, Alert } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AllPostRequest } from "../context/allpostRequest";

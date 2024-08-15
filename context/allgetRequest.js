@@ -52,47 +52,14 @@ const AllGetProvider = ({ children }) => {
       }
     }
   };
-  const InvolvedConversations = async()=>{
-      try {
-        const response = await axios.get(`${USER_BASE_URL}/get_conversation`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        return response.data.data
-      } catch (error) {
-         if (!error.response) {
-           setP_error_message("A network error occured");
-         } else {
-           setP_error_message(error.response.data.msg);
-         }
-      }
-  }
-
-  const ConsultantConversations = async () =>{
-     try {
-       const response = await axios.get(
-         `${CONSULTANT_BASE_URL}/get_conversation`,
-         {
-           headers: {
-             Authorization: `Bearer ${accessToken}`,
-           },
-         }
-       );
-       return response.data.data;
-     } catch (error) {
-       if (!error.response) {
-         setP_error_message("A network error occured");
-       } else {
-         setP_error_message(error.response.data.msg);
-       }
-     }
-  }
-
-  const GetMessagesInConversations = async(conversationId)=>{
+  const InvolvedConversations = async () => {
     try {
-      const response = await axios.get(`${MESSAGE_URL}/${conversationId}`)
-      return response.data.messages
+      const response = await axios.get(`${USER_BASE_URL}/get_conversation`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      return response.data.data;
     } catch (error) {
       if (!error.response) {
         setP_error_message("A network error occured");
@@ -100,41 +67,75 @@ const AllGetProvider = ({ children }) => {
         setP_error_message(error.response.data.msg);
       }
     }
-  }
+  };
+
+  const ConsultantConversations = async () => {
+    try {
+      const response = await axios.get(
+        `${CONSULTANT_BASE_URL}/get_conversation`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      return response.data.data;
+    } catch (error) {
+      if (!error.response) {
+        setP_error_message("A network error occured");
+      } else {
+        setP_error_message(error.response.data.msg);
+      }
+    }
+  };
+
+  const GetMessagesInConversations = async (conversationId) => {
+    try {
+      const response = await axios.get(`${MESSAGE_URL}/${conversationId}`);
+      return response.data.messages;
+    } catch (error) {
+      if (!error.response) {
+        setP_error_message("A network error occured");
+      } else {
+        setP_error_message(error.response.data.msg);
+      }
+    }
+  };
 
   //getting user details
-  const GetUserInfo = async () =>{
-     try {
+  const GetUserInfo = async () => {
+    try {
       const response = await axios.get(`${USER_BASE_URL}/profile`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      return response.data.data
-     } catch (error) {
-       console.log(error);
-     }
-  }
+      return response.data.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   //getting consultant details
-  const GetConsultantInfo = async () =>{
+  const GetConsultantInfo = async () => {
     try {
       const response = await axios.get(
-        `${CONSULTANT_BASE_URL}/consultant_profile`,{
-          headers:{
-            Authorization:`Bearer ${accessToken}`
-          }
+        `${CONSULTANT_BASE_URL}/consultant_profile`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
       );
       return response.data.data;
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   //GEtting the appointments for a doctor
-  const GetMyReceivedAppointments = async () =>{
-     try{
+  const GetMyReceivedAppointments = async () => {
+    try {
       const response = await axios.get(
         `${CONSULTANT_BASE_URL}/my_received_appointmetns`,
         {
@@ -143,27 +144,29 @@ const AllGetProvider = ({ children }) => {
           },
         }
       );
-      return response
-     }
-     catch(error){
-         console.log(error.response.data);
-     }
-  }
+      return response;
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
 
-  const GetAllAppointment = async () =>{
-     try{
-        const response = await axios.get(`${CONSULTANT_BASE_URL}/all_appointments`,{
-          headers:{
-            Authorization:`Bearer ${accessToken}`
-          }
-        })
-        return response
-     }catch(error){
-        console.log(error);
-     }
-  }
+  const GetAllAppointment = async () => {
+    try {
+      const response = await axios.get(
+        `${CONSULTANT_BASE_URL}/all_appointments`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  const GetNotification = async()=>{
+  const GetNotification = async () => {
     try {
       const response = await axios.get(
         `${NOTIFICATINO_URL}/all_notifications`,
@@ -173,11 +176,24 @@ const AllGetProvider = ({ children }) => {
           },
         }
       );
+      return response;
+    } catch (error) {
+      console.log("error", error.response);
+    }
+  };
+
+  const WorkersInDepartment = async (data) => {
+    try {
+      const response = await axios.get(
+        `${CONSULTANT_BASE_URL}/departments/:${data}`
+      )
       return response
     } catch (error) {
-      console.log("error",error.response)
+      console.log({
+        error: error.response,
+      });
     }
-  }
+  };
   return (
     <AllGetRequest.Provider
       value={{
@@ -194,7 +210,8 @@ const AllGetProvider = ({ children }) => {
         GetConsultantInfo,
         GetAllAppointment,
         GetMyReceivedAppointments,
-        GetNotification
+        GetNotification,
+        WorkersInDepartment,
       }}
     >
       {children}

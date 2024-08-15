@@ -22,22 +22,48 @@ const Main = ({ navigation, route }) => {
   const { futureDates, pickedDay, setPickedDay, GenerateTimeSlots } =
     useContext(DateTimeContext);
   const [time_slot, setTime_slot] = useState([]);
-
+  const [pickedDate,setPickedDate] = useState("")
+  const [pickedTime,setPickedTime] = useState(" ")
+  const [newPickedTime,setNewPickedTime] = useState("")
   const { name } = route.params;
 
   const handleItemSelect = (itemId) => {
     setSelectedItemId((prev) => (prev === itemId ? null : itemId));
     setPickedDay((prev) => (prev === itemId ? null : itemId));
   };
+
   const handleTimeSlots = (itemId) => {
     setTimedslots((prev) => (prev === itemId ? null : itemId));
+    setPickedTime((prev)=>(prev=== itemId?null:itemId))
   };
 
   useEffect(() => {
-    let date = moment(futureDates[pickedDay]?.data.date, "MM/DD/YYYY");
-    setTime_slot(GenerateTimeSlots(date.format("YYYY-MM-DD")));
-  }, []);
+    if (pickedDay !== null) {
+      const date = moment(futureDates[pickedDay]?.data.date, "MM/DD/YYYY");
+      const formattedDate = date.format("DD/MM/YYYY");
+      setPickedDate(formattedDate);
+      const generatedSlots = GenerateTimeSlots(date.format("YYYY-MM-DD"));
+      const currentDate = moment();
+      const filteredSlots = generatedSlots.filter((slot) => {
+        const slotTime = moment(
+          `${date.format("YYYY-MM-DD")} ${slot.time}`,
+          "YYYY-MM-DD HH:mm"
+        );
+        return slotTime.isAfter(currentDate);
+      });
 
+      setTime_slot(filteredSlots);
+      const selectedSlot = filteredSlots.find((slot) => slot.id === pickedTime);
+      setNewPickedTime(selectedSlot?.time)
+    }
+  }, [pickedDay, pickedTime, futureDates, GenerateTimeSlots]);
+
+ 
+ 
+ 
+  
+  
+  
   return (
     <View
       style={{
@@ -65,7 +91,6 @@ const Main = ({ navigation, route }) => {
             </View>
           </View>
         </View>
-        {/*second part of the main page */}
         <View className="mt-8 p-2">
           <View>
             <Text className="text-orange-500 text-lg">Choose your slot</Text>
@@ -92,18 +117,14 @@ const Main = ({ navigation, route }) => {
           </View>
 
           <View className="p-2 mt-5 ">
-            <Text className="text-lg text-orange-500 ">Morning</Text>
-            {time_slot?.length < 0 ? (
-              <Text className="font-bold text-lg ml-2 for this period at the moment">
+            <Text className="text-lg text-orange-500 ">Available Times</Text>
+            {time_slot.length === 0 ? (
+              <Text className="font-bold text-lg ml-2">
                 No time available for this period at the moment
               </Text>
             ) : (
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 {time_slot.map((item, key) => {
-                  let currentHour = item.time.split(":")[0];
-                  //console.log(currentHour);
-                  //console.log(new Date().getHours());
-                  console.log("this is cool", item.time);
                   return (
                     <TimeSlots
                       key={key}
@@ -161,7 +182,7 @@ const Main = ({ navigation, route }) => {
           </View>
 
           <TouchableOpacity
-            onPressIn={() => navigation.navigate("previewappointment")}
+            onPressIn={() => navigation.navigate("previewappointment",{date:pickedDate,time:newPickedTime,type:appointmentType,consultant:name})}
             className={"mt-3 bg-blue-900 p-1 rounded"}
           >
             <Text className="m-2 text-white text-center">

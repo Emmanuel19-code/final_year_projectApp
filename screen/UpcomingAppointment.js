@@ -28,7 +28,6 @@ const UpcomingAppointment = () => {
       setIsLoading(false);
     }
   };
-
   const upcoming = data?.filter((item) => {
     try {
       const appointmentDateParts = item.appointmentDate.split("/");

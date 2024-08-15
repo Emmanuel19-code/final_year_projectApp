@@ -69,6 +69,7 @@ const MainHome = ({ navigation }) => {
         paddingLeft: insets.left,
         paddingRight: insets.right,
       }}
+      className="bg-white h-full"
     >
       <View className="flex flex-row items-center p-2">
         <Pressable className="w-10 h-10" onPress={OpenDrawer}>

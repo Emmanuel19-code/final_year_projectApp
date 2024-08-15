@@ -1,12 +1,12 @@
 import * as SQLite from "expo-sqlite";
 
-const db = await SQLite.openDatabaseAsync("notifications");
+const db = await SQLite.openDatabaseAsync("notifications")
 
 export const createNotificationDB = async () => {
   try {
     await db.prepareAsync(`
-PRAGMA journal_mode = WAL;
-CREATE TABLE IF NOT EXISTS test (
+    PRAGMA journal_mode = WAL;
+    CREATE TABLE IF NOT EXISTS test (
     id TEXT PRIMARY KEY NOT NULL, 
     title TEXT NOT NULL, 
     message TEXT NOT NULL, 
@@ -18,10 +18,10 @@ CREATE TABLE IF NOT EXISTS test (
     appointment_id TEXT NOT NULL,
     doctor_name TEXT NOT NULL
 )
-`);
-    console.log("database create");
+`)
+    console.log("database create")
   } catch (error) {
-    console.log("an error ", error);
+    console.log("an error ", error)
   }
 };
 

@@ -17,6 +17,9 @@ import VideoScreen from "../screen/VideoScreen";
 import MedicalSpecialist from "../screen/MedicalSpecialist";
 import SpecialityMembers from "../screen/SpecialityMembers";
 import Preview from "../screen/Preview";
+import NotificationDetails from "../screen/NotificationDetails";
+import { Entypo } from "@expo/vector-icons";
+import { Pressable, View } from "react-native";
 
 const Stack = createStackNavigator();
 
@@ -60,7 +63,7 @@ const StackNavigator = () => {
             name="previewappointment"
             component={Preview}
             options={{
-              headerShown: false,
+              headerTitle:"Preview"
             }}
           />
           <Stack.Screen
@@ -92,6 +95,27 @@ const StackNavigator = () => {
               title: "Available Doctors",
               headerTitleAlign: "center",
             }}
+          />
+          <Stack.Screen
+            name="notificationdetails"
+            component={NotificationDetails}
+            options={({ route }) => ({
+              headerTitle: "",
+              headerTitleAlign: "center",
+              headerRight: () => (
+                <View style={{ flexDirection: "row" }}>
+                  <Pressable style={{ margin: 4 }}>
+                    <Entypo name="archive" size={20} color="gray" />
+                  </Pressable>
+                  <Pressable onPress={() => {}} style={{ margin: 4 }}>
+                    <Entypo name="trash" size={20} color="gray" />
+                  </Pressable>
+                  <Pressable onPress={() => {}} style={{ margin: 4 }}>
+                    <Entypo name="dots-three-vertical" size={20} color="gray" />
+                  </Pressable>
+                </View>
+              ),
+            })}
           />
         </>
       ) : (
