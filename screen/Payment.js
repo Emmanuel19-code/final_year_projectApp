@@ -6,7 +6,6 @@ import { useStripe } from "@stripe/stripe-react-native";
 
 const Payment = () => {
   const insets = useSafeAreaInsets();
-  //const paystackWebViewRef = useRef(null);
   const { CreatePaymentIntent } = useContext(AllPostRequest);
   const [amount, setAmount] = useState();
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
@@ -68,36 +67,4 @@ const Payment = () => {
 
 export default Payment;
 
-/*
-<Paystack
-        paystackKey="pk_test_6cbf6c96d9481f60b1fe9dad6e6e0614b4e3708e"
-        billingEmail="emmanueladane52@gmail.com"
-        amount={"25000.00"}
-        onCancel={(e) => {
-          // handle response here
-          console.log("Transaction canceled:", e);
-        }}
-        onSuccess={(res) => {
-          // handle response here
-          console.log("Transaction successful:", res);
-        }}
-        ref={paystackWebViewRef}
-      />
-      <TouchableOpacity
-        style={{
-          backgroundColor: "blue",
-          padding: 10,
-          marginTop: 20,
-          borderRadius: 5,
-        }}
-        onPress={() => {
-          if (paystackWebViewRef.current) {
-            paystackWebViewRef.current.startTransaction();
-          }
-        }}
-      >
-        <Text style={{ color: "white" }}>Pay Now</Text>
-      </TouchableOpacity>
 
-
-*/
