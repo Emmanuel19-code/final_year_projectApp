@@ -20,6 +20,7 @@ import Preview from "../screen/Preview";
 import NotificationDetails from "../screen/NotificationDetails";
 import { Entypo } from "@expo/vector-icons";
 import { Pressable, View } from "react-native";
+import PaymentSuccess from "../screen/PaymentSuccess";
 
 const Stack = createStackNavigator();
 
@@ -63,7 +64,7 @@ const StackNavigator = () => {
             name="previewappointment"
             component={Preview}
             options={{
-              headerTitle:"Preview"
+              headerTitle: "Preview",
             }}
           />
           <Stack.Screen
@@ -94,6 +95,13 @@ const StackNavigator = () => {
             options={{
               title: "Available Doctors",
               headerTitleAlign: "center",
+            }}
+          />
+          <Stack.Screen
+            name="success"
+            component={PaymentSuccess}
+            options={{
+              title: "Package Success",
             }}
           />
           <Stack.Screen
