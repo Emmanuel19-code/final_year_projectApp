@@ -15,52 +15,84 @@ import { Ionicons, Entypo } from "@expo/vector-icons";
 import { PUSHER_KEY } from "@env";
 import Pusher from "pusher-js/react-native";
 import { AllGetRequest } from "../context/allgetRequest";
+import Toast from "react-native-toast-message";
 
 const MainHome = ({ navigation }) => {
   const insets = useSafeAreaInsets();
-  const OpenDrawer = () => {
-    navigation.dispatch(DrawerActions.toggleDrawer());
-  };
-
   const info = useSelector(selectInfo);
   const role = useSelector(selectRole);
   const [newdata, setNewdata] = useState([]);
   const [data, setData] = useState([]);
   const { GetAllAppointment } = useContext(AllGetRequest);
+  const [dataCanceled, setDateCanceled] = useState([]);
+  const [completedAppointment,setCompletedAppointment] = useState([])
+
+  const OpenDrawer = () => {
+    navigation.dispatch(DrawerActions.toggleDrawer());
+  };
 
   useEffect(() => {
     const pusher = new Pusher(PUSHER_KEY, {
       cluster: "eu",
     });
     const channel = pusher.subscribe("appointments");
-    channel.bind("new-appointment", (data) => {
-      setNewdata(data);
+
+    channel.bind("new-appointment", (appointmentData) => {
+      setNewdata(appointmentData);
+      showToast("New appointment received!");
     });
 
+    channel.bind("canceled-appointment", (appointmentData) => {
+      setDateCanceled(appointmentData);
+      showToast("Appointment was canceled.");
+    });
+    channel.bind("completed-appointment", (appointmentData) => {
+      setCompletedAppointment(appointmentData);
+    });
     FetchAppointments();
 
     return () => {
       channel.unbind("new-appointment");
       pusher.unsubscribe("appointments");
+      pusher.unsubscribe("canceled-appointment");
     };
   }, []);
 
   useEffect(() => {
     FetchAppointments();
-  }, [newdata]);
+  }, [newdata, dataCanceled, completedAppointment]);
 
   const FetchAppointments = async () => {
     try {
       const response = await GetAllAppointment();
-      console.log(response.data.data);
-      if (response) {
-        setData(response.data?.data?.appointments || []);
+      if (response && response?.data && response?.data?.all_appointments) {
+        setData(response?.data?.all_appointments);
       }
     } catch (error) {
       console.error("Error fetching appointments:", error);
+      showToast("Error fetching appointments", "error");
     }
   };
 
+  const showToast = (message, type = "success") => {
+    Toast.show({
+      type: type,
+      text1: message,
+      position: "top",
+      visibilityTime: 4000,
+      autoHide: true,
+      topOffset: 30,
+    });
+  };
+  const cancelledAppointments = data?.filter(
+    (appointment) => appointment?.status === "canceled"
+  );
+  const notCanceledAppointments = data?.filter(
+    (appointment) => appointment?.status !== "canceled"
+  );
+  const completedAppointments = data?.filter(
+    (appointment) => appointment?.status == "completed"
+  );
   return (
     <View
       style={{
@@ -82,11 +114,12 @@ const MainHome = ({ navigation }) => {
           Welcome {info?.name && info?.name.split(" ")[0]}
         </Text>
       </View>
+
       <View className="p-2 mt-10">
         {role === "user" ? (
           <View>
             <ScrollView horizontal={true}>
-              <View className="w-80 h-40 border border-gray-300 bg-[#007BFF] rounded-xl p-1 justify-center m-1  shadow-lg">
+              <View className="w-80 h-40 border border-gray-300 bg-[#007BFF] rounded-xl p-1 justify-center m-1 shadow-lg">
                 <View>
                   <Text className="text-xl text-white">Consult Doctors</Text>
                   <Text className="text-wrap w-64 text-gray-300 font-medium">
@@ -146,21 +179,34 @@ const MainHome = ({ navigation }) => {
             <View className="bg-blue-500 w-40 h-24 rounded-lg p-2 m-1 shadow-lg">
               <View className="flex flex-row items-center">
                 <Ionicons name="calendar" size={24} color="white" />
-                <Text className="text-xl ml-2 text-white">{data?.length}</Text>
+                <Text className="text-xl ml-2 text-white">{data.length}</Text>
               </View>
               <Text className="mt-2 text-white">Appointments for Today</Text>
             </View>
             <View className="bg-blue-500 w-40 h-24 rounded-lg p-2 m-1 shadow-lg">
               <View className="flex flex-row items-center">
                 <Ionicons name="calendar" size={24} color="white" />
-                <Text className="text-xl ml-2 text-white">{data?.length}</Text>
+                <Text className="text-xl ml-2 text-white">
+                  {notCanceledAppointments.length}
+                </Text>
               </View>
               <Text className="mt-2 text-white">Pending Appointments</Text>
             </View>
             <View className="bg-blue-500 w-40 h-24 rounded-lg p-2 m-1 shadow-lg">
               <View className="flex flex-row items-center">
                 <Ionicons name="calendar" size={24} color="white" />
-                <Text className="text-xl ml-2 text-white">10</Text>
+                <Text className="text-xl ml-2 text-white">
+                  {completedAppointments.length}
+                </Text>
+              </View>
+              <Text className="mt-2 text-white">Completed</Text>
+            </View>
+            <View className="bg-blue-500 w-40 h-24 rounded-lg p-2 m-1 shadow-lg">
+              <View className="flex flex-row items-center">
+                <Ionicons name="calendar" size={24} color="white" />
+                <Text className="text-xl ml-2 text-white">
+                  {cancelledAppointments.length}
+                </Text>
               </View>
               <Text className="mt-2 text-white">Cancelled appointments</Text>
             </View>

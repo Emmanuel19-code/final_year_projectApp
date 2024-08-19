@@ -19,13 +19,18 @@ const Main = ({ navigation, route }) => {
   const [selectedItemId, setSelectedItemId] = useState(null);
   const [timedslots, setTimedslots] = useState(null);
   const [appointmentType, setAppointmentType] = useState("");
-  const { futureDates, pickedDay, setPickedDay, GenerateTimeSlots } =
-    useContext(DateTimeContext);
+  const {
+    futureDates,
+    pickedDay,
+    setPickedDay,
+    GenerateTimeSlots,
+    setWorkingDays,
+  } = useContext(DateTimeContext);
   const [time_slot, setTime_slot] = useState([]);
   const [pickedDate,setPickedDate] = useState("")
   const [pickedTime,setPickedTime] = useState(" ")
   const [newPickedTime,setNewPickedTime] = useState("")
-  const { name } = route.params;
+  const { healthworkerId, name, workingdays } = route.params;
 
   const handleItemSelect = (itemId) => {
     setSelectedItemId((prev) => (prev === itemId ? null : itemId));
@@ -36,7 +41,9 @@ const Main = ({ navigation, route }) => {
     setTimedslots((prev) => (prev === itemId ? null : itemId));
     setPickedTime((prev)=>(prev=== itemId?null:itemId))
   };
-
+  useEffect(()=>{
+   setWorkingDays(workingdays)
+  },[])
   useEffect(() => {
     if (pickedDay !== null) {
       const date = moment(futureDates[pickedDay]?.data.date, "MM/DD/YYYY");
@@ -57,13 +64,8 @@ const Main = ({ navigation, route }) => {
       setNewPickedTime(selectedSlot?.time)
     }
   }, [pickedDay, pickedTime, futureDates, GenerateTimeSlots]);
-
+ console.log(futureDates);
  
- 
- 
-  
-  
-  
   return (
     <View
       style={{

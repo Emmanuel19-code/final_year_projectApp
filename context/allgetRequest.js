@@ -146,7 +146,7 @@ const AllGetProvider = ({ children }) => {
       );
       return response;
     } catch (error) {
-      console.log(error.response.data);
+      console.log("tt",error.response.data);
     }
   };
 

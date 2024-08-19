@@ -220,7 +220,7 @@ const AllPostProvider = ({ children }) => {
   //consultant update their profile picture
   const ConsultantUpdateProfile = async (data) => {
     try {
-      const response = await axios.post(
+      const response = await axios.put(
         `${CONSULTANT_BASE_URL}/healthworkerupdate_details`,
         data,
         {
@@ -229,7 +229,6 @@ const AllPostProvider = ({ children }) => {
           },
         }
       );
-      console.log(response);
       return response;
     } catch (error) {
       console.log(error.response);

@@ -10,6 +10,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { persistor } from "./store/store";
 import { STRIPE_PUBLISHABLE_KEY } from "@env";
 import { StripeProvider } from "@stripe/stripe-react-native";
+import Toast from "react-native-toast-message";
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
                     <StackNavigator />
                   </StripeProvider>
                 </NavigationContainer>
+                <Toast/>
               </SafeAreaProvider>
             </DateTimeProvider>
           </AllGetProvider>

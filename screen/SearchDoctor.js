@@ -47,7 +47,8 @@ const SearchDoctor = ({ navigation }) => {
       return () => clearTimeout(timer);
     }
   }, [error_message, setError_message]);
-
+ 
+ 
   return (
     <View
       style={{
@@ -90,8 +91,10 @@ const SearchDoctor = ({ navigation }) => {
               phone={item?.phone}
               email={item?.email}
               healthworkerId={item?.healthworkerId}
-              starTime={item?.starTime}
+              startTime={item?.startTime}
               endTime={item?.endTime}
+              about={item?.about}
+              workingdays={item?.workingdays}
             />
           ))}
         {isloading && (

@@ -6,7 +6,18 @@ import { AntDesign } from "@expo/vector-icons";
 
 const Doctor = ({route,navigation}) => {
     const insets = useSafeAreaInsets();
-    const {name,phone,email,healthworkerId,startTime,endTime} = route.params
+    const {
+      name,
+      phone,
+      email,
+      healthworkerId,
+      startTime,
+      endTime,
+      about,
+      workingdays,
+    } = route.params;
+    console.log(startTime);
+    
   return (
     <View
       style={{
@@ -59,19 +70,14 @@ const Doctor = ({route,navigation}) => {
           <View className="mt-2 border-b-2 border-gray-200 border-dashed m-2 p-1">
             <Text className="">Working Time</Text>
             <View className="  mb-2">
-              <Text className="">Fri - Sat</Text>
+              <Text className="">{workingdays?.join(" , ")}</Text>
               <Text className="">{`${startTime?startTime:""} - ${endTime?endTime:""}`}</Text>
             </View>
           </View>
           <View className="border-b-2 border-gray-200 border-dashed m-2 p-1">
             <Text>About Doctor</Text>
             <Text className="flex-wrap mb-2">
-              Dr. Rita is a board-certified cardiologist with over 15 years of
-              experience. She specializes in advanced cardiac care, including
-              non-invasive procedures and patient education. Dr. Smith is
-              dedicated to providing personalized care and improving heart
-              health through the latest medical advancements and compassionate
-              support.
+              {about}
             </Text>
           </View>
         </View>
@@ -86,7 +92,8 @@ const Doctor = ({route,navigation}) => {
           onPress={() =>
             navigation.navigate("appointment", {
               healthworkerId,
-              name
+              name,
+              workingdays
             })
           }
         >

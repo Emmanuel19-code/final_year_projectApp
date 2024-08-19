@@ -3,15 +3,9 @@ import React, { createContext, useState, useEffect } from "react";
 export const DateTimeContext = createContext();
 
 const DateTimeProvider = ({ children }) => {
-  const [dateTime, setDateTime] = useState({
-    date: "",
-    day: "",
-    time: "",
-    year: "",
-    month: "",
-  });
   const [futureDates, setFutureDates] = useState([]);
   const [pickedDay, setPickedDay] = useState("");
+  const [workingDays, setWorkingDays] = useState([]);
 
   const getFutureDate = (daysAhead) => {
     const months = [
@@ -34,20 +28,23 @@ const DateTimeProvider = ({ children }) => {
       date: futureDate.toLocaleDateString(),
       day: futureDate.toLocaleDateString("en-US", { weekday: "long" }),
       year: futureDate.getFullYear().toString(),
-      month: months[futureDate.getMonth().toString()],
+      month: months[futureDate.getMonth()],
     };
   };
+
   useEffect(() => {
     const dates = [];
-    for (let day = 0; day < 7; day++) {
-      const futureDateData = getFutureDate(Number(day));
+    for (let day = 0; day < 10; day++) {
+      const futureDateData = getFutureDate(day);
       dates.push({
         id: day,
         data: futureDateData,
+        isAvailable: workingDays.includes(futureDateData.day),
       });
     }
     setFutureDates(dates);
-  }, []);
+  }, [workingDays]);
+
   const GenerateTimeSlots = (date) => {
     let startTime = new Date(date);
     let endTime = new Date(date);
@@ -75,10 +72,11 @@ const DateTimeProvider = ({ children }) => {
   return (
     <DateTimeContext.Provider
       value={{
-        futureDates,
+        futureDates: futureDates.filter((date) => date.isAvailable),
         pickedDay,
         setPickedDay,
         GenerateTimeSlots,
+        setWorkingDays,
       }}
     >
       {children}

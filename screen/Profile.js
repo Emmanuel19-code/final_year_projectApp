@@ -5,7 +5,7 @@ import {
   Pressable,
   TextInput,
   Modal,
-  ScrollView
+  ScrollView,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -16,6 +16,7 @@ import { LoggedOut, selectInfo, selectRole, SetUser } from "../store/authSlice";
 import { AllPostRequest } from "../context/allpostRequest";
 import { AllGetRequest } from "../context/allgetRequest";
 import { deleteToken } from "../store/tokenSlice";
+import SelectWorkingDays from "../components/SelectWorkingDays";
 
 const Profile = ({ navigation }) => {
   const insets = useSafeAreaInsets();
@@ -23,9 +24,9 @@ const Profile = ({ navigation }) => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [address, setAddress] = useState("");
-  const [workingDays, setWorkingDays] = useState("");
+  const [workingDays, setWorkingDays] = useState([]);
   const [phone, setPhone] = useState("");
-   const [about, setAbout] = useState("");
+  const [about, setAbout] = useState("");
   const role = useSelector(selectRole);
   const [data, setData] = useState([]);
   const [refresh, setRefresh] = useState(false);
@@ -37,31 +38,34 @@ const Profile = ({ navigation }) => {
   const dispatch = useDispatch();
   useEffect(() => {
     fetchprofile();
-  }, [role, refresh]);
-
+  }, [role, refresh]);  
+  
+  
   const sendPost = async () => {
     try {
+      const daysOnly = workingDays.map((dayObj) => dayObj.day);
       let response;
-      if (role == "user") {
-        const data = { phone: phone };
-        response = await UserUpdateProfile(data);
+
+      if (role === "user") {
+        response = await UserUpdateProfile({ phone });
       } else {
-        const data = {
-          phone: phone,
-          startTime: startTime,
-          endTime: endTime,
-        };
-        response = await ConsultantUpdateProfile(data);
+        response = await ConsultantUpdateProfile({
+          phone,
+          startTime,
+          endTime,
+          workingDays: daysOnly,
+        });
       }
+
       if (response) {
-        info.phone = response.data.data.phone != info.phone && response.data.data.phone;
-        info.startTime = response.data.data.startTime != info.startTime && response.data.data.startTime
+        dispatch(SetUser(response.data?.data));
         setRefresh(!refresh);
       }
     } catch (error) {
       console.log(error);
     }
   };
+
   const fetchprofile = async () => {
     try {
       if (role == "user") {
@@ -89,7 +93,7 @@ const Profile = ({ navigation }) => {
         paddingBottom: insets.bottom,
         paddingLeft: insets.left,
         paddingRight: insets.right,
-        flex:1
+        flex: 1,
       }}
     >
       <View className="flex flex-row items-center justify-between p-1">
@@ -125,7 +129,7 @@ const Profile = ({ navigation }) => {
           </Text>
           <View className="bg-white rounded p-3">
             <Text className="text-gray-300 font-extrabold">
-              {info?.uniqueId}
+              {role == "user" ? info?.uniqueId : info?.healthworkerId}
             </Text>
           </View>
         </View>
@@ -263,25 +267,28 @@ const Profile = ({ navigation }) => {
             )}
             {edit ? (
               <View className="m-2">
-                <Text className="text-xs text-gray-500 font-bold mb-1">
+                <Text className="text-xs text-gray-500 font-bold ">
                   Working Days
                 </Text>
-                <View className="bg-white rounded p-2">
-                  <TextInput
-                    value={workingDays}
-                    onChangeText={(text) => setWorkingDays(text)}
-                  />
-                </View>
+                <SelectWorkingDays setWorkingDays={setWorkingDays} />
               </View>
             ) : (
               <View className="m-2">
                 <Text className="text-xs text-gray-500 font-bold mb-1">
                   Working Days (eg. Monday,Tuesday .....)
                 </Text>
-                <View className="bg-white rounded p-3">
-                  <Text className="text-gray-300 font-extrabold">
-                    Monday,Tuesday,Wednesday
-                  </Text>
+                <View className="bg-white rounded p-3 flex flex-row items-center">
+                  {info?.workingdays?.map((day, index) => (
+                    <>
+                      <Text
+                        className="text-gray-300 font-extrabold"
+                        key={index}
+                      >
+                        {day}
+                        {index < day.length - 1 && <Text>, </Text>}
+                      </Text>
+                    </>
+                  ))}
                 </View>
               </View>
             )}

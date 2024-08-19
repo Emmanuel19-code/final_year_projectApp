@@ -3,8 +3,18 @@ import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-const DisplayDoc = ({name,speciality,healthworkerId,phone,starTime,endTime,email}) => {
-  const navigation = useNavigation()
+const DisplayDoc = ({
+  name,
+  speciality,
+  healthworkerId,
+  phone,
+  startTime,
+  endTime,
+  email,
+  about,
+  workingdays,
+}) => {
+  const navigation = useNavigation();
   return (
     <TouchableOpacity
       className="p-2 bg-white rounded-lg m-2 shadow-lg flex-row items-center "
@@ -15,8 +25,10 @@ const DisplayDoc = ({name,speciality,healthworkerId,phone,starTime,endTime,email
           phone,
           email,
           healthworkerId,
-          starTime,
+          startTime,
           endTime,
+          about,
+          workingdays,
         })
       }
     >
