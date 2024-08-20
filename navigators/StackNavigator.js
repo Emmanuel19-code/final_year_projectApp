@@ -13,7 +13,6 @@ import { selectloggedIn } from "../store/authSlice";
 import ChatPage from "../screen/ChatPage";
 import Payment from "../screen/Payment";
 import MeetingRoom from "../screen/MeetingRoom";
-import VideoScreen from "../screen/VideoScreen";
 import MedicalSpecialist from "../screen/MedicalSpecialist";
 import SpecialityMembers from "../screen/SpecialityMembers";
 import Preview from "../screen/Preview";
@@ -21,6 +20,8 @@ import NotificationDetails from "../screen/NotificationDetails";
 import { Entypo } from "@expo/vector-icons";
 import { Pressable, View } from "react-native";
 import PaymentSuccess from "../screen/PaymentSuccess";
+import JoinMeeting from "../screen/JoinMeeting"
+import Meeting from "../screen/Meeting";
 
 const Stack = createStackNavigator();
 
@@ -75,8 +76,8 @@ const StackNavigator = () => {
             }}
           />
           <Stack.Screen
-            name="video"
-            component={VideoScreen}
+            name="joinmeeting"
+            component={JoinMeeting}
             options={{
               headerShown: false,
             }}
@@ -103,6 +104,13 @@ const StackNavigator = () => {
             options={{
               title: "Package Success",
             }}
+          />
+          <Stack.Screen
+            name="newmeeting"
+            component={Meeting}
+            options={{ 
+               headerShown:false
+             }}
           />
           <Stack.Screen
             name="notificationdetails"

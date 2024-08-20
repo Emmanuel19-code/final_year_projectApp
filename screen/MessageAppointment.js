@@ -20,7 +20,7 @@ const MessageAppointment = ({ navigation }) => {
   const [refresh,setRefresh] = useState(false)
   useEffect(() => {
     fetchAppointments();
-  }, []);
+  }, [refresh]);
 
   const fetchAppointments = async () => {
     setM_isloading(true);
@@ -28,7 +28,9 @@ const MessageAppointment = ({ navigation }) => {
       let response = await GetMyReceivedAppointments();
       if (response && response.data) {
         const filteredData = response.data?.booked?.filter(
-          (item) => item.appointmentType === "message" && item.doctorId === info.uniqueId
+          (item) =>
+            item.appointmentType === "message" &&
+            item.doctorId === info.healthworkerId
         );
         setMdata(filteredData);
         setM_isloading(false);

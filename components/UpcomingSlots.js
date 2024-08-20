@@ -27,11 +27,12 @@ const UpcomingSlots = ({
     };
     try {
       const response = await ConsultantStartConversation(data);
-      if(response){
-         navigation.navigate("chatpage")
-      }
+      //if(response){
+      //   navigation.navigate("chatpage")
+      //}
+      console.log(response.data)
     } catch (error) {
-      console.log(error);
+      console.log(error.response);
     }
   };
   return (

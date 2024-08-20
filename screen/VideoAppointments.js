@@ -20,19 +20,21 @@ const VideoAppointments = ({ navigation }) => {
       let response = await GetMyReceivedAppointments();
       if (response && response.data) {
         const filteredData = response.data?.booked?.filter(
-          (item) => item.appointmentType === "video"
+          (item) =>
+            item.appointmentType === "video" &&
+            item.doctorId === info.healthworkerId
         );
         setData(filteredData);
       }
     } catch (error) {
-      console.log(error);
+      console.log(error.response);
     } finally {
       setIsloading(false);
     }
   };
 
   return (
-    <View className="h-full">
+    <View className="h-full bg-white">
       <ScrollView className="" showsVerticalScrollIndicator={false}>
         {isloading ? (
           <View className="flex-1 justify-center mt-20 items-center">
@@ -52,9 +54,9 @@ const VideoAppointments = ({ navigation }) => {
             />
           ))
         ) : (
-          <View className="items-center bg-red-500">
+          <View className="items-center h-64 justify-center">
             <Text className="w-64 text-center">
-              There are no appointments for you at the moment
+              There are no Video appointments for you at the moment
             </Text>
           </View>
         )}

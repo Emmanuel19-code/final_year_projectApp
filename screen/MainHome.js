@@ -16,7 +16,8 @@ import { PUSHER_KEY } from "@env";
 import Pusher from "pusher-js/react-native";
 import { AllGetRequest } from "../context/allgetRequest";
 import Toast from "react-native-toast-message";
-
+import { io } from "socket.io-client";
+let socket;
 const MainHome = ({ navigation }) => {
   const insets = useSafeAreaInsets();
   const info = useSelector(selectInfo);
@@ -25,13 +26,17 @@ const MainHome = ({ navigation }) => {
   const [data, setData] = useState([]);
   const { GetAllAppointment } = useContext(AllGetRequest);
   const [dataCanceled, setDateCanceled] = useState([]);
-  const [completedAppointment,setCompletedAppointment] = useState([])
+  const [completedAppointment, setCompletedAppointment] = useState([]);
+
+  
 
   const OpenDrawer = () => {
     navigation.dispatch(DrawerActions.toggleDrawer());
   };
 
   useEffect(() => {
+    socket = io("http://100.66.121.49:5000");
+    socket.on("connection", () => console.log("connected"));
     const pusher = new Pusher(PUSHER_KEY, {
       cluster: "eu",
     });
@@ -73,7 +78,7 @@ const MainHome = ({ navigation }) => {
       showToast("Error fetching appointments", "error");
     }
   };
-
+ 
   const showToast = (message, type = "success") => {
     Toast.show({
       type: type,
@@ -210,6 +215,9 @@ const MainHome = ({ navigation }) => {
               </View>
               <Text className="mt-2 text-white">Cancelled appointments</Text>
             </View>
+            <TouchableOpacity onPress={()=>navigation.navigate("joinmeeting")}>
+                 <Text>hello</Text>
+            </TouchableOpacity>
           </View>
         )}
       </View>

@@ -17,6 +17,7 @@ import { AllPostRequest } from "../context/allpostRequest";
 import { AllGetRequest } from "../context/allgetRequest";
 import { deleteToken } from "../store/tokenSlice";
 import SelectWorkingDays from "../components/SelectWorkingDays";
+import Feather from "@expo/vector-icons/Feather";
 
 const Profile = ({ navigation }) => {
   const insets = useSafeAreaInsets();
@@ -88,7 +89,6 @@ const Profile = ({ navigation }) => {
   return (
     <View
       style={{
-        // Paddings to handle safe area
         paddingTop: insets.top,
         paddingBottom: insets.bottom,
         paddingLeft: insets.left,
@@ -103,7 +103,20 @@ const Profile = ({ navigation }) => {
         <View>
           <Text>Profile</Text>
         </View>
-        <View className="mr-4">
+        <View className="mr-4 flex flex-row items-center">
+          {edit && (
+            <TouchableOpacity
+              onPress={() => {
+                if (edit) {
+                  setEdit(false);
+                }
+              }}
+              className="p-1 m-1"
+            >
+              {edit && <Feather name="x" size={24} color="black" />}
+            </TouchableOpacity>
+          )}
+
           <TouchableOpacity
             onPress={() => {
               if (edit) {
@@ -279,15 +292,14 @@ const Profile = ({ navigation }) => {
                 </Text>
                 <View className="bg-white rounded p-3 flex flex-row items-center">
                   {info?.workingdays?.map((day, index) => (
-                    <>
-                      <Text
-                        className="text-gray-300 font-extrabold"
-                        key={index}
-                      >
-                        {day}
-                        {index < day.length - 1 && <Text>, </Text>}
-                      </Text>
-                    </>
+                    <Text
+                      className="text-gray-300 font-extrabold"
+                      key={index}
+                      e
+                    >
+                      {day}
+                      {index < info.workingdays.length - 1 && ", "}
+                    </Text>
                   ))}
                 </View>
               </View>
