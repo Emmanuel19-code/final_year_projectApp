@@ -13,7 +13,7 @@ const Tab = createMaterialTopTabNavigator();
 const MaterialTobTab = () => {
   const role = useSelector(selectRole)
   return (
-    <Tab.Navigator screenOptions={{}}>
+    <Tab.Navigator>
       {role == "user" ? (
         <>
           <Tab.Screen name="upcoming" component={UpcomingAppointment} />

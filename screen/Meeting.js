@@ -2,17 +2,34 @@ import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
 import { useState, useEffect } from "react";
 import { Button, Text, TouchableOpacity, View, Image } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import Feather from "@expo/vector-icons/Feather";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import {
+  CallContent,
+  StreamCall,
+  StreamVideo,
+  StreamVideoClient,
+} from "@stream-io/video-react-native-sdk";
+import { useSelector } from "react-redux";
+import { selectInfo } from "../store/authSlice";
 
 
+const apiKey = "a6q6ssgnfqc9";
+const userId = "HW1234568";
+const token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiSFcxMjM0NTY4In0.EvPClVDFIdTwvmDP5VTlJAA9rjXu59WgqMMCaFWQRZU";
+const callId = "";
+const user = { id: userId };
+
+const client = new StreamVideoClient({ apiKey, user, token });
+const call = client.call("default", callId);
+call.join({ create: true });
 const Meeting = () => {
   const [facing, setFacing] = useState("back");
   const [permission, requestPermission] = useCameraPermissions();
   const [mute, setMute] = useState(true);
   const [showVideo, setShowVideo] = useState(true);
   const insets = useSafeAreaInsets();
-
+ const info = useSelector(selectInfo)
+ //console.log(info);
+ 
   useEffect(() => {
     const requestPermissions = async () => {
       const { status } = await requestPermission();
@@ -34,8 +51,8 @@ const Meeting = () => {
 
    if (!permission.granted) {
      return (
-       <View style={styles.container}>
-         <Text style={styles.text}>
+       <View>
+         <Text >
            We need your permission to show the camera
          </Text>
          <Button onPress={requestPermission} title="Grant Permission" />
@@ -44,7 +61,18 @@ const Meeting = () => {
    }
 
   return (
-    <View
+    <StreamVideo client={client}>
+      <StreamCall call={call}>
+         <CallContent/>
+      </StreamCall>
+    </StreamVideo>
+  );
+};
+
+export default Meeting;
+/*
+
+ <View
       className="flex-1"
       style={{
         paddingTop: insets.top,
@@ -156,7 +184,8 @@ const Meeting = () => {
         </View>
       )}
     </View>
-  );
-};
 
-export default Meeting;
+
+
+
+*/

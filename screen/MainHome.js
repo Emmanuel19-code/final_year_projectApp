@@ -5,6 +5,7 @@ import {
   Pressable,
   ScrollView,
   TouchableOpacity,
+  Button
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -17,6 +18,8 @@ import Pusher from "pusher-js/react-native";
 import { AllGetRequest } from "../context/allgetRequest";
 import Toast from "react-native-toast-message";
 import { io } from "socket.io-client";
+import * as Notifications from "expo-notifications";
+
 let socket;
 const MainHome = ({ navigation }) => {
   const insets = useSafeAreaInsets();
@@ -28,7 +31,16 @@ const MainHome = ({ navigation }) => {
   const [dataCanceled, setDateCanceled] = useState([]);
   const [completedAppointment, setCompletedAppointment] = useState([]);
 
-  
+  async function schedulePushNotification() {
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "You've got mail! 📬",
+        body: "Here is the notification body",
+        data: { data: "goes here", test: { test1: "more data" } },
+      },
+      trigger: { seconds: 10 },
+    });
+  }
 
   const OpenDrawer = () => {
     navigation.dispatch(DrawerActions.toggleDrawer());
@@ -215,8 +227,10 @@ const MainHome = ({ navigation }) => {
               </View>
               <Text className="mt-2 text-white">Cancelled appointments</Text>
             </View>
-            <TouchableOpacity onPress={()=>navigation.navigate("joinmeeting")}>
-                 <Text>hello</Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("joinmeeting")}
+            >
+              <Text>hello</Text>
             </TouchableOpacity>
           </View>
         )}

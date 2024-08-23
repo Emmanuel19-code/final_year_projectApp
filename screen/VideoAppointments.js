@@ -1,14 +1,23 @@
-import { ScrollView, View, Text, ActivityIndicator, TouchableOpacity } from "react-native";
+import {
+  ScrollView,
+  View,
+  Text,
+  ActivityIndicator,
+  TouchableOpacity,
+} from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import UpcomingSlots from "../components/UpcomingSlots";
 import { AllGetRequest } from "../context/allgetRequest";
 import { Ionicons } from "@expo/vector-icons";
+import { useSelector } from "react-redux";
+import { selectInfo } from "../store/authSlice";
 
 const VideoAppointments = ({ navigation }) => {
   const { GetMyReceivedAppointments } = useContext(AllGetRequest);
   const [data, setData] = useState([]);
   const [isloading, setIsloading] = useState(false);
-  const [refresh,setRefresh] = useState(false)
+  const [refresh, setRefresh] = useState(false);
+  const info = useSelector(selectInfo); // Get user info from Redux store
 
   useEffect(() => {
     fetchAppointments();
@@ -21,8 +30,8 @@ const VideoAppointments = ({ navigation }) => {
       if (response && response.data) {
         const filteredData = response.data?.booked?.filter(
           (item) =>
-            item.appointmentType === "video" &&
-            item.doctorId === info.healthworkerId
+            item?.appointmentType === "video" &&
+            item?.doctorId === info?.healthworkerId // Use the info from Redux store
         );
         setData(filteredData);
       }
@@ -30,12 +39,13 @@ const VideoAppointments = ({ navigation }) => {
       console.log(error.response);
     } finally {
       setIsloading(false);
+      setRefresh(false); // Reset refresh state after data fetching
     }
   };
 
   return (
     <View className="h-full bg-white">
-      <ScrollView className="" showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false}>
         {isloading ? (
           <View className="flex-1 justify-center mt-20 items-center">
             <ActivityIndicator size={"large"} color={"#3b82f6"} />
@@ -63,9 +73,7 @@ const VideoAppointments = ({ navigation }) => {
       </ScrollView>
       {!isloading && (
         <View className="absolute right-8 bottom-8 bg-blue-500 rounded-full p-2">
-          <TouchableOpacity
-            onPress={()=>setRefresh(true)}
-          >
+          <TouchableOpacity onPress={() => setRefresh(true)}>
             <Ionicons name="refresh" size={24} color="white" />
           </TouchableOpacity>
         </View>

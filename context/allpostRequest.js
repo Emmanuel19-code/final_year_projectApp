@@ -49,7 +49,7 @@ const AllPostProvider = ({ children }) => {
       const response = await axios.post(`${USER_BASE_URL}/login`, data);
       return response;
     } catch (error) {
-      console.log(error);
+      console.log(error.response);
       if (error.code === "ECONNABORTED") {
         setError_message("The request took too long. Please try again.");
       } else if (!error.response) {

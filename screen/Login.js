@@ -1,21 +1,29 @@
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import React, { useContext, useState, useEffect } from "react";
+import React, {
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+} from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AllPostRequest } from "../context/allpostRequest";
 import * as Progress from "react-native-progress";
 import { useDispatch } from "react-redux";
 import { Logged, SetUser } from "../store/authSlice";
 import { saveToken } from "../store/tokenSlice";
+import Toast from "react-native-toast-message";
 
 const Login = ({ navigation }) => {
   const insets = useSafeAreaInsets();
-  //variables
+  const navigationRef = useRef(navigation); 
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isloading, setIsloading] = useState(false);
   const [disable, setDisable] = useState(true);
   const dispatch = useDispatch();
-  // calling the AllPostRequest Context
+
   const {
     UserSignIn,
     error_message,
@@ -23,65 +31,72 @@ const Login = ({ navigation }) => {
     setSucessMessage,
     successMessage,
   } = useContext(AllPostRequest);
- 
-  //calling the function to help users sign In
-  const user = async () => {
+
+  
+  const user = useCallback(async () => {
     setIsloading(true);
     setDisable(true);
     const response = await UserSignIn(email.trim(), password.trim());
     if (response) {
       setIsloading(false);
       setDisable(false);
-      //saving the token's using redux
       dispatch(
         saveToken({
           refreshToken: response.data.userInfo.refreshtoken,
           accessToken: response.data.userInfo.accesstoken,
         })
       );
-      //storing the user's information in redux
-      dispatch(
-        SetUser(
-        response.data.userInfo
-        )
-      )
-      dispatch(Logged(response.data.userInfo.role))
-    }
-  };
+      dispatch(SetUser(response.data.userInfo));
+      dispatch(Logged(response.data.userInfo.role));
 
-  //This function deals with any error in response
+      
+      showToast("Login successful", "success");
+      setTimeout(() => {
+        navigationRef.current.navigate("home");
+      }, 5000);
+    }
+  }, [dispatch, email, password, UserSignIn]);
+
+
+  const showToast = useCallback((message, type) => {
+    Toast.show({
+      type: type,
+      text1: message,
+      position: "top",
+      visibilityTime: 4000,
+      autoHide: true,
+      topOffset: 40,
+    });
+  }, []);
+
+  
   useEffect(() => {
     if (error_message) {
       setIsloading(false);
       setDisable(false);
-      const timer = setTimeout(() => {
-        setError_message("");
-      }, 1000);
-      return () => clearTimeout(timer);
+      showToast(error_message, "error");
+      setError_message(""); 
     }
-  }, [error_message, setError_message]);
+  }, [error_message, setError_message, showToast]);
 
-  //this is used to check to see if all criteria are met before allowing the user to Sign In
-  useEffect(() => {
-    if (email === "" || password === "" || password.length < 8) {
-      setDisable(true);
-    } else {
-      setDisable(false);
-    }
-  }, [email, password]);
-
-  // This is used to deal with the sucessmessage
+  
   useEffect(() => {
     if (successMessage) {
       setIsloading(false);
       dispatch(Logged());
+      showToast(successMessage, "success");
       const timer = setTimeout(() => {
         setSucessMessage("");
-        //navigation.navigate("home");
+        
       }, 5000);
       return () => clearTimeout(timer);
     }
-  }, [successMessage, setSucessMessage, navigation]);
+  }, [successMessage, dispatch, setSucessMessage, showToast]);
+
+  
+  useEffect(() => {
+    setDisable(email === "" || password === "" || password.length < 8);
+  }, [email, password]);
 
   return (
     <View
@@ -98,10 +113,7 @@ const Login = ({ navigation }) => {
           <Text className="text-xl font-bold m-1">Sign In</Text>
           <View className="flex flex-row items-center m-1">
             <Text className="text-gray-300">Don't have an account?</Text>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("register")}
-              className=""
-            >
+            <TouchableOpacity onPress={() => navigation.navigate("register")}>
               <Text className="ml-2 text-blue-600 font-bold">Sign Up</Text>
             </TouchableOpacity>
           </View>
@@ -148,16 +160,6 @@ const Login = ({ navigation }) => {
           )}
           <Text className="text-white font-bold text-center">Sign In</Text>
         </TouchableOpacity>
-        {error_message && (
-          <Text className="text-red-500 text-center mt-4 text-lg font-semibold">
-            {error_message}
-          </Text>
-        )}
-        {successMessage && (
-          <Text className="text-blue-600 text-center mt-4 text-lg font-semibold">
-            {successMessage}
-          </Text>
-        )}
       </View>
     </View>
   );

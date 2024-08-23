@@ -16,8 +16,9 @@ const MessageAppointment = ({ navigation }) => {
   const { GetMyReceivedAppointments } = useContext(AllGetRequest);
   const [mdata, setMdata] = useState([]);
   const [m_isloading, setM_isloading] = useState(false);
-  const info = useSelector(selectInfo)
-  const [refresh,setRefresh] = useState(false)
+  const [refresh, setRefresh] = useState(false);
+  const info = useSelector(selectInfo);
+
   useEffect(() => {
     fetchAppointments();
   }, [refresh]);
@@ -33,17 +34,18 @@ const MessageAppointment = ({ navigation }) => {
             item.doctorId === info.healthworkerId
         );
         setMdata(filteredData);
-        setM_isloading(false);
       }
     } catch (error) {
-      setM_isloading(false);
       console.log(error);
+    } finally {
+      setM_isloading(false);
+      setRefresh(false)
     }
   };
-   
+
   return (
-    <View className=" h-full">
-      <ScrollView className="" showsVerticalScrollIndicator={false}>
+    <View className="h-full">
+      <ScrollView showsVerticalScrollIndicator={false}>
         {m_isloading ? (
           <View className="flex-1 justify-center mt-20 items-center">
             <ActivityIndicator size={"large"} color={"#3b82f6"} />
@@ -63,9 +65,9 @@ const MessageAppointment = ({ navigation }) => {
             />
           ))
         ) : (
-          <View className="items-center bg-red-500">
+          <View className="items-center h-64 justify-center">
             <Text className="w-64 text-center">
-              There are no appointments for you at the moment
+              There are no Message appointments for you at the moment
             </Text>
           </View>
         )}
