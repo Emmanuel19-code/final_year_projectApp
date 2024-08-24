@@ -5,7 +5,7 @@ import {
   Pressable,
   ScrollView,
   TouchableOpacity,
-  Button
+  Button,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -90,7 +90,7 @@ const MainHome = ({ navigation }) => {
       showToast("Error fetching appointments", "error");
     }
   };
- 
+
   const showToast = (message, type = "success") => {
     Toast.show({
       type: type,
@@ -227,11 +227,6 @@ const MainHome = ({ navigation }) => {
               </View>
               <Text className="mt-2 text-white">Cancelled appointments</Text>
             </View>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("joinmeeting")}
-            >
-              <Text>hello</Text>
-            </TouchableOpacity>
           </View>
         )}
       </View>

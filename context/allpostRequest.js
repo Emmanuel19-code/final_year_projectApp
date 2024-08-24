@@ -249,7 +249,13 @@ const AllPostProvider = ({ children }) => {
       );
       return response;
     } catch (error) {
-      console.log(error.response);
+     if (error.code === "ECONNABORTED") {
+       setError_message("The request took too long. Please try again.");
+     } else if (!error.response) {
+       setError_message("A network error occurred");
+     } else {
+       setError_message(error.response.data.msg);
+     }
     }
   };
 

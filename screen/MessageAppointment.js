@@ -11,6 +11,8 @@ import { AllGetRequest } from "../context/allgetRequest";
 import { Ionicons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import { selectInfo } from "../store/authSlice";
+import Toast from "react-native-toast-message";
+import { AllPostRequest } from "../context/allpostRequest";
 
 const MessageAppointment = ({ navigation }) => {
   const { GetMyReceivedAppointments } = useContext(AllGetRequest);
@@ -18,7 +20,13 @@ const MessageAppointment = ({ navigation }) => {
   const [m_isloading, setM_isloading] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const info = useSelector(selectInfo);
-
+  const {
+    ConsultantStartConversation,
+    error_message,
+    setError_message,
+    successMessage,
+    setSucessMessage,
+  } = useContext(AllPostRequest);
   useEffect(() => {
     fetchAppointments();
   }, [refresh]);
@@ -42,9 +50,38 @@ const MessageAppointment = ({ navigation }) => {
       setRefresh(false)
     }
   };
-
+ const CreateConversation = async (data) => {
+   try {
+     const response = await ConsultantStartConversation(data);
+     console.log(response?.data);
+   } catch (error) {
+     console.log(error?.response?.data);
+   }
+ };
+ useEffect(() => {
+   if (error_message) {
+     showToast(error_message, "error");
+     setError_message("");
+   }
+ }, [error_message, setError_message, showToast]);
+ useEffect(() => {
+   if (successMessage) {
+     showToast(successMessage, "success");
+     setSucessMessage("");
+   }
+ }, [successMessage, setSucessMessage, showToast]);
+ const showToast = (message, type) => {
+   Toast.show({
+     type: type,
+     text1: message,
+     position: "top",
+     visibilityTime: 4000,
+     autoHide: true,
+     topOffset: 40,
+   });
+ };
   return (
-    <View className="h-full">
+    <View className="h-full bg-gray-100">
       <ScrollView showsVerticalScrollIndicator={false}>
         {m_isloading ? (
           <View className="flex-1 justify-center mt-20 items-center">
@@ -62,6 +99,7 @@ const MessageAppointment = ({ navigation }) => {
               date={item.appointmentDate}
               time={item.appointmentTime}
               patientId={item.patientId}
+              functionCall = {CreateConversation}
             />
           ))
         ) : (

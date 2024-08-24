@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { selectRole } from "../store/authSlice";
 import MessageAppointment from "../screen/MessageAppointment";
 import VideoAppointments from "../screen/VideoAppointments";
+import VoiceCall from "../screen/VoiceCall";
 
 
 const Tab = createMaterialTopTabNavigator();
@@ -26,6 +27,7 @@ const MaterialTobTab = () => {
             component={MessageAppointment}
           />
           <Tab.Screen name="Video" component={VideoAppointments}/>
+          <Tab.Screen name="voice" component={VoiceCall}/>
         </>
       )}
     </Tab.Navigator>

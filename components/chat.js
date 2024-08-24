@@ -47,9 +47,9 @@ const Chat = ({ conversationId, name, email, userIdentity, phone }) => {
   };
 
   const lastMessageContent =
-    data.length > 0 ? data[data.length - 1].content : "No messages yet";
+    data?.length > 0 ? data[data.length - 1].content : "No messages yet";
   const lastMessageTime =
-    data.length > 0
+    data?.length > 0
       ? new Date(data[data.length - 1].createdAt).toTimeString().substring(0, 5)
       : "";
 

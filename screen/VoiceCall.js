@@ -11,16 +11,13 @@ import { AllGetRequest } from "../context/allgetRequest";
 import { Ionicons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import { selectInfo } from "../store/authSlice";
-import { selectAccesstoken, SelectRefreshToken } from "../store/tokenSlice";
 
-
-const VideoAppointments = ({ navigation }) => {
+const VoiceCall = ({ navigation }) => {
   const { GetMyReceivedAppointments } = useContext(AllGetRequest);
   const [data, setData] = useState([]);
   const [isloading, setIsloading] = useState(false);
   const [refresh, setRefresh] = useState(false);
-  const info = useSelector(selectInfo); 
- const accessToken = useSelector(selectAccesstoken)
+const info = useSelector(selectInfo); 
   useEffect(() => {
     fetchAppointments();
   }, [refresh]);
@@ -32,7 +29,7 @@ const VideoAppointments = ({ navigation }) => {
       if (response && response.data) {
         const filteredData = response.data?.booked?.filter(
           (item) =>
-            item?.appointmentType === "video" &&
+            item?.appointmentType === "voice" &&
             item?.doctorId === info?.healthworkerId
         );
         setData(filteredData);
@@ -41,10 +38,9 @@ const VideoAppointments = ({ navigation }) => {
       console.log(error.response);
     } finally {
       setIsloading(false);
-      setRefresh(false); 
+      setRefresh(false);
     }
   };
-
   return (
     <View className="h-full bg-gray-100">
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -58,7 +54,7 @@ const VideoAppointments = ({ navigation }) => {
               key={key}
               appointmentInformation={"Start Meeting"}
               icon_name={"video"}
-              type={"video"}
+              type={"voice"}
               navigation={navigation}
               id={item._id}
               date={item.appointmentDate}
@@ -69,7 +65,7 @@ const VideoAppointments = ({ navigation }) => {
         ) : (
           <View className="items-center h-64 justify-center">
             <Text className="w-64 text-center">
-              There are no Video appointments for you at the moment
+              There are no Voice appointments for you at the moment
             </Text>
           </View>
         )}
@@ -85,4 +81,4 @@ const VideoAppointments = ({ navigation }) => {
   );
 };
 
-export default VideoAppointments;
+export default VoiceCall;

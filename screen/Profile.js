@@ -41,6 +41,7 @@ const Profile = ({ navigation }) => {
     fetchprofile();
   }, [role, refresh]);  
   
+  console.log(JSON.stringify(info.stream_token));
   
   const sendPost = async () => {
     try {
@@ -290,7 +291,7 @@ const Profile = ({ navigation }) => {
                 <Text className="text-xs text-gray-500 font-bold mb-1">
                   Working Days (eg. Monday,Tuesday .....)
                 </Text>
-                <View className="bg-white rounded p-3 flex flex-row items-center">
+                <View className="bg-white rounded p-3 flex flex-row items-center flex-wrap">
                   {info?.workingdays?.map((day, index) => (
                     <Text
                       className="text-gray-300 font-extrabold"

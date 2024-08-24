@@ -35,14 +35,6 @@ const SChat = ({ navigation }) => {
     setData(data);
   };
   
-  //useEffect(() => {
-  //  if (p_error_message) {
-  //    const timer = setTimeout(() => {
-  //      setP_error_message("");
-  //    }, 10000);
-  //    return () => clearTimeout(timer);
-  //  }
-  //}, [p_error_message, setP_error_message]);
   return (
     <View
       style={{
@@ -55,20 +47,20 @@ const SChat = ({ navigation }) => {
       <Text className="text-black p-2 text-lg">Chats</Text>
       <ScrollView className="">
         {data?.length > 0 ? (
-          data.map(
+          data?.map(
             (item, index) =>
               item && (
                 <Chat
                   key={index}
-                  conversationId={item.conversationId}
-                  email={item.user.email}
+                  conversationId={item?.conversationId}
+                  email={item.user?.email}
                   userIdentity={
                     role === "user"
-                      ? item.user.healthworkerId
-                      : item.user.uniqueId
+                      ? item.user?.healthworkerId
+                      : item.user?.uniqueId
                   }
-                  name={item.user.name}
-                  phone={item.user.phone}
+                  name={item.user?.name}
+                  phone={item.user?.phone}
                 />
               )
           )
