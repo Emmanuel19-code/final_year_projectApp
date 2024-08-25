@@ -2,6 +2,7 @@ import { View, Text, ScrollView, ActivityIndicator } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import PastAppointmentSlot from "../components/PastAppointmentSlot";
 import { AllGetRequest } from "../context/allgetRequest";
+import moment from "moment";
 
 const PastAppointment = () => {
   const [data, setData] = useState([]);
@@ -15,46 +16,44 @@ const PastAppointment = () => {
 
   const fetchData = async () => {
     setIsLoading(true);
-    const response = await getMyAppointments();
-    if (response) {
-      setData(response);
-    } else {
-      setErrorMessage(p_error_message || "Failed to fetch appointments");
+    try {
+      const response = await getMyAppointments();
+      if (response) {
+        setData(response.filter((item) => item.status !== "canceled"));
+      } else {
+        setErrorMessage(p_error_message || "Failed to fetch appointments");
+      }
+    } catch (error) {
+      setErrorMessage("Failed to fetch appointments");
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const pastAppointments = data?.filter((item) => {
-    const [appointmentDate, appointmentMonth] = item.appointmentDate.split("/");
-    const currentDay = new Date().getDate();
-    const currentMonth = new Date().getMonth() + 1;
-    return (
-      (currentDay > parseInt(appointmentDate) ||
-        currentMonth > parseInt(appointmentMonth)) &&
-      item.status !== "canceled"
-    );
+    try {
+      const appointmentDate = moment(item.appointmentDate, "DD/MM/YYYY");
+      const currentDate = moment().startOf("day");
+      return appointmentDate.isBefore(currentDate);
+    } catch (error) {
+      console.error("Error parsing appointment date:", error);
+      return false;
+    }
   });
 
   return (
     <ScrollView className="h-screen" showsVerticalScrollIndicator={false}>
-      {isLoading && (
+      {isLoading ? (
         <View className="flex-1 justify-center mt-20 items-center">
           <ActivityIndicator size="large" color="#3b82f6" />
         </View>
-      )}
-      {!isLoading && errorMessage ? (
+      ) : errorMessage ? (
         <Text className="text-center mt-10 font-bold">{errorMessage}</Text>
-      ) : null}
-      {!isLoading &&
-        !errorMessage &&
-        data.length === 0 && ( 
-          <Text className="text-center mt-10 font-bold">
-            There are no past appointments.
-          </Text>
-        )}
-      {!isLoading &&
-        !errorMessage &&
-        data.length > 0 && 
+      ) : pastAppointments.length === 0 ? (
+        <Text className="text-center mt-10 font-bold">
+          There are no past appointments.
+        </Text>
+      ) : (
         pastAppointments.map((item) => (
           <PastAppointmentSlot
             key={item._id}
@@ -64,7 +63,8 @@ const PastAppointment = () => {
             status={item.status}
             appointmentType={item.appointmentType}
           />
-        ))}
+        ))
+      )}
     </ScrollView>
   );
 };

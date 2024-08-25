@@ -2,6 +2,7 @@ import { View, Text, ScrollView, ActivityIndicator } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import UpcomingSlots from "../components/UpcomingSlots";
 import { AllGetRequest } from "../context/allgetRequest";
+import moment from "moment";
 
 const UpcomingAppointment = () => {
   const [data, setData] = useState([]);
@@ -18,28 +19,23 @@ const UpcomingAppointment = () => {
       const response = await getMyAppointments();
       setData(response.filter((item) => item.status !== "canceled"));
     } catch (error) {
+      console.error("Error fetching appointments:", error);
       p_error_message(error.message || "Failed to fetch appointments");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const parseDate = (dateString) => {
-    const [day, month, year] = dateString.split("/").map(Number);
-    return new Date(year, month - 1, day);
-  };
-
   const upcoming = data?.filter((item) => {
     try {
-      const appointmentDate = parseDate(item.appointmentDate);
-      const currentDate = new Date();
-      return appointmentDate >= currentDate;
+      const appointmentDate = moment(item.appointmentDate, "DD/MM/YYYY");
+      const currentDate = moment().startOf("day");
+      return appointmentDate.isSameOrAfter(currentDate);
     } catch (error) {
       console.error("Error parsing appointment date:", error);
       return false;
     }
   });
-
   return (
     <ScrollView className="h-screen" showsVerticalScrollIndicator={false}>
       {isLoading ? (
