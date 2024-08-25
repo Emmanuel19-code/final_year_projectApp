@@ -39,7 +39,7 @@ const DateTimeProvider = ({ children }) => {
       dates.push({
         id: day,
         data: futureDateData,
-        isAvailable: workingDays.includes(futureDateData.day),
+        isAvailable: workingDays?.includes(futureDateData?.day),
       });
     }
     setFutureDates(dates);

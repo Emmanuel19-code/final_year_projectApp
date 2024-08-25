@@ -10,8 +10,9 @@ const USER_BASE_URL =
   "https://final-year-backend-35ph.onrender.com/api/v1/user";
 const CONSULTANT_BASE_URL =
   "https://final-year-backend-35ph.onrender.com/api/v1/consultant";
-const consultant_token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoZWFsdGh3b3JrZXJJZCI6IkhXMTIzNDU4Iiwicm9sZSI6ImhlYWx0aHdvcmtlciIsImlhdCI6MTcyMDg2NTMxMiwiZXhwIjoxNzIwOTUxNzEyfQ.NZF8URD9R4qbaSPgw1PQhdsU-6PSR0Fbx5tkw5WX0EI";
+const APPOINTMENT_BASE_URL ="https://final-year-backend-35ph.onrender.com/api/v1/appointment"
+
+
 const AllPostProvider = ({ children }) => {
   const [error_message, setError_message] = useState("");
   const [successMessage, setSucessMessage] = useState("");
@@ -271,6 +272,24 @@ const AllPostProvider = ({ children }) => {
        console.log(error.response)
     }
   };
+
+  const BookAppointment = async (data) =>{
+    try {
+      const response = await axios.post(
+        `${APPOINTMENT_BASE_URL}/create-appointment`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      return response
+    } catch (error) {
+      console.log(error.response); 
+    }
+  }
+
   return (
     <AllPostRequest.Provider
       value={{
@@ -290,6 +309,7 @@ const AllPostProvider = ({ children }) => {
         ConsultantUpdateProfile,
         ConsultantStartConversation,
         CreatePaymentIntent,
+        BookAppointment
       }}
     >
       {children}

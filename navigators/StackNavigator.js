@@ -20,7 +20,7 @@ import NotificationDetails from "../screen/NotificationDetails";
 import { Entypo } from "@expo/vector-icons";
 import { Pressable, View } from "react-native";
 import PaymentSuccess from "../screen/PaymentSuccess";
-import JoinMeeting from "../screen/JoinMeeting"
+import JoinMeeting from "../screen/JoinMeeting";
 import Meeting from "../screen/Meeting";
 
 const Stack = createStackNavigator();
@@ -103,14 +103,24 @@ const StackNavigator = () => {
             component={PaymentSuccess}
             options={{
               title: "Package Success",
+              headerStyle: {
+                backgroundColor: "#007BFF",
+              },
+              headerTintColor: "#fff",
+              headerTitleStyle: {
+                fontSize: 20,
+              },
+              headerLeft: null,
+              headerTitleAlign: "center",
             }}
           />
+
           <Stack.Screen
             name="newmeeting"
             component={Meeting}
-            options={{ 
-               headerShown:false
-             }}
+            options={{
+              headerShown: false,
+            }}
           />
           <Stack.Screen
             name="notificationdetails"

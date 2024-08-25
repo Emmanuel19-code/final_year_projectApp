@@ -11,19 +11,27 @@ import { AllGetRequest } from "../context/allgetRequest";
 import { Ionicons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import { selectInfo } from "../store/authSlice";
-import { selectAccesstoken, SelectRefreshToken } from "../store/tokenSlice";
-
+import { selectAccesstoken } from "../store/tokenSlice";
+import moment from "moment";
 
 const VideoAppointments = ({ navigation }) => {
   const { GetMyReceivedAppointments } = useContext(AllGetRequest);
   const [data, setData] = useState([]);
   const [isloading, setIsloading] = useState(false);
   const [refresh, setRefresh] = useState(false);
-  const info = useSelector(selectInfo); 
- const accessToken = useSelector(selectAccesstoken)
+  const info = useSelector(selectInfo);
+  const accessToken = useSelector(selectAccesstoken);
+
   useEffect(() => {
     fetchAppointments();
   }, [refresh]);
+
+  const isToday = (dateString) => {
+    // Assuming dateString is in the format "DD/MM/YYYY"
+    const today = moment().startOf("day");
+    const appointmentDate = moment(dateString, "DD/MM/YYYY").startOf("day");
+    return today.isSame(appointmentDate);
+  };
 
   const fetchAppointments = async () => {
     setIsloading(true);
@@ -33,7 +41,8 @@ const VideoAppointments = ({ navigation }) => {
         const filteredData = response.data?.booked?.filter(
           (item) =>
             item?.appointmentType === "video" &&
-            item?.doctorId === info?.healthworkerId
+            item?.doctorId === info?.healthworkerId &&
+            isToday(item?.appointmentDate)
         );
         setData(filteredData);
       }
@@ -41,7 +50,7 @@ const VideoAppointments = ({ navigation }) => {
       console.log(error.response);
     } finally {
       setIsloading(false);
-      setRefresh(false); 
+      setRefresh(false);
     }
   };
 

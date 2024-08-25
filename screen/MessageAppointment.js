@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 import { selectInfo } from "../store/authSlice";
 import Toast from "react-native-toast-message";
 import { AllPostRequest } from "../context/allpostRequest";
+import moment from "moment";
 
 const MessageAppointment = ({ navigation }) => {
   const { GetMyReceivedAppointments } = useContext(AllGetRequest);
@@ -27,9 +28,17 @@ const MessageAppointment = ({ navigation }) => {
     successMessage,
     setSucessMessage,
   } = useContext(AllPostRequest);
+
   useEffect(() => {
     fetchAppointments();
   }, [refresh]);
+
+  const isToday = (dateString) => {
+    // Assuming dateString is in the format "DD/MM/YYYY"
+    const today = moment().startOf("day");
+    const appointmentDate = moment(dateString, "DD/MM/YYYY").startOf("day");
+    return today.isSame(appointmentDate);
+  };
 
   const fetchAppointments = async () => {
     setM_isloading(true);
@@ -39,7 +48,8 @@ const MessageAppointment = ({ navigation }) => {
         const filteredData = response.data?.booked?.filter(
           (item) =>
             item.appointmentType === "message" &&
-            item.doctorId === info.healthworkerId
+            item.doctorId === info.healthworkerId &&
+            isToday(item?.appointmentDate)
         );
         setMdata(filteredData);
       }
@@ -47,39 +57,44 @@ const MessageAppointment = ({ navigation }) => {
       console.log(error);
     } finally {
       setM_isloading(false);
-      setRefresh(false)
+      setRefresh(false);
     }
   };
- const CreateConversation = async (data) => {
-   try {
-     const response = await ConsultantStartConversation(data);
-     console.log(response?.data);
-   } catch (error) {
-     console.log(error?.response?.data);
-   }
- };
- useEffect(() => {
-   if (error_message) {
-     showToast(error_message, "error");
-     setError_message("");
-   }
- }, [error_message, setError_message, showToast]);
- useEffect(() => {
-   if (successMessage) {
-     showToast(successMessage, "success");
-     setSucessMessage("");
-   }
- }, [successMessage, setSucessMessage, showToast]);
- const showToast = (message, type) => {
-   Toast.show({
-     type: type,
-     text1: message,
-     position: "top",
-     visibilityTime: 4000,
-     autoHide: true,
-     topOffset: 40,
-   });
- };
+
+  const CreateConversation = async (data) => {
+    try {
+      const response = await ConsultantStartConversation(data);
+      console.log(response?.data);
+    } catch (error) {
+      console.log(error?.response?.data);
+    }
+  };
+
+  useEffect(() => {
+    if (error_message) {
+      showToast(error_message, "error");
+      setError_message("");
+    }
+  }, [error_message, setError_message]);
+
+  useEffect(() => {
+    if (successMessage) {
+      showToast(successMessage, "success");
+      setSucessMessage("");
+    }
+  }, [successMessage, setSucessMessage]);
+
+  const showToast = (message, type) => {
+    Toast.show({
+      type: type,
+      text1: message,
+      position: "top",
+      visibilityTime: 4000,
+      autoHide: true,
+      topOffset: 40,
+    });
+  };
+
   return (
     <View className="h-full bg-gray-100">
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -99,7 +114,7 @@ const MessageAppointment = ({ navigation }) => {
               date={item.appointmentDate}
               time={item.appointmentTime}
               patientId={item.patientId}
-              functionCall = {CreateConversation}
+              functionCall={CreateConversation}
             />
           ))
         ) : (

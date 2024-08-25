@@ -1,9 +1,4 @@
-import {
-  View,
-  Text,
-  ScrollView,
-  ActivityIndicator,
-} from "react-native";
+import { View, Text, ScrollView, ActivityIndicator } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import UpcomingSlots from "../components/UpcomingSlots";
 import { AllGetRequest } from "../context/allgetRequest";
@@ -28,16 +23,17 @@ const UpcomingAppointment = () => {
       setIsLoading(false);
     }
   };
+
+  const parseDate = (dateString) => {
+    const [day, month, year] = dateString.split("/").map(Number);
+    return new Date(year, month - 1, day);
+  };
+
   const upcoming = data?.filter((item) => {
     try {
-      const appointmentDateParts = item.appointmentDate.split("/");
-      const appointmentDate = new Date(
-        parseInt(appointmentDateParts[1]), 
-        parseInt(appointmentDateParts[0]) - 1, 
-        parseInt(appointmentDateParts[2]) || new Date().getFullYear() 
-      );
+      const appointmentDate = parseDate(item.appointmentDate);
       const currentDate = new Date();
-      return appointmentDate > currentDate;
+      return appointmentDate >= currentDate;
     } catch (error) {
       console.error("Error parsing appointment date:", error);
       return false;

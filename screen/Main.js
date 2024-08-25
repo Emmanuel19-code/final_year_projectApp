@@ -30,13 +30,15 @@ const Main = ({ navigation, route }) => {
   const [pickedDate,setPickedDate] = useState("")
   const [pickedTime,setPickedTime] = useState(" ")
   const [newPickedTime,setNewPickedTime] = useState("")
+  const [disable,setDisable] = useState(false)
   const { healthworkerId, name, workingdays } = route.params;
 
   const handleItemSelect = (itemId) => {
     setSelectedItemId((prev) => (prev === itemId ? null : itemId));
     setPickedDay((prev) => (prev === itemId ? null : itemId));
   };
-
+ console.log(time_slot);
+ 
   const handleTimeSlots = (itemId) => {
     setTimedslots((prev) => (prev === itemId ? null : itemId));
     setPickedTime((prev)=>(prev=== itemId?null:itemId))
@@ -46,25 +48,36 @@ const Main = ({ navigation, route }) => {
   },[])
   useEffect(() => {
     if (pickedDay !== null) {
-      const date = moment(futureDates[pickedDay]?.data.date, "MM/DD/YYYY");
-      const formattedDate = date.format("DD/MM/YYYY");
-      setPickedDate(formattedDate);
-      const generatedSlots = GenerateTimeSlots(date.format("YYYY-MM-DD"));
-      const currentDate = moment();
-      const filteredSlots = generatedSlots.filter((slot) => {
-        const slotTime = moment(
-          `${date.format("YYYY-MM-DD")} ${slot.time}`,
-          "YYYY-MM-DD HH:mm"
-        );
-        return slotTime.isAfter(currentDate);
-      });
+      const selectedDate = futureDates.find((date) => date.id === pickedDay);
 
-      setTime_slot(filteredSlots);
-      const selectedSlot = filteredSlots.find((slot) => slot.id === pickedTime);
-      setNewPickedTime(selectedSlot?.time)
+      if (selectedDate) {
+        const date = moment(selectedDate.data.date, "MM/DD/YYYY");
+        const formattedDate = date.format("YYYY-MM-DD");
+        setPickedDate(date.format("DD/MM/YYYY"));
+        const generatedSlots = GenerateTimeSlots(formattedDate);
+        const currentDate = moment();
+        const filteredSlots = generatedSlots.filter((slot) => {
+          const slotTime = moment(
+            `${formattedDate} ${slot.time}`,
+            "YYYY-MM-DD HH:mm"
+          );
+          return slotTime.isAfter(currentDate);
+        });
+
+        setTime_slot(filteredSlots);
+        const selectedSlot = filteredSlots.find(
+          (slot) => slot.id === pickedTime
+        );
+        setNewPickedTime(selectedSlot?.time || "");
+      }
     }
   }, [pickedDay, pickedTime, futureDates, GenerateTimeSlots]);
- console.log(futureDates);
+   
+  useEffect(()=>{
+     if(appointmentType?.length != 0 && newPickedTime?.length != 0 && pickedDate?.length !=0){
+        setDisable(false)
+     }
+  },[appointmentType,newPickedTime,pickedDate])
  
   return (
     <View
@@ -146,9 +159,9 @@ const Main = ({ navigation, route }) => {
             <View className="flex flex-row items-center">
               <TouchableOpacity
                 className={`m-1 p-2 rounded flex items-center flex-row ${
-                  appointmentType === "Video" ? "bg-blue-500 " : "bg-gray-300"
+                  appointmentType === "video" ? "bg-blue-500 " : "bg-gray-300"
                 }`}
-                onPress={() => setAppointmentType("Video")}
+                onPress={() => setAppointmentType("video")}
               >
                 <View className="mr-2 ">
                   <Feather name="video" size={20} color="white" />
@@ -158,9 +171,9 @@ const Main = ({ navigation, route }) => {
               </TouchableOpacity>
               <TouchableOpacity
                 className={`m-1 p-2 rounded flex items-center flex-row ${
-                  appointmentType === "Voice" ? "bg-violet-800" : "bg-gray-300"
+                  appointmentType === "voice" ? "bg-violet-800" : "bg-gray-300"
                 }`}
-                onPress={() => setAppointmentType("Voice")}
+                onPress={() => setAppointmentType("voice")}
               >
                 <View className="mr-2 ">
                   <Feather name="phone-call" size={20} color="white" />
@@ -169,11 +182,11 @@ const Main = ({ navigation, route }) => {
               </TouchableOpacity>
               <TouchableOpacity
                 className={`m-1 p-2 rounded flex items-center flex-row ${
-                  appointmentType === "Message"
+                  appointmentType === "message"
                     ? "bg-orange-600"
                     : "bg-gray-300"
                 }`}
-                onPress={() => setAppointmentType("Message")}
+                onPress={() => setAppointmentType("message")}
               >
                 <View className="mr-2 ">
                   <Feather name="message-circle" size={20} color="white" />
@@ -184,8 +197,20 @@ const Main = ({ navigation, route }) => {
           </View>
 
           <TouchableOpacity
-            onPressIn={() => navigation.navigate("previewappointment",{date:pickedDate,time:newPickedTime,type:appointmentType,consultant:name})}
-            className={"mt-3 bg-blue-900 p-1 rounded"}
+            onPressIn={() =>
+              navigation.navigate("previewappointment", {
+                date: pickedDate,
+                time: newPickedTime,
+                type: appointmentType,
+                consultant: name,
+                healthworkerId:healthworkerId
+              })
+            }
+            className={
+              disable
+                ? "mt-3 bg-blue-900 p-1 rounded opacity-60"
+                : "mt-3 bg-blue-900 p-1 rounded"
+            }
           >
             <Text className="m-2 text-white text-center">
               Confirm Appointment

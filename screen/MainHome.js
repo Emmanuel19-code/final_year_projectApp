@@ -5,7 +5,6 @@ import {
   Pressable,
   ScrollView,
   TouchableOpacity,
-  Button,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -54,12 +53,12 @@ const MainHome = ({ navigation }) => {
     });
     const channel = pusher.subscribe("appointments");
 
-    channel.bind("new-appointment", (appointmentData) => {
+    channel.bind(role != info?.healthworkerId, (appointmentData) => {
       setNewdata(appointmentData);
       showToast("New appointment received!");
     });
 
-    channel.bind("canceled-appointment", (appointmentData) => {
+    channel.bind(role != info?.healthworkerId, (appointmentData) => {
       setDateCanceled(appointmentData);
       showToast("Appointment was canceled.");
     });

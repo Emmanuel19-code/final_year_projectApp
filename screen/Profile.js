@@ -41,8 +41,6 @@ const Profile = ({ navigation }) => {
     fetchprofile();
   }, [role, refresh]);  
   
-  console.log(JSON.stringify(info.stream_token));
-  
   const sendPost = async () => {
     try {
       const daysOnly = workingDays.map((dayObj) => dayObj.day);

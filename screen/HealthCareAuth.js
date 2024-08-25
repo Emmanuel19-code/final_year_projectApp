@@ -32,7 +32,6 @@ const HealthCareAuth = ({ navigation }) => {
       password.trim(),
       healthworkerId.trim()
     );
-    if (response) {
       if (response) {
         setIsloading(false);
         setDisable(false);
@@ -44,7 +43,8 @@ const HealthCareAuth = ({ navigation }) => {
         );
         dispatch(SetUser(response.data.userInfo));
         dispatch(Logged("admin"));
-      }
+       
+        
     }
   };
   useEffect(() => {

@@ -11,26 +11,38 @@ import { AllGetRequest } from "../context/allgetRequest";
 import { Ionicons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
 import { selectInfo } from "../store/authSlice";
+import moment from "moment";
 
 const VoiceCall = ({ navigation }) => {
   const { GetMyReceivedAppointments } = useContext(AllGetRequest);
   const [data, setData] = useState([]);
   const [isloading, setIsloading] = useState(false);
   const [refresh, setRefresh] = useState(false);
-const info = useSelector(selectInfo); 
+  const info = useSelector(selectInfo);
+
   useEffect(() => {
     fetchAppointments();
   }, [refresh]);
+
+  // Function to check if a date is today
+  const isToday = (dateString) => {
+    // Assuming dateString is in the format "DD/MM/YYYY"
+    const today = moment().startOf("day");
+    const appointmentDate = moment(dateString, "DD/MM/YYYY").startOf("day");
+    return today.isSame(appointmentDate);
+  };
 
   const fetchAppointments = async () => {
     setIsloading(true);
     try {
       let response = await GetMyReceivedAppointments();
+      console.log(response.data.booked);
       if (response && response.data) {
         const filteredData = response.data?.booked?.filter(
           (item) =>
             item?.appointmentType === "voice" &&
-            item?.doctorId === info?.healthworkerId
+            item?.doctorId === info?.healthworkerId &&
+            isToday(item?.appointmentDate)
         );
         setData(filteredData);
       }
@@ -41,6 +53,7 @@ const info = useSelector(selectInfo);
       setRefresh(false);
     }
   };
+
   return (
     <View className="h-full bg-gray-100">
       <ScrollView showsVerticalScrollIndicator={false}>
