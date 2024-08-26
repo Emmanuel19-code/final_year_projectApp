@@ -24,9 +24,8 @@ const VoiceCall = ({ navigation }) => {
     fetchAppointments();
   }, [refresh]);
 
-  // Function to check if a date is today
+  
   const isToday = (dateString) => {
-    // Assuming dateString is in the format "DD/MM/YYYY"
     const today = moment().startOf("day");
     const appointmentDate = moment(dateString, "DD/MM/YYYY").startOf("day");
     return today.isSame(appointmentDate);
@@ -42,7 +41,8 @@ const VoiceCall = ({ navigation }) => {
           (item) =>
             item?.appointmentType === "voice" &&
             item?.doctorId === info?.healthworkerId &&
-            isToday(item?.appointmentDate)
+            isToday(item?.appointmentDate) &&
+            item?.status == "scheduled"
         );
         setData(filteredData);
       }

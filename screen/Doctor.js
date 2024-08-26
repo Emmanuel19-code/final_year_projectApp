@@ -16,7 +16,7 @@ const Doctor = ({route,navigation}) => {
       about,
       workingdays,
     } = route.params;
-    console.log(startTime);
+    
     
   return (
     <View

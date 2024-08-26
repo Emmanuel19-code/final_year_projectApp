@@ -18,7 +18,7 @@ const MaterialTobTab = () => {
       {role == "user" ? (
         <>
           <Tab.Screen name="upcoming" component={UpcomingAppointment} />
-          <Tab.Screen name="past" component={PastAppointment} />
+          <Tab.Screen name="completed" component={PastAppointment} />
         </>
       ) : (
         <>

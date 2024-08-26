@@ -1,17 +1,46 @@
 import { View, Text, ScrollView, ActivityIndicator } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState, useCallback, useEffect } from "react";
 import UpcomingSlots from "../components/UpcomingSlots";
 import { AllGetRequest } from "../context/allgetRequest";
+import { useFocusEffect } from "@react-navigation/native";
 import moment from "moment";
+import { PUSHER_KEY } from "@env";
+import Pusher from "pusher-js/react-native";
+import { useSelector } from "react-redux";
+import { selectInfo } from "../store/authSlice";
+import Toast from "react-native-toast-message";
 
 const UpcomingAppointment = () => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const { getMyAppointments, p_error_message } = useContext(AllGetRequest);
-
+  const [refresh, setRefresh] = useState(false);
+  const [meetingStarted, setMeetingStarted] = useState(null);
+ const info = useSelector(selectInfo)
   useEffect(() => {
-    fetchData();
+    const pusher = new Pusher(PUSHER_KEY, {
+      cluster: "eu",
+    });
+
+    const channel = pusher.subscribe("meetingNotice");
+
+    channel.bind(info?.uniqueId && info?.uniqueId, (appointmentData) => {
+      setMeetingStarted(appointmentData);
+      showToast("Your Meeting has started");
+    });
+
+    // Cleanup on unmount
+    return () => {
+      pusher.unsubscribe("meetingNotice");
+      pusher.disconnect();
+    };
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, [refresh, meetingStarted])
+  );
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -19,7 +48,6 @@ const UpcomingAppointment = () => {
       const response = await getMyAppointments();
       setData(response.filter((item) => item.status !== "canceled"));
     } catch (error) {
-      console.error("Error fetching appointments:", error);
       p_error_message(error.message || "Failed to fetch appointments");
     } finally {
       setIsLoading(false);
@@ -29,13 +57,23 @@ const UpcomingAppointment = () => {
   const upcoming = data?.filter((item) => {
     try {
       const appointmentDate = moment(item.appointmentDate, "DD/MM/YYYY");
-      const currentDate = moment().startOf("day");
-      return appointmentDate.isSameOrAfter(currentDate);
+      const currentDate = moment();
+      return appointmentDate.isSameOrAfter(currentDate, "day");
     } catch (error) {
       console.error("Error parsing appointment date:", error);
       return false;
     }
   });
+const showToast = (message, type = "success") => {
+  Toast.show({
+    type: type,
+    text1: message,
+    position: "top",
+    visibilityTime: 4000,
+    autoHide: true,
+    topOffset: 30,
+  });
+};
   return (
     <ScrollView className="h-screen" showsVerticalScrollIndicator={false}>
       {isLoading ? (
@@ -51,12 +89,15 @@ const UpcomingAppointment = () => {
       ) : (
         upcoming.map((item) => (
           <UpcomingSlots
-            key={item._id}
-            appointmentId={item._id}
-            date={item.appointmentDate}
-            time={item.appointmentTime}
+            key={item?._id}
+            appointmentId={item?._id}
+            date={item?.appointmentDate}
+            time={item?.appointmentTime}
             status={item.status}
-            appointmentType={item.appointmentType}
+            appointmentType={item?.appointmentType}
+            id={item?._id}
+            setRefresh={setRefresh}
+            callId={item?.callId}
           />
         ))
       )}

@@ -30,9 +30,15 @@ const PastAppointmentSlot = ({
           <Text className="font-bold text-gray-400 ">Date</Text>
           <Text className="font-bold">{appointmentType}</Text>
         </View>
-        <TouchableOpacity className="bg-blue-600 opacity-70 rounded w-24 p-2">
-          <Text className="text-center text-white font-bold">Cancel</Text>
-        </TouchableOpacity>
+        {status == "canceled" ? (
+          <TouchableOpacity className="bg-blue-600 opacity-70 rounded w-24 p-2">
+            <Text className="text-center text-white font-bold">canceled</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity className="bg-blue-600 opacity-70 rounded w-24 p-2">
+            <Text className="text-center text-white font-bold">completed</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );

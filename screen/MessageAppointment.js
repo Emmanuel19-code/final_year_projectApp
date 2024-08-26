@@ -34,7 +34,6 @@ const MessageAppointment = ({ navigation }) => {
   }, [refresh]);
 
   const isToday = (dateString) => {
-    // Assuming dateString is in the format "DD/MM/YYYY"
     const today = moment().startOf("day");
     const appointmentDate = moment(dateString, "DD/MM/YYYY").startOf("day");
     return today.isSame(appointmentDate);
@@ -47,10 +46,11 @@ const MessageAppointment = ({ navigation }) => {
       if (response && response.data) {
         const filteredData = response.data?.booked?.filter(
           (item) =>
-            item.appointmentType === "message" &&
-            item.doctorId === info.healthworkerId &&
-            isToday(item?.appointmentDate)
-        );
+           item.appointmentType === "message" && item.doctorId === info.healthworkerId && item?.status == "scheduled" &&
+            isToday(item?.appointmentDate) 
+        )
+        
+        
         setMdata(filteredData);
       }
     } catch (error) {

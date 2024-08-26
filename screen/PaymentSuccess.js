@@ -19,7 +19,7 @@ const PaymentSuccess = ({navigation}) => {
       </View>
       <View className="mt-10 items-center">
         <Text className="text-gray-600 font-semibold">
-          Do You want to Book a Consultaion ?{" "}
+          Do You want to Book a Consultaion ?
         </Text>
         <TouchableOpacity
           className="bg-[#007BFF] p-2 mt-3 w-28 rounded-lg"

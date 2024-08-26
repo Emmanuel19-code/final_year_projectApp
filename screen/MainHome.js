@@ -82,14 +82,20 @@ const MainHome = ({ navigation }) => {
     try {
       const response = await GetAllAppointment();
       if (response && response?.data && response?.data?.all_appointments) {
-        setData(response?.data?.all_appointments);
+        //setData(response?.data?.all_appointments);
+        console.log(response?.data?.all_appointments);
+        
       }
     } catch (error) {
       console.error("Error fetching appointments:", error);
       showToast("Error fetching appointments", "error");
     }
   };
-
+const isToday = (dateString) => {
+  const today = moment().startOf("day");
+  const appointmentDate = moment(dateString, "DD/MM/YYYY").startOf("day");
+  return today.isSame(appointmentDate);
+};
   const showToast = (message, type = "success") => {
     Toast.show({
       type: type,

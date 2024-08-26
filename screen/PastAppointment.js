@@ -18,8 +18,14 @@ const PastAppointment = () => {
     setIsLoading(true);
     try {
       const response = await getMyAppointments();
+      console.log(JSON.stringify(response));
+      
       if (response) {
-        setData(response.filter((item) => item.status !== "canceled"));
+        setData(
+          response.filter(
+            (item) => item.status == "canceled" || item.status == "completed"
+          )
+        );
       } else {
         setErrorMessage(p_error_message || "Failed to fetch appointments");
       }
@@ -49,12 +55,12 @@ const PastAppointment = () => {
         </View>
       ) : errorMessage ? (
         <Text className="text-center mt-10 font-bold">{errorMessage}</Text>
-      ) : pastAppointments.length === 0 ? (
+      ) : data.length === 0 ? (
         <Text className="text-center mt-10 font-bold">
           There are no past appointments.
         </Text>
       ) : (
-        pastAppointments.map((item) => (
+        data.map((item) => (
           <PastAppointmentSlot
             key={item._id}
             appointmentId={item._id}

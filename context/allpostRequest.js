@@ -273,6 +273,7 @@ const AllPostProvider = ({ children }) => {
     }
   };
 
+  //creating an appointment
   const BookAppointment = async (data) =>{
     try {
       const response = await axios.post(
@@ -289,7 +290,40 @@ const AllPostProvider = ({ children }) => {
       console.log(error.response); 
     }
   }
+ 
+  //cancel appointment
+  const CancelAppointment = async (data) =>{
+    try {
+      const response = await axios.post(
+        `${APPOINTMENT_BASE_URL}/cancel_appointment`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      return response
+    } catch (error) {
+      console.log(error.response);
+    }
+  }
 
+  //sending meetingId
+  const SendMeetingId = async (data) =>{
+    try{
+      const response = await axios.post(
+        `${APPOINTMENT_BASE_URL}/start_meeting/${appointmentId}`,data,{
+           headers:{
+             Authorization: `Bearer ${accessToken}`
+           }
+        }
+      );
+      return response.data
+    }catch(error){
+        console.log(error.response);
+    }
+  }
   return (
     <AllPostRequest.Provider
       value={{
@@ -309,7 +343,9 @@ const AllPostProvider = ({ children }) => {
         ConsultantUpdateProfile,
         ConsultantStartConversation,
         CreatePaymentIntent,
-        BookAppointment
+        BookAppointment,
+        CancelAppointment,
+        SendMeetingId
       }}
     >
       {children}

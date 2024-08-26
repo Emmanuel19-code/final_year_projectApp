@@ -30,15 +30,13 @@ const Main = ({ navigation, route }) => {
   const [pickedDate,setPickedDate] = useState("")
   const [pickedTime,setPickedTime] = useState(" ")
   const [newPickedTime,setNewPickedTime] = useState("")
-  const [disable,setDisable] = useState(false)
+  const [disable,setDisable] = useState(true)
   const { healthworkerId, name, workingdays } = route.params;
 
   const handleItemSelect = (itemId) => {
     setSelectedItemId((prev) => (prev === itemId ? null : itemId));
     setPickedDay((prev) => (prev === itemId ? null : itemId));
-  };
- console.log(time_slot);
- 
+  }; 
   const handleTimeSlots = (itemId) => {
     setTimedslots((prev) => (prev === itemId ? null : itemId));
     setPickedTime((prev)=>(prev=== itemId?null:itemId))
@@ -78,7 +76,8 @@ const Main = ({ navigation, route }) => {
         setDisable(false)
      }
   },[appointmentType,newPickedTime,pickedDate])
- 
+  
+  
   return (
     <View
       style={{
