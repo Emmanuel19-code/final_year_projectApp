@@ -82,8 +82,8 @@ const MainHome = ({ navigation }) => {
     try {
       const response = await GetAllAppointment();
       if (response && response?.data && response?.data?.all_appointments) {
-        //setData(response?.data?.all_appointments);
-        console.log(response?.data?.all_appointments);
+        setData(response?.data?.all_appointments);
+       // console.log(response?.data?.all_appointments);
         
       }
     } catch (error) {
@@ -189,7 +189,7 @@ const isToday = (dateString) => {
               <View className="justify-center">
                 <TouchableOpacity
                   className="ml-2"
-                  onPress={() => navigation.navigate("specialty")}
+                  onPress={schedulePushNotification}
                 >
                   <Entypo name="chevron-right" size={30} color="gray" />
                 </TouchableOpacity>

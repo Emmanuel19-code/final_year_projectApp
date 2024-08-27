@@ -19,6 +19,7 @@ const AllGetProvider = ({ children }) => {
   const accessToken = useSelector(selectAccesstoken);
   const refreshToken = useSelector(SelectRefreshToken);
 
+  //Helps in searching for consultant
   const getAllConsutlant = async (search) => {
     const data = {
       search: search,
@@ -36,6 +37,7 @@ const AllGetProvider = ({ children }) => {
     }
   };
 
+  //User getting all his or her appointments
   const getMyAppointments = async () => {
     try {
       const response = await axios.get(`${USER_BASE_URL}/all_appointments`, {
@@ -52,6 +54,8 @@ const AllGetProvider = ({ children }) => {
       }
     }
   };
+
+  //Getting the conversations that users are in
   const InvolvedConversations = async () => {
     try {
       const response = await axios.get(`${USER_BASE_URL}/get_conversation`, {
@@ -69,6 +73,7 @@ const AllGetProvider = ({ children }) => {
     }
   };
 
+  //Conversations That involve Consultant
   const ConsultantConversations = async () => {
     try {
       const response = await axios.get(
@@ -89,6 +94,7 @@ const AllGetProvider = ({ children }) => {
     }
   };
 
+  //Getting Messages in In a conversation
   const GetMessagesInConversations = async (conversationId) => {
     try {
       const response = await axios.get(`${MESSAGE_URL}/${conversationId}`);
@@ -146,10 +152,11 @@ const AllGetProvider = ({ children }) => {
       );
       return response;
     } catch (error) {
-      console.log("tt",error.response.data);
+      console.log("tt", error.response.data);
     }
   };
 
+  //Getting All the appointments
   const GetAllAppointment = async () => {
     try {
       const response = await axios.get(
@@ -166,6 +173,7 @@ const AllGetProvider = ({ children }) => {
     }
   };
 
+  //Get Notifications
   const GetNotification = async () => {
     try {
       const response = await axios.get(
@@ -182,16 +190,28 @@ const AllGetProvider = ({ children }) => {
     }
   };
 
+  //Getting Appointments in a particular group
   const WorkersInDepartment = async (data) => {
     try {
       const response = await axios.get(
         `${CONSULTANT_BASE_URL}/departments/:${data}`
-      )
-      return response
+      );
+      return response;
     } catch (error) {
       console.log({
         error: error.response,
       });
+    }
+  };
+
+  const GroupingPractioners = async (department) => {
+    try {
+      const response = await axios.get(
+        `${CONSULTANT_BASE_URL}/departmentworkers/${department}`
+      );
+      return response;
+    } catch (error) {
+      console.log(error.response);
     }
   };
   return (
@@ -212,6 +232,7 @@ const AllGetProvider = ({ children }) => {
         GetMyReceivedAppointments,
         GetNotification,
         WorkersInDepartment,
+        GroupingPractioners,
       }}
     >
       {children}
