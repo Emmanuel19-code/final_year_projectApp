@@ -45,7 +45,7 @@ const AllGetProvider = ({ children }) => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      return response.data.data;
+      return response.data?.data;
     } catch (error) {
       if (!error.response) {
         setP_error_message("A network error occured");
@@ -194,7 +194,7 @@ const AllGetProvider = ({ children }) => {
   const WorkersInDepartment = async (data) => {
     try {
       const response = await axios.get(
-        `${CONSULTANT_BASE_URL}/departments/:${data}`
+        `${CONSULTANT_BASE_URL}/departmentworkers/${data}`
       );
       return response;
     } catch (error) {

@@ -72,6 +72,7 @@ const VideoAppointments = ({ navigation }) => {
               date={item.appointmentDate}
               time={item.appointmentTime}
               patientId={item.patientId}
+              patientName={item.patientName}
             />
           ))
         ) : (

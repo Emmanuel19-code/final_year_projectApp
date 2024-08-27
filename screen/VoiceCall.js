@@ -35,7 +35,6 @@ const VoiceCall = ({ navigation }) => {
     setIsloading(true);
     try {
       let response = await GetMyReceivedAppointments();
-      console.log(response.data.booked);
       if (response && response.data) {
         const filteredData = response.data?.booked?.filter(
           (item) =>
@@ -73,6 +72,7 @@ const VoiceCall = ({ navigation }) => {
               date={item.appointmentDate}
               time={item.appointmentTime}
               patientId={item.patientId}
+              patientName={item.patientName}
             />
           ))
         ) : (

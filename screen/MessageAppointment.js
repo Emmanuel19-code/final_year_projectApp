@@ -115,6 +115,7 @@ const MessageAppointment = ({ navigation }) => {
               time={item.appointmentTime}
               patientId={item.patientId}
               functionCall={CreateConversation}
+              patientName={item.patientName}
             />
           ))
         ) : (

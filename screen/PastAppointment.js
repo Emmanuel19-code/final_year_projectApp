@@ -1,8 +1,9 @@
 import { View, Text, ScrollView, ActivityIndicator } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState , useCallback} from "react";
 import PastAppointmentSlot from "../components/PastAppointmentSlot";
 import { AllGetRequest } from "../context/allgetRequest";
 import moment from "moment";
+import { useFocusEffect } from "@react-navigation/native";
 
 const PastAppointment = () => {
   const [data, setData] = useState([]);
@@ -10,16 +11,17 @@ const PastAppointment = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const { getMyAppointments, p_error_message } = useContext(AllGetRequest);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchData();
+    }, [])
+  );
 
   const fetchData = async () => {
     setIsLoading(true);
     try {
       const response = await getMyAppointments();
-      console.log(JSON.stringify(response));
-      
+
       if (response) {
         setData(
           response.filter(
@@ -27,7 +29,7 @@ const PastAppointment = () => {
           )
         );
       } else {
-        setErrorMessage(p_error_message || "Failed to fetch appointments");
+        setErrorMessage(p_error_message);
       }
     } catch (error) {
       setErrorMessage("Failed to fetch appointments");
@@ -54,11 +56,17 @@ const PastAppointment = () => {
           <ActivityIndicator size="large" color="#3b82f6" />
         </View>
       ) : errorMessage ? (
-        <Text className="text-center mt-10 font-bold">{errorMessage}</Text>
+        <View className="w-96 justify-center flex flex-row h-72 items-center">
+          <Text className="text-center mt-10 font-bold w-52">
+            {errorMessage}
+          </Text>
+        </View>
       ) : data.length === 0 ? (
-        <Text className="text-center mt-10 font-bold">
-          There are no past appointments.
-        </Text>
+        <View className="w-96 justify-center flex flex-row h-72 items-center">
+          <Text className="text-center mt-10 font-bold w-52">
+            There are no completed appointments.
+          </Text>
+        </View>
       ) : (
         data.map((item) => (
           <PastAppointmentSlot

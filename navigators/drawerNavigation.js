@@ -1,10 +1,8 @@
 import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import BottomTab from "./bottomTab";
-import NearbyHospital from "../screen/NearbyHospital";
 import News from "../screen/News";
 import Help from "../screen/Help";
-import { Entypo } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import SearchDoctor from "../screen/SearchDoctor";
@@ -13,11 +11,14 @@ import Profile from "../screen/Profile";
 import SChat from "../screen/Chat";
 import { useSelector } from "react-redux";
 import { selectRole } from "../store/authSlice";
+import { TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => {
-  const role = useSelector(selectRole)
+  const role = useSelector(selectRole);
+  const navigation = useNavigation();
   return (
     <Drawer.Navigator>
       {role == "user" ? (
@@ -39,7 +40,7 @@ const DrawerNavigator = () => {
               },
             }}
           />
-        
+
           {/*
          <Drawer.Screen
         name="News"
@@ -62,7 +63,7 @@ const DrawerNavigator = () => {
             name="Help"
             component={Help}
             options={{
-              headerShown: false,
+              headerShown: true,
               drawerIcon: ({}) => (
                 <FontAwesome5 name="hands-helping" size={24} color="black" />
               ),
@@ -72,6 +73,24 @@ const DrawerNavigator = () => {
                 fontWeight: "bold",
                 color: "black",
               },
+              headerStyle: {
+                backgroundColor: "#f3f4f6",
+                borderBottomWidth:0
+              },
+              headerTitle: "Need Help ?",
+              headerTitleAlign: "center",
+              headerTitleStyle: {
+                fontSize: 20,
+                fontFamily: "",
+              },
+              headerLeft: () => (
+                <TouchableOpacity
+                  className="ml-3 justify-center items-center  w-12 h-12 "
+                  onPress={() => navigation.goBack()}
+                >
+                  <Ionicons name="arrow-back-outline" size={24} color="black" />
+                </TouchableOpacity>
+              ),
             }}
           />
           <Drawer.Screen
@@ -144,7 +163,7 @@ const DrawerNavigator = () => {
                 color: "black",
               },
             }}
-          /> 
+          />
           <Drawer.Screen
             name="chat"
             component={SChat}

@@ -57,9 +57,10 @@ const Register = ({ navigation }) => {
       if (password !== confirm_pass) {
         setError_message("Passwords do not match");
         setIsloading(false);
+        setDisable(true)
+        return
       }
       const response = await UserSignUp(name, email.trim(), password.trim(), phone);
-      console.log("this is", response.data);
       if (response) {
         setIsloading(false);
         navigation.navigate("verifyemail");
@@ -163,11 +164,6 @@ const Register = ({ navigation }) => {
           )}
           <Text className="text-white font-bold text-center">Sign Up</Text>
         </TouchableOpacity>
-        {error_message && (
-          <Text className="text-red-300 text-center mt-4 text-lg font-semibold">
-            {error_message}
-          </Text>
-        )}
       </View>
     </View>
   );

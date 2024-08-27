@@ -18,6 +18,7 @@ import { AllGetRequest } from "../context/allgetRequest";
 import Toast from "react-native-toast-message";
 import { io } from "socket.io-client";
 import * as Notifications from "expo-notifications";
+import moment from "moment";
 
 let socket;
 const MainHome = ({ navigation }) => {
@@ -82,12 +83,14 @@ const MainHome = ({ navigation }) => {
     try {
       const response = await GetAllAppointment();
       if (response && response?.data && response?.data?.all_appointments) {
-        setData(response?.data?.all_appointments);
-       // console.log(response?.data?.all_appointments);
-        
+        const filteredData = response?.data?.all_appointments.filter(
+          (item) =>
+            item?.doctorId === info?.healthworkerId &&
+            isToday(item?.appointmentDate)
+        );
+        setData(filteredData); 
       }
     } catch (error) {
-      console.error("Error fetching appointments:", error);
       showToast("Error fetching appointments", "error");
     }
   };
@@ -123,7 +126,7 @@ const isToday = (dateString) => {
         paddingLeft: insets.left,
         paddingRight: insets.right,
       }}
-      className="bg-white h-full"
+      className="bg-gray-100 h-full"
     >
       <View className="flex flex-row items-center p-2">
         <Pressable className="w-10 h-10" onPress={OpenDrawer}>
@@ -189,7 +192,7 @@ const isToday = (dateString) => {
               <View className="justify-center">
                 <TouchableOpacity
                   className="ml-2"
-                  onPress={schedulePushNotification}
+                  onPress={()=>navigation.navigate("specialty")}
                 >
                   <Entypo name="chevron-right" size={30} color="gray" />
                 </TouchableOpacity>

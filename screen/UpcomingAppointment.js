@@ -10,13 +10,15 @@ import { useSelector } from "react-redux";
 import { selectInfo } from "../store/authSlice";
 import Toast from "react-native-toast-message";
 
-const UpcomingAppointment = () => {
+const UpcomingAppointment = ({navigation}) => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const { getMyAppointments, p_error_message } = useContext(AllGetRequest);
   const [refresh, setRefresh] = useState(false);
   const [meetingStarted, setMeetingStarted] = useState(null);
- const info = useSelector(selectInfo)
+  const info = useSelector(selectInfo);
+
+ 
   useEffect(() => {
     const pusher = new Pusher(PUSHER_KEY, {
       cluster: "eu",
@@ -24,39 +26,54 @@ const UpcomingAppointment = () => {
 
     const channel = pusher.subscribe("meetingNotice");
 
-    channel.bind(info?.uniqueId && info?.uniqueId, (appointmentData) => {
+    channel.bind(info?.uniqueId, (appointmentData) => {
       setMeetingStarted(appointmentData);
       showToast("Your Meeting has started");
     });
 
-    // Cleanup on unmount
     return () => {
       pusher.unsubscribe("meetingNotice");
       pusher.disconnect();
     };
-  }, []);
+  }, [info?.uniqueId]);
 
+ 
   useFocusEffect(
     useCallback(() => {
       fetchData();
     }, [refresh, meetingStarted])
   );
 
+  
   const fetchData = async () => {
     setIsLoading(true);
     try {
       const response = await getMyAppointments();
-      setData(response.filter((item) => item.status !== "canceled"));
+      if (response) {
+        setData(response.filter((item) => item.status !== "canceled"));
+      }
     } catch (error) {
-      p_error_message(error.message || "Failed to fetch appointments");
+      showToast("Failed to fetch appointments", "error");
+      console.log(error);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const upcoming = data?.filter((item) => {
+
+  useEffect(() => {
+    if (p_error_message) {
+      setIsLoading(false);
+      showToast(p_error_message, "error");
+      console.log(p_error_message);
+    }
+  }, [p_error_message]);
+
+  const upcoming = data.filter((item) => {
     try {
       const appointmentDate = moment(item.appointmentDate, "DD/MM/YYYY");
+      console.log(item);
+      
       const currentDate = moment();
       return appointmentDate.isSameOrAfter(currentDate, "day");
     } catch (error) {
@@ -64,16 +81,19 @@ const UpcomingAppointment = () => {
       return false;
     }
   });
-const showToast = (message, type = "success") => {
-  Toast.show({
-    type: type,
-    text1: message,
-    position: "top",
-    visibilityTime: 4000,
-    autoHide: true,
-    topOffset: 30,
-  });
-};
+
+ 
+  const showToast = (message, type = "success") => {
+    Toast.show({
+      type: type,
+      text1: message,
+      position: "top",
+      visibilityTime: 4000,
+      autoHide: true,
+      topOffset: 30,
+    });
+  };
+
   return (
     <ScrollView className="h-screen" showsVerticalScrollIndicator={false}>
       {isLoading ? (
@@ -89,15 +109,17 @@ const showToast = (message, type = "success") => {
       ) : (
         upcoming.map((item) => (
           <UpcomingSlots
-            key={item?._id}
-            appointmentId={item?._id}
-            date={item?.appointmentDate}
-            time={item?.appointmentTime}
+            key={item._id}
+            appointmentId={item._id}
+            date={item.appointmentDate}
+            time={item.appointmentTime}
             status={item.status}
-            appointmentType={item?.appointmentType}
-            id={item?._id}
+            appointmentType={item.appointmentType}
+            id={item._id}
             setRefresh={setRefresh}
-            callId={item?.callId}
+            callId={item.callId}
+            navigation={navigation}
+            
           />
         ))
       )}

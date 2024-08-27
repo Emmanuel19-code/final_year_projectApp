@@ -1,44 +1,48 @@
 import React, { useState, useRef, useContext, useEffect } from "react";
-import { View, Text, Pressable, TextInput,TouchableOpacity} from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 import { selectRole } from "../store/authSlice";
 import { AllPostRequest } from "../context/allpostRequest";
 import * as Progress from "react-native-progress";
+import Toast from "react-native-toast-message";
 
 const VerifyEmail = ({ navigation }) => {
   const insets = useSafeAreaInsets();
   const user_role = useSelector(selectRole);
   const { VerifyUser, error_message, setError_message } =
     useContext(AllPostRequest);
-  const [disable,setDisable] = useState(true)
+  const [disable, setDisable] = useState(true);
   const [isloading, setIsloading] = useState(false);
   const [code1, setCode1] = useState("");
   const [code2, setCode2] = useState("");
   const [code3, setCode3] = useState("");
   const [code4, setCode4] = useState("");
-  const [activationcode,setActivationcode] = useState("")
+  const [activationcode, setActivationcode] = useState("");
   const code1Ref = useRef(null);
   const code2Ref = useRef(null);
   const code3Ref = useRef(null);
   const code4Ref = useRef(null);
- 
 
   const handleVerify = async () => {
-    setDisable(true)
-    setIsloading(true)
+    setDisable(true);
+    setIsloading(true);
     let data = {
-      activationcode:activationcode,
+      activationcode: activationcode,
     };
-    if(user_role == "user"){
+    if (user_role == "user") {
       const response = await VerifyUser(data);
-      if(response){
-console.log(response);
+      if (response) {
+        showToast(response.data.msg, "success");
+        navigation.navigate("login");
       }
-      
-      //navigation.navigate("home");
     }
-   
   };
 
   const handleChangeText = (text, setCode, nextRef) => {
@@ -47,23 +51,32 @@ console.log(response);
       nextRef.current.focus();
     }
   };
- useEffect(() => {
-  setActivationcode(`${code1}${code2}${code3}${code4}`)
-   if (activationcode.length == 4) {
-     setDisable(false);
-   }
- }, [activationcode,code1,code2,code3,code4]);
+  useEffect(() => {
+    setActivationcode(`${code1}${code2}${code3}${code4}`);
+    if (activationcode.length == 4) {
+      setDisable(false);
+    }
+  }, [activationcode, code1, code2, code3, code4]);
 
   useEffect(() => {
     if (error_message) {
       setIsloading(false);
       setDisable(false);
-      const timer = setTimeout(() => {
-        setError_message("");
-      }, 1000);
-      return () => clearTimeout(timer);
+      showToast(error_message, "error");
+      setError_message("");
     }
-  }, [error_message, setError_message]);
+  }, [error_message, setError_message, showToast]);
+
+  const showToast = (message, type) => {
+    Toast.show({
+      type: type,
+      text1: message,
+      position: "top",
+      visibilityTime: 4000,
+      autoHide: true,
+      topOffset: 40,
+    });
+  };
 
   return (
     <View
@@ -131,16 +144,13 @@ console.log(response);
               ref={code4Ref}
               className="w-12 h-12 p-1 bg-gray-200 border-b-2 border-teal-500"
               value={code4}
-              onChangeText={(text) =>
-                handleChangeText(text, setCode4, null)
-              }
+              onChangeText={(text) => handleChangeText(text, setCode4, null)}
               maxLength={1}
               keyboardType="number-pad"
               clearButtonMode="while-editing"
               textAlign="center"
             />
           </View>
-          
         </View>
         <TouchableOpacity
           className={
@@ -168,4 +178,3 @@ console.log(response);
 };
 
 export default VerifyEmail;
-9

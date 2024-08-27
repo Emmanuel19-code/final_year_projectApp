@@ -50,7 +50,6 @@ const AllPostProvider = ({ children }) => {
       const response = await axios.post(`${USER_BASE_URL}/login`, data);
       return response;
     } catch (error) {
-      console.log(error.response);
       if (error.code === "ECONNABORTED") {
         setError_message("The request took too long. Please try again.");
       } else if (!error.response) {
@@ -73,22 +72,17 @@ const AllPostProvider = ({ children }) => {
           },
         }
       );
-      console.log(response.data);
       return response;
     } catch (error) {
-      console.log(error);
       if (error.code === "ECONNABORTED") {
-        // Handle timeout error
         setError_message(
           error.message || "The request took too long. Please try again."
         );
       } else if (!error.response) {
-        // Handle network error
         setError_message(
           "A network error occurred. Please check your internet connection and try again."
         );
       } else {
-        // Handle other errors
         setError_message(
           error.response.data.msg || "An error occurred. Please try again."
         );
@@ -310,7 +304,7 @@ const AllPostProvider = ({ children }) => {
   }
 
   //sending meetingId
-  const SendMeetingId = async (data) =>{
+  const SendMeetingId = async (data,appointmentId) =>{
     try{
       const response = await axios.post(
         `${APPOINTMENT_BASE_URL}/start_meeting/${appointmentId}`,data,{
@@ -321,7 +315,11 @@ const AllPostProvider = ({ children }) => {
       );
       return response.data
     }catch(error){
-        console.log(error.response);
+        if(!error.response){
+           setError_message("A network error occured")
+        }else{
+          setError_message(error.response.data.msg)
+        }
     }
   }
   return (

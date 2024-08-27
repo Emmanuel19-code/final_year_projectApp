@@ -19,10 +19,11 @@ const UpcomingSlots = ({
   functionCall,
   id,
   setRefresh,
-  callId
+  callId,
+  patientName
 }) => {
   const role = useSelector(selectRole);
-  const { CancelAppointment } = useContext(AllPostRequest);
+  const { CancelAppointment, SendMeetingId } = useContext(AllPostRequest);
   const handlePress = () => {
     if (type === "message") {
       const data = { participantId: patientId };
@@ -31,6 +32,7 @@ const UpcomingSlots = ({
       navigation.navigate("newmeeting", {
         participantId: patientId,
         type: type,
+        id:id
       });
     }
   };
@@ -59,6 +61,8 @@ const UpcomingSlots = ({
       topOffset: 40,
     });
   };
+  console.log("this is",patientName);
+  
   return (
     <View className="bg-white shadow rounded-lg p-1 m-1">
       <View className="border-b border-gray-200 flex flex-row items-center justify-between p-1">
@@ -76,6 +80,12 @@ const UpcomingSlots = ({
             <Text className="font-bold">{doctor}</Text>
           </View>
         )}
+        {role === "admin" && (
+          <View>
+            <Text className="font-bold text-gray-400">Patient Name</Text>
+            <Text className="font-bold">{patientName}</Text>
+          </View>
+        )}
       </View>
 
       <View className="flex flex-row items-center justify-between p-1">
@@ -90,7 +100,9 @@ const UpcomingSlots = ({
                   ? "bg-[#007BFF] rounded w-24 p-2 m-1"
                   : "bg-[#007BFF] rounded w-24 p-2 m-1 opacity-70"
               }
-              onPress={() => navigation.navigate("newmeeting",{callId:callId})}
+              onPress={() =>
+                navigation.navigate("newmeeting", { callId: callId })
+              }
             >
               <Text className="text-center text-white font-bold">Join</Text>
             </TouchableOpacity>
@@ -102,17 +114,27 @@ const UpcomingSlots = ({
             </TouchableOpacity>
           </View>
         ) : (
-          <TouchableOpacity
-            className="bg-blue-400 rounded w-36 flex flex-row items-center p-2"
-            onPress={handlePress}
-          >
-            <View className="mr-2">
-              <Feather name={icon_name} size={20} color="white" />
-            </View>
-            <Text className="text-center text-white text-xs font-bold">
-              {appointmentInformation}
-            </Text>
-          </TouchableOpacity>
+          <View className="flex flex-row items-center">
+            <TouchableOpacity
+              className="bg-blue-400 rounded w-28 flex m-1 flex-row items-center justify-center p-2.5 "
+              onPress={handlePress}
+            >
+              <Text className="text-center text-white text-xs font-bold">
+                Done
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              className="bg-blue-400 rounded w-28 m-1 flex flex-row items-center p-2"
+              onPress={handlePress}
+            >
+              <View className="mr-2">
+                <Feather name={icon_name} size={20} color="white" />
+              </View>
+              <Text className="text-center text-white text-xs font-bold">
+                {appointmentInformation}
+              </Text>
+            </TouchableOpacity>
+          </View>
         )}
       </View>
     </View>

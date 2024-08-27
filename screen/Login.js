@@ -53,7 +53,7 @@ const Login = ({ navigation }) => {
       showToast("Login successful", "success");
       setTimeout(() => {
         navigationRef.current.navigate("home");
-      }, 5000);
+      }, 7000);
     }
   }, [dispatch, email, password, UserSignIn]);
 
