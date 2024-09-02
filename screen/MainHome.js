@@ -160,6 +160,13 @@ const isToday = (dateString) => {
             <View className="mt-8">
               <Text className="m-2 font-bold text-xl">Medical Specialties</Text>
             </View>
+            {/*
+               <TouchableOpacity onPress={() => navigation.navigate("paystack")}>
+              <Text>stack</Text>
+            </TouchableOpacity>
+              
+              */}
+
             <View className="flex-row justify-center items-center flex-wrap mt-1">
               <View className="m-1">
                 <Image
@@ -192,7 +199,7 @@ const isToday = (dateString) => {
               <View className="justify-center">
                 <TouchableOpacity
                   className="ml-2"
-                  onPress={()=>navigation.navigate("specialty")}
+                  onPress={() => navigation.navigate("specialty")}
                 >
                   <Entypo name="chevron-right" size={30} color="gray" />
                 </TouchableOpacity>

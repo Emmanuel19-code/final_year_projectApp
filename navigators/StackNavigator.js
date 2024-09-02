@@ -22,6 +22,7 @@ import { Pressable, View } from "react-native";
 import PaymentSuccess from "../screen/PaymentSuccess";
 import JoinMeeting from "../screen/JoinMeeting";
 import Meeting from "../screen/Meeting";
+import PaystackComponent from "../screen/Paystack";
 
 const Stack = createStackNavigator();
 
@@ -118,6 +119,13 @@ const StackNavigator = () => {
           <Stack.Screen
             name="newmeeting"
             component={Meeting}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="paystack"
+            component={PaystackComponent}
             options={{
               headerShown: false,
             }}

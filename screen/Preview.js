@@ -108,7 +108,7 @@ const Preview = ({ route, navigation }) => {
               <Text className="mr-2 text-gray-400">:</Text>
             </View>
 
-            <Text className="text-base font-bold">{consultant}</Text>
+            <Text className="text-base font-bold">Ghs 160</Text>
           </View>
         </View>
       </View>
