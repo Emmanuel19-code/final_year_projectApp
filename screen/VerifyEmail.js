@@ -16,7 +16,7 @@ import Toast from "react-native-toast-message";
 const VerifyEmail = ({ navigation }) => {
   const insets = useSafeAreaInsets();
   const user_role = useSelector(selectRole);
-  const { VerifyUser, error_message, setError_message } =
+  const { VerifyUser, error_message, setError_message, VerifyConsultant } =
     useContext(AllPostRequest);
   const [disable, setDisable] = useState(true);
   const [isloading, setIsloading] = useState(false);
@@ -39,10 +39,16 @@ const VerifyEmail = ({ navigation }) => {
     if (user_role == "user") {
       const response = await VerifyUser(data);
       if (response) {
-        showToast(response.data.msg, "success");
+        showToast(response.data?.msg, "success");
         navigation.navigate("login");
       }
-    }
+    }// else {
+     //// const response = VerifyConsultant(data);
+     //// if (response) {
+     ////   showToast(response.data?.msg, "success");
+     ////   navigation.navigate("login");
+     //// }
+    //}
   };
 
   const handleChangeText = (text, setCode, nextRef) => {

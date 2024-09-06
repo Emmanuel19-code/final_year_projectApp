@@ -4,6 +4,8 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  Image,
+  Pressable
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -20,7 +22,7 @@ const HealthCareAuth = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [isloading, setIsloading] = useState(false);
   const [disable, setDisable] = useState(true);
-
+const [passhide, setPasshide] = useState(true);
   const dispatch = useDispatch();
   const { ConsultantSignIn, error_message, setError_message } =
     useContext(AllPostRequest);
@@ -43,6 +45,7 @@ const HealthCareAuth = ({ navigation }) => {
         );
         dispatch(SetUser(response.data.userInfo));
         dispatch(Logged("admin"));
+       console.log(response.data.userInfo.stream_token);
        
         
     }
@@ -106,12 +109,28 @@ const HealthCareAuth = ({ navigation }) => {
         </View>
         <View className="m-2">
           <Text className="m-1">Password</Text>
-          <TextInput
-            placeholder="***********"
-            className="border border-gray-400 p-1 rounded"
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-          />
+          <View className="flex flex-row items-center w-full  border border-gray-400 p-1 rounded">
+            <TextInput
+              placeholder="***********"
+              className="flex-1"
+              value={password}
+              onChangeText={(text) => setPassword(text)}
+              secureTextEntry={passhide}
+            />
+            <Pressable onPress={() => setPasshide(!passhide)}>
+              {passhide ? (
+                <Image
+                  source={require("../assets/hide.png")}
+                  className="w-6 h-6"
+                />
+              ) : (
+                <Image
+                  source={require("../assets/eyeopen.png")}
+                  className="w-6 h-6"
+                />
+              )}
+            </Pressable>
+          </View>
         </View>
         <TouchableOpacity
           className={

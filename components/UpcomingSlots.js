@@ -29,6 +29,8 @@ const UpcomingSlots = ({
       const data = { participantId: patientId };
       functionCall(data);
     } else {
+      console.log("uocomennn",id);
+      
       navigation.navigate("newmeeting", {
         participantId: patientId,
         type: type,

@@ -66,6 +66,12 @@ const MainHome = ({ navigation }) => {
     channel.bind("completed-appointment", (appointmentData) => {
       setCompletedAppointment(appointmentData);
     });
+    const newchannel = pusher.subscribe("meetingNotice");
+
+    newchannel.bind(info?.uniqueId, (appointmentData) => {
+      //setMeetingStarted(appointmentData);
+      showToast("Your Meeting has started");
+    });
     FetchAppointments();
 
     return () => {
@@ -88,17 +94,17 @@ const MainHome = ({ navigation }) => {
             item?.doctorId === info?.healthworkerId &&
             isToday(item?.appointmentDate)
         );
-        setData(filteredData); 
+        setData(filteredData);
       }
     } catch (error) {
       showToast("Error fetching appointments", "error");
     }
   };
-const isToday = (dateString) => {
-  const today = moment().startOf("day");
-  const appointmentDate = moment(dateString, "DD/MM/YYYY").startOf("day");
-  return today.isSame(appointmentDate);
-};
+  const isToday = (dateString) => {
+    const today = moment().startOf("day");
+    const appointmentDate = moment(dateString, "DD/MM/YYYY").startOf("day");
+    return today.isSame(appointmentDate);
+  };
   const showToast = (message, type = "success") => {
     Toast.show({
       type: type,

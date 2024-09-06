@@ -46,11 +46,12 @@ const MessageAppointment = ({ navigation }) => {
       if (response && response.data) {
         const filteredData = response.data?.booked?.filter(
           (item) =>
-           item.appointmentType === "message" && item.doctorId === info.healthworkerId && item?.status == "scheduled" &&
-            isToday(item?.appointmentDate) 
-        )
-        
-        
+            item.appointmentType === "message" &&
+            item.doctorId === info.healthworkerId &&
+            item?.status == "scheduled" &&
+            isToday(item?.appointmentDate)
+        );
+
         setMdata(filteredData);
       }
     } catch (error) {
@@ -64,7 +65,10 @@ const MessageAppointment = ({ navigation }) => {
   const CreateConversation = async (data) => {
     try {
       const response = await ConsultantStartConversation(data);
-      console.log(response?.data);
+      if (response) {
+        showToast(response.data.msg, "success");
+        navigation.navigate("chat");
+      }
     } catch (error) {
       console.log(error?.response?.data);
     }

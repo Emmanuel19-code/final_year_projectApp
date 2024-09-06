@@ -8,9 +8,11 @@ import { selectRole } from "../store/authSlice";
 import { useSelector } from "react-redux";
 import { Image } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
+import Pusher from "pusher-js/react-native";
 
 const SChat = ({ navigation }) => {
   const insets = useSafeAreaInsets();
+  const [newmessage, setNewmessage] = useState([]);
   const {
     InvolvedConversations,
     p_error_message,
@@ -22,7 +24,7 @@ const SChat = ({ navigation }) => {
 
   useEffect(() => {
     fetchData();
-  }, [role]);
+  }, [role,newmessage]);
 
   const fetchData = async () => {
     let data;
@@ -34,7 +36,15 @@ const SChat = ({ navigation }) => {
     }
     setData(data);
   };
-  
+  const PusherConnection = async () => {
+    const pusher = new Pusher("ee44b081730b6cc9b1d7", {
+      cluster: "eu",
+    });
+    const channel = pusher.subscribe(`${conversationId}`);
+    channel.bind("new-message", (data) => {
+      setNewmessage(data);
+    });
+  };
   return (
     <View
       style={{

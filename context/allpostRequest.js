@@ -102,7 +102,7 @@ const AllPostProvider = ({ children }) => {
       name: name,
       email: email,
       password: password,
-      healthWorkerId: healthWorkerId,
+      healthworkerId: healthWorkerId,
       phone: phone,
     };
     try {
@@ -110,7 +110,6 @@ const AllPostProvider = ({ children }) => {
         `${CONSULTANT_BASE_URL}/registerhealthworker`,
         data
       );
-      console.log("this is ", response);
       return response;
     } catch (error) {
       if (error.response) {
@@ -322,6 +321,37 @@ const AllPostProvider = ({ children }) => {
         }
     }
   }
+
+  const VerifyConsultant =async(data) =>{
+      try {
+        const response = await axios.post(
+          `${CONSULTANT_BASE_URL}/verify`,
+          data,
+          {
+            headers: {
+              Authorization: `Bearer ${auth_Token}`,
+            },
+          }
+        );
+        return response;
+      } catch (error) {
+        console.log(error.response);
+        
+        if (error.code === "ECONNABORTED") {
+          setError_message(
+            error.message || "The request took too long. Please try again."
+          );
+        } else if (!error.response) {
+          setError_message(
+            "A network error occurred. Please check your internet connection and try again."
+          );
+        } else {
+          setError_message(
+            error.response.data.msg || "An error occurred. Please try again."
+          );
+        }
+      }
+  }
   return (
     <AllPostRequest.Provider
       value={{
@@ -343,7 +373,8 @@ const AllPostProvider = ({ children }) => {
         CreatePaymentIntent,
         BookAppointment,
         CancelAppointment,
-        SendMeetingId
+        SendMeetingId,
+        VerifyConsultant
       }}
     >
       {children}

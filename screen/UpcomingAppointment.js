@@ -65,14 +65,14 @@ const UpcomingAppointment = ({navigation}) => {
     if (p_error_message) {
       setIsLoading(false);
       showToast(p_error_message, "error");
-      console.log(p_error_message);
+      //console.log(p_error_message);
     }
   }, [p_error_message]);
 
   const upcoming = data.filter((item) => {
     try {
       const appointmentDate = moment(item.appointmentDate, "DD/MM/YYYY");
-      console.log(item);
+      //console.log(item);
       
       const currentDate = moment();
       return appointmentDate.isSameOrAfter(currentDate, "day");

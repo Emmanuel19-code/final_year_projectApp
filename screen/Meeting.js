@@ -4,7 +4,6 @@ import {
   StreamCall,
   StreamVideo,
   StreamVideoClient,
-  useCallStateHooks,
 } from "@stream-io/video-react-native-sdk";
 import { useSelector } from "react-redux";
 import { selectInfo } from "../store/authSlice";
@@ -19,22 +18,27 @@ const Meeting = ({ navigation, route }) => {
     useContext(AllPostRequest);
   const receivedId = route.params.callId;
   const appointmentId = route.params.id;
-  const callstate = useCallStateHooks();
+
   const callId = receivedId ? receivedId : `call_${Date.now()}`;
+
   const user = {
     id: info?.role !== "user" ? info.healthworkerId : info?.uniqueId,
   };
   const { participantId, type } = route.params;
   const token = info?.stream_token;
+
+  console.log("user", participantId);
+
   const [hasError, setHasError] = useState(false);
   const client = new StreamVideoClient({ apiKey, user, token });
 
-  const call = client.call(
+  let call = client.call(
     type === "video" ? "default" : "audio_room",
-    info?.role !== "user" ? callId : receivedId
+    "default_de3375f4-36cd-443b-a34a-934199ae7465"
   );
-
-  call.join({ create: true });
+ call.join({create:true})
+  
+ 
 
   const sendId = async () => {
     try {
@@ -60,6 +64,7 @@ const Meeting = ({ navigation, route }) => {
       navigation.goBack();
     }
   }, [error_message, hasError, navigation]);
+  console.log(error_message);
 
   return (
     <StreamVideo client={client}>

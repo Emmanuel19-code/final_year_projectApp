@@ -21,7 +21,8 @@ export const authSlice = createSlice({
       state.info = action.payload;
     },
     Verification:(state,action)=>{    
-        state.auth_token = action.payload
+        state.role = action.payload.role && action.payload.role
+        state.auth_token = action.payload.token
     }
   },
 });
